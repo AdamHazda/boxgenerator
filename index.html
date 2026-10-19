@@ -261,10 +261,10 @@
         <div style="font-size: 0.75rem; margin-top: 0.2rem;" id="txtPrivacyNote">Všechny výpočty probíhají 100% lokálně ve vašem prohlížeči.</div>
       </div>
       
-      <!-- Počítadlo návštěv -->
+      <!-- Počítadlo návštěv (CounterAPI) -->
       <div class="footer-center">
         <i class="fa-solid fa-eye text-blue-400"></i>
-        <span id="visitCount">...</span> <span id="txtVisits">zobrazení</span>
+        <span id="visitCount" class="font-mono font-bold text-slate-200">1</span> <span id="txtVisits">zobrazení</span>
       </div>
 
       <div class="footer-right">
@@ -493,7 +493,6 @@
         }
       });
 
-      // Překlad textu u počítadla
       const visitsTextEl = document.getElementById('txtVisits');
       if (visitsTextEl && translations[lang].txtVisits) {
         visitsTextEl.textContent = translations[lang].txtVisits;
@@ -948,21 +947,19 @@
       setTimeout(() => toast.classList.add('hidden'), 4000);
     }
 
-    // Načtení počítadla z CountAPI (zcela zdarma a bez registrace)
+    // Spolehlivější API pro počítadlo návštěv (CounterAPI.dev)
     function initVisitorCounter() {
-      // Unikátní namespace a klíč pro váš projekt boxgenerator
-      fetch('https://api.countapi.xyz/hit/boxgenerator-hazda-cz/visits')
+      fetch('https://api.counterapi.dev/v1/boxgenerator-hazda-cz/visits/up')
         .then(response => response.json())
         .then(data => {
           const countEl = document.getElementById('visitCount');
-          if (countEl && data && data.value) {
-            countEl.textContent = data.value.toLocaleString();
+          if (countEl && data && typeof data.count !== 'undefined') {
+            countEl.textContent = data.count.toLocaleString();
           }
         })
         .catch(err => {
-          // Fallback, kdyby služba náhodou neodpověděla
           const countEl = document.getElementById('visitCount');
-          if (countEl) countEl.textContent = "100+";
+          if (countEl) countEl.textContent = "1+";
         });
     }
 
