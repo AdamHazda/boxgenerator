@@ -17,6 +17,13 @@
     ::-webkit-scrollbar-thumb:hover { background: #475569; }
     input[type=range] { accent-color: #3b82f6; }
     
+    /* Poloprůhlednost ovládacího panelu na mobilech bez rozostření */
+    @media (max-width: 767px) {
+      #panelControls.mobile-visible {
+        background-color: rgba(3, 7, 18, 0.90) !important;
+      }
+    }
+
     /* Footer styling */
     footer {
       background-color: var(--card-bg, #1e1e24);
@@ -78,208 +85,255 @@
     }
   </style>
 </head>
-<body class="h-full flex flex-col md:flex-row overflow-hidden font-sans antialiased">
+<body class="h-full flex flex-col overflow-hidden font-sans antialiased">
 
-  <!-- LEFT PANEL: Controls -->
-  <aside class="w-full md:w-96 bg-slate-950 border-r border-slate-800 flex flex-col h-auto md:h-full z-10 shadow-2xl flex-shrink-0">
-    <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
-      <div class="flex items-center space-x-2">
-        <i class="fa-solid fa-cube text-blue-500 text-xl"></i>
-        <h1 class="font-bold text-lg text-slate-100 tracking-wide" data-i18n="appTitle">3D Box Generator</h1>
-      </div>
-      <div class="flex items-center gap-2">
-        <select id="langSelect" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded px-2 py-1 focus:outline-none focus:border-blue-500">
-          <option value="cs">🇨🇿 CS</option>
-          <option value="en">🇬🇧 EN</option>
-          <option value="de">🇩🇪 DE</option>
-          <option value="es">🇪🇸 ES</option>
-          <option value="fr">🇫🇷 FR</option>
-        </select>
-        <span class="text-xs px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/20">v2.7</span>
-      </div>
-    </div>
+  <!-- Mobile Tab Bar (Visible only on small screens) -->
+  <div class="flex md:hidden bg-slate-950/95 border-b border-slate-800 text-xs font-semibold z-30 flex-shrink-0">
+    <button id="mobileTabPreview" onclick="switchMobileTab('preview')" class="flex-1 py-3 text-center text-blue-400 border-b-2 border-blue-500 bg-slate-900/55 flex items-center justify-center gap-2">
+      <i class="fa-solid fa-cube"></i> <span data-i18n="tabPreview">3D Náhled</span>
+    </button>
+    <button id="mobileTabControls" onclick="switchMobileTab('controls')" class="flex-1 py-3 text-center text-slate-400 border-b-2 border-transparent flex items-center justify-center gap-2">
+      <i class="fa-solid fa-sliders"></i> <span data-i18n="tabControls">Parametry & Export</span>
+    </button>
+  </div>
 
-    <div class="flex-1 overflow-y-auto p-4 space-y-6">
-      <!-- 1. SVG Input -->
-      <section class="space-y-3">
-        <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-          <i class="fa-solid fa-shapes text-blue-400"></i> <span data-i18n="sectionInput">1. Input Shape (2D SVG)</span>
-        </label>
-        <div>
-          <label class="text-xs text-slate-300 mb-1 block" data-i18n="presetShapes">Preset Shapes:</label>
-          <select id="presetSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
-            <option value="star" data-i18n="shapeStar">Star</option>
-            <option value="heart" data-i18n="shapeHeart">Heart</option>
-            <option value="hexagon" data-i18n="shapeHexagon">Hexagon</option>
-            <option value="shield" data-i18n="shapeShield">Shield</option>
-            <option value="circle" data-i18n="shapeCircle">Circle</option>
+  <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+
+    <!-- LEFT PANEL / CONTROLS -->
+    <aside id="panelControls" class="w-full md:w-96 bg-slate-950 border-r border-slate-800 flex-col h-full z-20 shadow-2xl flex-shrink-0 absolute md:relative inset-0 md:inset-auto transition-all duration-200 hidden md:flex">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-cube text-blue-500 text-xl"></i>
+          <h1 class="font-bold text-lg text-slate-100 tracking-wide" data-i18n="appTitle">3D Box Generator</h1>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <select id="unitSelect" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded px-2 py-1 focus:outline-none focus:border-blue-500 font-mono">
+            <option value="mm">mm</option>
+            <option value="in">inch</option>
           </select>
-        </div>
-        <div>
-          <label class="text-xs text-slate-300 mb-1 block" data-i18n="uploadSvg">Or upload custom SVG:</label>
-          <input type="file" id="svgFileInput" accept=".svg" class="block w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-blue-400 hover:file:bg-slate-700 cursor-pointer border border-slate-800 rounded-lg bg-slate-900/50">
-        </div>
-      </section>
-
-      <hr class="border-slate-800">
-
-      <!-- 2. Dimensions -->
-      <section class="space-y-4">
-        <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-          <i class="fa-solid fa-ruler-combined text-blue-400"></i> <span data-i18n="sectionDimensions">2. Box Dimensions (mm)</span>
-        </label>
-
-        <div class="space-y-1">
-          <div class="flex justify-between text-xs">
-            <span class="text-slate-300" data-i18n="paramWidth">Width / Outer Size</span>
-            <span id="paramWidthVal" class="font-mono text-blue-400 font-bold">80.0 mm</span>
-          </div>
-          <input type="range" id="paramWidth" min="30" max="250" value="80" class="w-full">
-        </div>
-
-        <div class="space-y-1">
-          <div class="flex justify-between text-xs">
-            <span class="text-slate-300" data-i18n="paramBoxHeight">Total Box Height</span>
-            <span id="paramBoxHeightVal" class="font-mono text-blue-400 font-bold">40.0 mm</span>
-          </div>
-          <input type="range" id="paramBoxHeight" min="15" max="150" value="40" class="w-full">
-        </div>
-
-        <div class="space-y-1">
-          <div class="flex justify-between text-xs">
-            <span class="text-slate-300" data-i18n="paramLidHeight">Lid Height</span>
-            <span id="paramLidHeightVal" class="font-mono text-blue-400 font-bold">15.0 mm</span>
-          </div>
-          <input type="range" id="paramLidHeight" min="8" max="80" value="15" class="w-full">
-        </div>
-
-        <div class="space-y-1">
-          <div class="flex justify-between text-xs">
-            <span class="text-slate-300" data-i18n="paramWallThickness">Wall Thickness</span>
-            <span id="paramWallThicknessVal" class="font-mono text-blue-400 font-bold">2.4 mm</span>
-          </div>
-          <input type="range" id="paramWallThickness" min="1.2" max="6.0" step="0.2" value="2.4" class="w-full">
-        </div>
-
-        <div class="space-y-1">
-          <div class="flex justify-between text-xs">
-            <span class="text-slate-300" data-i18n="paramFloorThickness">Bottom/Top Thickness</span>
-            <span id="paramFloorThicknessVal" class="font-mono text-blue-400 font-bold">2.0 mm</span>
-          </div>
-          <input type="range" id="paramFloorThickness" min="1.0" max="6.0" step="0.2" value="2.0" class="w-full">
-        </div>
-
-        <div class="space-y-1">
-          <div class="flex justify-between text-xs">
-            <span class="text-slate-300" data-i18n="paramLipHeight">Lip / Lock Height</span>
-            <span id="paramLipHeightVal" class="font-mono text-blue-400 font-bold">5.0 mm</span>
-          </div>
-          <input type="range" id="paramLipHeight" min="2" max="15" step="0.5" value="5.0" class="w-full">
-        </div>
-
-        <div class="space-y-1">
-          <div class="flex justify-between text-xs">
-            <span class="text-slate-300" data-i18n="paramTolerance">Lock Tolerance / Clearance</span>
-            <span id="paramToleranceVal" class="font-mono text-blue-400 font-bold">0.30 mm</span>
-          </div>
-          <input type="range" id="paramTolerance" min="0.05" max="1.0" step="0.05" value="0.30" class="w-full">
-        </div>
-
-        <div>
-          <label class="text-xs text-slate-300 mb-1 block font-medium" data-i18n="lidStyleLabel">Lid Style:</label>
-          <select id="lidStyleSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
-            <option value="inset" data-i18n="lidStyleInset">Internal Lip / Flush (Stepped)</option>
-            <option value="shoebox" data-i18n="lidStyleShoebox">Cap / Shoe-Box Style (Overlapping)</option>
+          <select id="langSelect" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded px-2 py-1 focus:outline-none focus:border-blue-500">
+            <option value="cs">🇨🇿 CS</option>
+            <option value="en">🇬🇧 EN</option>
+            <option value="de">🇩🇪 DE</option>
+            <option value="es">🇪🇸 ES</option>
+            <option value="fr">🇫🇷 FR</option>
           </select>
+          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v2.8</span>
         </div>
-      </section>
+      </div>
 
-      <hr class="border-slate-800">
-
-      <!-- 3. View Settings -->
-      <section class="space-y-3">
-        <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-          <i class="fa-solid fa-eye text-blue-400"></i> <span data-i18n="sectionView">3. Preview & View Settings</span>
-        </label>
-
-        <div class="grid grid-cols-3 gap-2">
-          <button id="btnViewBoth" class="px-3 py-1.5 bg-blue-600 text-white rounded text-xs font-medium hover:bg-blue-500 transition" data-i18n="viewBoth">Both</button>
-          <button id="btnViewBox" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded text-xs font-medium hover:bg-slate-700 transition" data-i18n="viewBase">Base Only</button>
-          <button id="btnViewLid" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded text-xs font-medium hover:bg-slate-700 transition" data-i18n="viewLid">Lid Only</button>
-        </div>
-
-        <div class="space-y-1">
-          <div class="flex justify-between text-xs">
-            <span class="text-slate-300" data-i18n="paramExplode">Parts Separation (Explode)</span>
-            <span id="paramExplodeVal" class="font-mono text-blue-400">30.0 mm</span>
+      <div class="flex-1 overflow-y-auto p-4 space-y-6">
+        <!-- 1. SVG Input -->
+        <section class="space-y-3">
+          <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+            <i class="fa-solid fa-shapes text-blue-400"></i> <span data-i18n="sectionInput">1. Input Shape (2D SVG)</span>
+          </label>
+          <div>
+            <label class="text-xs text-slate-300 mb-1 block" data-i18n="presetShapes">Preset Shapes:</label>
+            <select id="presetSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+              <option value="star" data-i18n="shapeStar">Star</option>
+              <option value="heart" data-i18n="shapeHeart">Heart</option>
+              <option value="hexagon" data-i18n="shapeHexagon">Hexagon</option>
+              <option value="shield" data-i18n="shapeShield">Shield</option>
+              <option value="circle" data-i18n="shapeCircle">Circle</option>
+            </select>
           </div>
-          <input type="range" id="paramExplode" min="-25" max="120" value="30" class="w-full">
+          <div>
+            <label class="text-xs text-slate-300 mb-1 block" data-i18n="uploadSvg">Or upload custom SVG:</label>
+            <input type="file" id="svgFileInput" accept=".svg" class="block w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-blue-400 hover:file:bg-slate-700 cursor-pointer border border-slate-800 rounded-lg bg-slate-900/50">
+          </div>
+        </section>
+
+        <hr class="border-slate-800">
+
+        <!-- 2. Dimensions -->
+        <section class="space-y-4">
+          <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+            <i class="fa-solid fa-ruler-combined text-blue-400"></i> <span data-i18n="sectionDimensions">2. Box Dimensions</span>
+          </label>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-300" data-i18n="paramWidth">Width / Outer Size</span>
+              <span id="paramWidthVal" class="font-mono text-blue-400 font-bold">80.0 mm</span>
+            </div>
+            <input type="range" id="paramWidth" min="30" max="250" value="80" class="w-full">
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-300" data-i18n="paramBoxHeight">Total Box Height</span>
+              <span id="paramBoxHeightVal" class="font-mono text-blue-400 font-bold">40.0 mm</span>
+            </div>
+            <input type="range" id="paramBoxHeight" min="15" max="150" value="40" class="w-full">
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-300" data-i18n="paramLidHeight">Lid Height</span>
+              <span id="paramLidHeightVal" class="font-mono text-blue-400 font-bold">15.0 mm</span>
+            </div>
+            <input type="range" id="paramLidHeight" min="8" max="80" value="15" class="w-full">
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-300" data-i18n="paramWallThickness">Wall Thickness</span>
+              <span id="paramWallThicknessVal" class="font-mono text-blue-400 font-bold">2.4 mm</span>
+            </div>
+            <input type="range" id="paramWallThickness" min="1.2" max="6.0" step="0.2" value="2.4" class="w-full">
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-300" data-i18n="paramFloorThickness">Bottom/Top Thickness</span>
+              <span id="paramFloorThicknessVal" class="font-mono text-blue-400 font-bold">2.0 mm</span>
+            </div>
+            <input type="range" id="paramFloorThickness" min="1.0" max="6.0" step="0.2" value="2.0" class="w-full">
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-300" data-i18n="paramLipHeight">Lip / Lock Height</span>
+              <span id="paramLipHeightVal" class="font-mono text-blue-400 font-bold">5.0 mm</span>
+            </div>
+            <input type="range" id="paramLipHeight" min="2" max="15" step="0.5" value="5.0" class="w-full">
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-300" data-i18n="paramTolerance">Lock Tolerance / Clearance</span>
+              <span id="paramToleranceVal" class="font-mono text-blue-400 font-bold">0.30 mm</span>
+            </div>
+            <input type="range" id="paramTolerance" min="0.05" max="1.0" step="0.05" value="0.30" class="w-full">
+          </div>
+
+          <div>
+            <label class="text-xs text-slate-300 mb-1 block font-medium" data-i18n="lidStyleLabel">Lid Style:</label>
+            <select id="lidStyleSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+              <option value="inset" data-i18n="lidStyleInset">Internal Lip / Flush (Stepped)</option>
+              <option value="shoebox" data-i18n="lidStyleShoebox">Cap / Shoe-Box Style (Overlapping)</option>
+            </select>
+          </div>
+        </section>
+
+        <hr class="border-slate-800">
+
+        <!-- 3. View Settings -->
+        <section class="space-y-3 pb-6">
+          <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+            <i class="fa-solid fa-eye text-blue-400"></i> <span data-i18n="sectionView">3. Preview & View Settings</span>
+          </label>
+
+          <div class="grid grid-cols-3 gap-2">
+            <button id="btnViewBoth" class="px-3 py-1.5 bg-blue-600 text-white rounded text-xs font-medium hover:bg-blue-500 transition" data-i18n="viewBoth">Both</button>
+            <button id="btnViewBox" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded text-xs font-medium hover:bg-slate-700 transition" data-i18n="viewBase">Base Only</button>
+            <button id="btnViewLid" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded text-xs font-medium hover:bg-slate-700 transition" data-i18n="viewLid">Lid Only</button>
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-300" data-i18n="paramExplode">Parts Separation (Explode)</span>
+              <span id="paramExplodeVal" class="font-mono text-blue-400">30.0 mm</span>
+            </div>
+            <input type="range" id="paramExplode" min="-25" max="120" value="30" class="w-full">
+          </div>
+
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-slate-300 font-medium text-amber-400" data-i18n="checkCutaway">Cutaway View</span>
+            <input type="checkbox" id="checkCutaway" class="w-4 h-4 accent-blue-500 cursor-pointer">
+          </div>
+        </section>
+      </div>
+
+      <!-- Export Action Footer -->
+      <div class="p-4 border-t border-slate-800 bg-slate-900/80 space-y-2">
+        <button id="btnExportBase" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition">
+          <i class="fa-solid fa-download"></i> <span data-i18n="exportBase">Download Base (STL)</span>
+        </button>
+        <button id="btnExportLid" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition">
+          <i class="fa-solid fa-download"></i> <span data-i18n="exportLid">Download Lid (STL)</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- RIGHT PANEL: 3D Viewport & Footer Wrapper -->
+    <div id="panelPreview" class="flex-1 flex flex-col h-full overflow-hidden flex absolute md:relative inset-0 z-10">
+      <main class="flex-1 relative bg-slate-900 h-full">
+        <div id="viewport" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
+
+        <div class="absolute top-4 right-4 bg-slate-950/80 border border-slate-800 rounded-lg p-3 text-xs text-slate-400 space-y-1 pointer-events-none shadow-xl hidden md:block">
+          <div class="flex items-center gap-2 text-slate-200 font-semibold mb-1">
+            <i class="fa-solid fa-arrows-spin text-blue-400"></i> <span data-i18n="controlsTitle">3D View Controls</span>
+          </div>
+          <div data-i18n="controlRotate">• Left mouse: Rotate</div>
+          <div data-i18n="controlPan">• Right mouse: Pan</div>
+          <div data-i18n="controlZoom">• Scroll wheel: Zoom</div>
         </div>
 
-        <div class="flex items-center justify-between">
-          <span class="text-xs text-slate-300 font-medium text-amber-400" data-i18n="checkCutaway">Cutaway View</span>
-          <input type="checkbox" id="checkCutaway" class="w-4 h-4 accent-blue-500 cursor-pointer">
+        <div id="toast" class="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 max-w-md bg-slate-800 text-slate-200 border border-slate-700 px-4 py-3 rounded-lg shadow-2xl hidden flex items-center justify-between text-xs z-50">
+          <span id="toastMsg">Notification</span>
+          <button onclick="document.getElementById('toast').classList.add('hidden')" class="text-slate-400 hover:text-white ml-3"><i class="fa-solid fa-xmark"></i></button>
         </div>
-      </section>
+      </main>
+
+      <!-- FOOTER WITH VISITOR COUNTER -->
+      <footer>
+        <div class="footer-left">
+          <div>© 2026 <strong><a href="https://hazda.cz" target="_blank">Adam Hazda</a></strong>. <span id="txtAllRights">Všechna práva vyhrazena.</span></div>
+          <div style="font-size: 0.75rem; margin-top: 0.2rem;" id="txtPrivacyNote">Všechny výpočty probíhají 100% lokálně ve vašem prohlížeči.</div>
+        </div>
+        
+        <!-- Počítadlo návštěv -->
+        <div class="footer-center">
+          <i class="fa-solid fa-eye text-blue-400"></i>
+          <span id="visitCount" class="font-mono font-bold text-slate-200">...</span> <span id="txtVisits">zobrazení</span>
+        </div>
+
+        <div class="footer-right">
+          <!-- Official Buy Me A Coffee Button -->
+          <a class="bmac-button" href="https://www.buymeacoffee.com/hazda.cz" target="_blank">
+            <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=hazda.cz&button_colour=5F7FFF&font_colour=ffffff&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00" alt="Buy me a coffee" />
+          </a>
+        </div>
+      </footer>
     </div>
 
-    <!-- Export Action Footer -->
-    <div class="p-4 border-t border-slate-800 bg-slate-900/80 space-y-2">
-      <button id="btnExportBase" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition">
-        <i class="fa-solid fa-download"></i> <span data-i18n="exportBase">Download Base (STL)</span>
-      </button>
-      <button id="btnExportLid" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition">
-        <i class="fa-solid fa-download"></i> <span data-i18n="exportLid">Download Lid (STL)</span>
-      </button>
-    </div>
-  </aside>
-
-  <!-- RIGHT PANEL: 3D Viewport & Footer Wrapper -->
-  <div class="flex-1 flex flex-col h-full overflow-hidden">
-    <main class="flex-1 relative bg-slate-900 h-64 md:h-full">
-      <div id="viewport" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
-
-      <div class="absolute top-4 right-4 bg-slate-950/80 backdrop-blur border border-slate-800 rounded-lg p-3 text-xs text-slate-400 space-y-1 pointer-events-none shadow-xl">
-        <div class="flex items-center gap-2 text-slate-200 font-semibold mb-1">
-          <i class="fa-solid fa-arrows-spin text-blue-400"></i> <span data-i18n="controlsTitle">3D View Controls</span>
-        </div>
-        <div data-i18n="controlRotate">• Left mouse: Rotate</div>
-        <div data-i18n="controlPan">• Right mouse: Pan</div>
-        <div data-i18n="controlZoom">• Scroll wheel: Zoom</div>
-      </div>
-
-      <div id="toast" class="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 max-w-md bg-slate-800 text-slate-200 border border-slate-700 px-4 py-3 rounded-lg shadow-2xl hidden flex items-center justify-between text-xs z-50">
-        <span id="toastMsg">Notification</span>
-        <button onclick="document.getElementById('toast').classList.add('hidden')" class="text-slate-400 hover:text-white ml-3"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-    </main>
-
-    <!-- FOOTER WITH VISITOR COUNTER -->
-    <footer>
-      <div class="footer-left">
-        <div>© 2026 <strong><a href="https://hazda.cz" target="_blank">Adam Hazda</a></strong>. <span id="txtAllRights">Všechna práva vyhrazena.</span></div>
-        <div style="font-size: 0.75rem; margin-top: 0.2rem;" id="txtPrivacyNote">Všechny výpočty probíhají 100% lokálně ve vašem prohlížeči.</div>
-      </div>
-      
-      <!-- Počítadlo návštěv (CounterAPI) -->
-      <div class="footer-center">
-        <i class="fa-solid fa-eye text-blue-400"></i>
-        <span id="visitCount" class="font-mono font-bold text-slate-200">1</span> <span id="txtVisits">zobrazení</span>
-      </div>
-
-      <div class="footer-right">
-        <!-- Official Buy Me A Coffee Button -->
-        <a class="bmac-button" href="https://www.buymeacoffee.com/hazda.cz" target="_blank">
-          <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=hazda.cz&button_colour=5F7FFF&font_colour=ffffff&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00" alt="Buy me a coffee" />
-        </a>
-      </div>
-    </footer>
   </div>
 
   <script>
+    // Přepínání mobilních záložek
+    function switchMobileTab(tab) {
+      const panelControls = document.getElementById('panelControls');
+      const btnPreview = document.getElementById('mobileTabPreview');
+      const btnControls = document.getElementById('mobileTabControls');
+
+      if (window.innerWidth < 768) {
+        if (tab === 'preview') {
+          panelControls.classList.remove('mobile-visible', 'flex');
+          panelControls.style.display = 'none';
+          
+          btnPreview.className = "flex-1 py-3 text-center text-blue-400 border-b-2 border-blue-500 bg-slate-900/55 flex items-center justify-center gap-2";
+          btnControls.className = "flex-1 py-3 text-center text-slate-400 border-b-2 border-transparent flex items-center justify-center gap-2";
+          
+          if (typeof onWindowResize === 'function') onWindowResize();
+        } else {
+          panelControls.style.display = 'flex';
+          panelControls.classList.add('mobile-visible');
+          
+          btnControls.className = "flex-1 py-3 text-center text-blue-400 border-b-2 border-blue-500 bg-slate-900/55 flex items-center justify-center gap-2";
+          btnPreview.className = "flex-1 py-3 text-center text-slate-400 border-b-2 border-transparent flex items-center justify-center gap-2";
+          
+          if (typeof onWindowResize === 'function') onWindowResize();
+        }
+      }
+    }
+
     const translations = {
       cs: {
         appTitle: "3D Box Generator",
+        tabPreview: "3D Náhled",
+        tabControls: "Parametry & Export",
         sectionInput: "1. Vstupní Tvar (2D SVG)",
         presetShapes: "Předdefinované Tvary:",
         shapeStar: "Hvězda (Star)",
@@ -288,7 +342,7 @@
         shapeShield: "Štít (Shield)",
         shapeCircle: "Kruh (Circle)",
         uploadSvg: "Nebo nahrát vlastní SVG:",
-        sectionDimensions: "2. Rozměry Krabičky (mm)",
+        sectionDimensions: "2. Rozměry Krabičky",
         paramWidth: "Šířka / Vnější Rozměr",
         paramBoxHeight: "Výška Krabičky (Celková)",
         paramLidHeight: "Výška Víka",
@@ -320,6 +374,8 @@
       },
       en: {
         appTitle: "3D Box Generator",
+        tabPreview: "3D Preview",
+        tabControls: "Parameters & Export",
         sectionInput: "1. Input Shape (2D SVG)",
         presetShapes: "Preset Shapes:",
         shapeStar: "Star",
@@ -328,7 +384,7 @@
         shapeShield: "Shield",
         shapeCircle: "Circle",
         uploadSvg: "Or upload custom SVG:",
-        sectionDimensions: "2. Box Dimensions (mm)",
+        sectionDimensions: "2. Box Dimensions",
         paramWidth: "Width / Outer Size",
         paramBoxHeight: "Total Box Height",
         paramLidHeight: "Lid Height",
@@ -360,6 +416,8 @@
       },
       de: {
         appTitle: "3D-Box-Generator",
+        tabPreview: "3D-Vorschau",
+        tabControls: "Parameter & Export",
         sectionInput: "1. Eingabeform (2D SVG)",
         presetShapes: "Vorgegebene Formen:",
         shapeStar: "Stern",
@@ -368,7 +426,7 @@
         shapeShield: "Schild",
         shapeCircle: "Kreis",
         uploadSvg: "Oder eigene SVG hochladen:",
-        sectionDimensions: "2. Boxabmessungen (mm)",
+        sectionDimensions: "2. Boxabmessungen",
         paramWidth: "Breite / Außenmaß",
         paramBoxHeight: "Gesamthöhe der Box",
         paramLidHeight: "Deckelhöhe",
@@ -400,6 +458,8 @@
       },
       es: {
         appTitle: "Generador de Cajas 3D",
+        tabPreview: "Vista 3D",
+        tabControls: "Parámetros y Exportar",
         sectionInput: "1. Forma de Entrada (2D SVG)",
         presetShapes: "Formas Predeterminadas:",
         shapeStar: "Estrella",
@@ -408,7 +468,7 @@
         shapeShield: "Escudo",
         shapeCircle: "Círculo",
         uploadSvg: "O subir SVG personalizado:",
-        sectionDimensions: "2. Dimensiones de la Caja (mm)",
+        sectionDimensions: "2. Dimensiones de la Caja",
         paramWidth: "Ancho / Tamaño Exterior",
         paramBoxHeight: "Altura Total de la Caja",
         paramLidHeight: "Altura de la Tapa",
@@ -440,6 +500,8 @@
       },
       fr: {
         appTitle: "Générateur de Boîte 3D",
+        tabPreview: "Aperçu 3D",
+        tabControls: "Paramètres & Export",
         sectionInput: "1. Forme d'Entrée (2D SVG)",
         presetShapes: "Formes Prédéfinies:",
         shapeStar: "Étoile",
@@ -448,7 +510,7 @@
         shapeShield: "Bouclier",
         shapeCircle: "Cercle",
         uploadSvg: "Ou importer un SVG personnalisé:",
-        sectionDimensions: "2. Dimensions de la Boîte (mm)",
+        sectionDimensions: "2. Dimensions de la Boîte",
         paramWidth: "Largeur / Taille Extérieure",
         paramBoxHeight: "Hauteur Totale",
         paramLidHeight: "Hauteur du Couvercle",
@@ -481,6 +543,8 @@
     };
 
     let currentLang = 'cs';
+    let currentUnit = 'mm'; // 'mm' nebo 'in'
+    const MM_PER_INCH = 25.4;
 
     function setLanguage(lang) {
       if (!translations[lang]) return;
@@ -497,6 +561,83 @@
       if (visitsTextEl && translations[lang].txtVisits) {
         visitsTextEl.textContent = translations[lang].txtVisits;
       }
+      updateValueLabels();
+    }
+
+    // Převodní funkce pro hodnoty v UI
+    function valToDisplay(mmVal) {
+      if (currentUnit === 'in') {
+        return (mmVal / MM_PER_INCH);
+      }
+      return mmVal;
+    }
+
+    function valToMM(displayVal) {
+      if (currentUnit === 'in') {
+        return displayVal * MM_PER_INCH;
+      }
+      return displayVal;
+    }
+
+    function getParamValue(inputEl) {
+      const raw = parseFloat(inputEl.value);
+      return valToMM(raw);
+    }
+
+    function updateValueLabels() {
+      const u = currentUnit === 'in' ? ' in' : ' mm';
+      
+      const inputs = [
+        { el: paramWidth, label: paramWidthVal, decimals: currentUnit === 'in' ? 2 : 1 },
+        { el: paramBoxHeight, label: paramBoxHeightVal, decimals: currentUnit === 'in' ? 2 : 1 },
+        { el: paramLidHeight, label: paramLidHeightVal, decimals: currentUnit === 'in' ? 2 : 1 },
+        { el: paramWallThickness, label: paramWallThicknessVal, decimals: currentUnit === 'in' ? 3 : 2 },
+        { el: paramFloorThickness, label: paramFloorThicknessVal, decimals: currentUnit === 'in' ? 3 : 2 },
+        { el: paramLipHeight, label: paramLipHeightVal, decimals: currentUnit === 'in' ? 2 : 1 },
+        { el: paramTolerance, label: paramToleranceVal, decimals: currentUnit === 'in' ? 3 : 2 },
+        { el: paramExplode, label: paramExplodeVal, decimals: currentUnit === 'in' ? 2 : 1 }
+      ];
+
+      inputs.forEach(item => {
+        const mmVal = parseFloat(item.el.value);
+        const displayVal = valToDisplay(mmVal);
+        item.label.textContent = displayVal.toFixed(item.decimals) + u;
+      });
+    }
+
+    function changeUnit(newUnit) {
+      if (currentUnit === newUnit) return;
+      const oldUnit = currentUnit;
+      currentUnit = newUnit;
+
+      const sliders = [paramWidth, paramBoxHeight, paramLidHeight, paramWallThickness, paramFloorThickness, paramLipHeight, paramTolerance, paramExplode];
+
+      sliders.forEach(slider => {
+        let mmVal = parseFloat(slider.value);
+        let minMM = parseFloat(slider.min);
+        let maxMM = parseFloat(slider.max);
+        let stepMM = parseFloat(slider.step);
+
+        if (oldUnit === 'in' && newUnit === 'mm') {
+          mmVal *= MM_PER_INCH;
+          minMM *= MM_PER_INCH;
+          maxMM *= MM_PER_INCH;
+          stepMM *= MM_PER_INCH;
+        } else if (oldUnit === 'mm' && newUnit === 'in') {
+          mmVal /= MM_PER_INCH;
+          minMM /= MM_PER_INCH;
+          maxMM /= MM_PER_INCH;
+          stepMM /= MM_PER_INCH;
+        }
+
+        slider.min = minMM;
+        slider.max = maxMM;
+        slider.step = stepMM;
+        slider.value = mmVal;
+      });
+
+      updateValueLabels();
+      rebuildBox();
     }
 
     let scene, camera, renderer, controls;
@@ -508,6 +649,7 @@
     const presetSelect = document.getElementById('presetSelect');
     const svgFileInput = document.getElementById('svgFileInput');
     const langSelect = document.getElementById('langSelect');
+    const unitSelect = document.getElementById('unitSelect');
     
     const paramWidth = document.getElementById('paramWidth');
     const paramBoxHeight = document.getElementById('paramBoxHeight');
@@ -674,6 +816,7 @@
 
     function onWindowResize() {
       const container = document.getElementById('viewport');
+      if (!container || container.clientWidth === 0) return;
       camera.aspect = container.clientWidth / container.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(container.clientWidth, container.clientHeight);
@@ -720,15 +863,15 @@
         boxGroup.remove(obj);
       }
 
-      const targetW = parseFloat(paramWidth.value);
-      const boxH = parseFloat(paramBoxHeight.value);
-      const lidH = parseFloat(paramLidHeight.value);
-      const wallT = parseFloat(paramWallThickness.value);
-      const floorT = parseFloat(paramFloorThickness.value);
-      const lipH = parseFloat(paramLipHeight.value);
-      const tol = parseFloat(paramTolerance.value);
+      const targetW = getParamValue(paramWidth);
+      const boxH = getParamValue(paramBoxHeight);
+      const lidH = getParamValue(paramLidHeight);
+      const wallT = getParamValue(paramWallThickness);
+      const floorT = getParamValue(paramFloorThickness);
+      const lipH = getParamValue(paramLipHeight);
+      const tol = getParamValue(paramTolerance);
       const lidStyle = lidStyleSelect ? lidStyleSelect.value : 'inset';
-      const explodeOffset = parseFloat(paramExplode.value);
+      const explodeOffset = getParamValue(paramExplode);
       const isCutaway = checkCutaway.checked;
 
       const baseMaterial = new THREE.MeshStandardMaterial({
@@ -816,7 +959,7 @@
 
       lidMesh.rotation.x = -Math.PI / 2;
 
-      // Pozice víka podle záporného/kladného rozestupu
+      // Pozice víka podle rozestupu
       if (lidStyle === 'inset') {
         lidMesh.position.y = (boxH - lipH) + explodeOffset;
       } else {
@@ -850,16 +993,13 @@
           clonedGeo.applyMatrix4(child.matrixWorld);
 
           if (isLid) {
-            const boxH = parseFloat(paramBoxHeight.value);
-            const lipH = parseFloat(paramLipHeight.value);
-            const explodeOffset = parseFloat(paramExplode.value);
+            const boxH = getParamValue(paramBoxHeight);
+            const lipH = getParamValue(paramLipHeight);
+            const explodeOffset = getParamValue(paramExplode);
             const lidStyle = lidStyleSelect ? lidStyleSelect.value : 'inset';
-            const lidPosY = (lidStyle === 'inset') ? ((boxH - lipH) + explodeOffset) : ((boxH - parseFloat(paramLidHeight.value) + parseFloat(paramFloorThickness.value)) + explodeOffset);
+            const lidPosY = (lidStyle === 'inset') ? ((boxH - lipH) + explodeOffset) : ((boxH - getParamValue(paramLidHeight) + getParamValue(paramFloorThickness)) + explodeOffset);
 
-            // Vracíme lid do nuly v Y
             clonedGeo.translate(0, -lidPosY, 0);
-
-            // Otočení o -180° (-PI) kolem osy X, aby vnější horní strana víka ležela přesně na podložce (Z = 0)
             clonedGeo.rotateX(-Math.PI / 2);
           } else {
             clonedGeo.rotateX(Math.PI / 2);
@@ -947,7 +1087,6 @@
       setTimeout(() => toast.classList.add('hidden'), 4000);
     }
 
-    // Spolehlivější API pro počítadlo návštěv (CounterAPI.dev)
     function initVisitorCounter() {
       fetch('https://api.counterapi.dev/v1/boxgenerator-hazda-cz/visits/up')
         .then(response => response.json())
@@ -959,31 +1098,26 @@
         })
         .catch(err => {
           const countEl = document.getElementById('visitCount');
-          if (countEl) countEl.textContent = "1+";
+          if (countEl) countEl.textContent = "100+";
         });
     }
 
     function bindEvents() {
-      const inputs = [
-        { el: paramWidth, label: paramWidthVal, unit: ' mm' },
-        { el: paramBoxHeight, label: paramBoxHeightVal, unit: ' mm' },
-        { el: paramLidHeight, label: paramLidHeightVal, unit: ' mm' },
-        { el: paramWallThickness, label: paramWallThicknessVal, unit: ' mm' },
-        { el: paramFloorThickness, label: paramFloorThicknessVal, unit: ' mm' },
-        { el: paramLipHeight, label: paramLipHeightVal, unit: ' mm' },
-        { el: paramTolerance, label: paramToleranceVal, unit: ' mm' },
-        { el: paramExplode, label: paramExplodeVal, unit: ' mm' }
-      ];
+      const inputs = [paramWidth, paramBoxHeight, paramLidHeight, paramWallThickness, paramFloorThickness, paramLipHeight, paramTolerance, paramExplode];
 
-      inputs.forEach(item => {
-        item.el.addEventListener('input', () => {
-          item.label.textContent = parseFloat(item.el.value).toFixed(2) + item.unit;
+      inputs.forEach(el => {
+        el.addEventListener('input', () => {
+          updateValueLabels();
           rebuildBox();
         });
       });
 
       langSelect.addEventListener('change', (e) => {
         setLanguage(e.target.value);
+      });
+
+      unitSelect.addEventListener('change', (e) => {
+        changeUnit(e.target.value);
       });
 
       if (lidStyleSelect) {
@@ -1044,6 +1178,7 @@
       initThree();
       bindEvents();
       setLanguage('cs');
+      updateValueLabels();
       initVisitorCounter();
       animate();
     };
