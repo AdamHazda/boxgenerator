@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs" class="h-full bg-slate-900 text-slate-100">
+<html lang="en" class="h-full bg-slate-900 text-slate-100">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,18 +54,6 @@
       text-decoration: underline;
     }
 
-    .footer-center {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.8rem;
-      color: var(--text-muted, #9ca3af);
-      background: rgba(15, 23, 42, 0.4);
-      padding: 0.35rem 0.75rem;
-      border-radius: 9999px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
     .footer-right {
       display: flex;
       align-items: center;
@@ -90,10 +78,10 @@
   <!-- Mobile Tab Bar (Visible only on small screens) -->
   <div class="flex md:hidden bg-slate-950/95 border-b border-slate-800 text-xs font-semibold z-30 flex-shrink-0">
     <button id="mobileTabPreview" onclick="switchMobileTab('preview')" class="flex-1 py-3 text-center text-blue-400 border-b-2 border-blue-500 bg-slate-900/55 flex items-center justify-center gap-2">
-      <i class="fa-solid fa-cube"></i> <span data-i18n="tabPreview">3D Náhled</span>
+      <i class="fa-solid fa-cube"></i> <span data-i18n="tabPreview">3D Preview</span>
     </button>
     <button id="mobileTabControls" onclick="switchMobileTab('controls')" class="flex-1 py-3 text-center text-slate-400 border-b-2 border-transparent flex items-center justify-center gap-2">
-      <i class="fa-solid fa-sliders"></i> <span data-i18n="tabControls">Parametry & Export</span>
+      <i class="fa-solid fa-sliders"></i> <span data-i18n="tabControls">Parameters & Export</span>
     </button>
   </div>
 
@@ -112,8 +100,8 @@
             <option value="in">inch</option>
           </select>
           <select id="langSelect" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded px-2 py-1 focus:outline-none focus:border-blue-500">
+            <option value="en" selected>🇬🇧 EN</option>
             <option value="cs">🇨🇿 CS</option>
-            <option value="en">🇬🇧 EN</option>
             <option value="de">🇩🇪 DE</option>
             <option value="es">🇪🇸 ES</option>
             <option value="fr">🇫🇷 FR</option>
@@ -277,17 +265,11 @@
         </div>
       </main>
 
-      <!-- FOOTER WITH VISITOR COUNTER -->
+      <!-- FOOTER -->
       <footer>
         <div class="footer-left">
-          <div>© 2026 <strong><a href="https://hazda.cz" target="_blank">Adam Hazda</a></strong>. <span id="txtAllRights">Všechna práva vyhrazena.</span></div>
-          <div style="font-size: 0.75rem; margin-top: 0.2rem;" id="txtPrivacyNote">Všechny výpočty probíhají 100% lokálně ve vašem prohlížeči.</div>
-        </div>
-        
-        <!-- Počítadlo návštěv -->
-        <div class="footer-center">
-          <i class="fa-solid fa-eye text-blue-400"></i>
-          <span id="visitCount" class="font-mono font-bold text-slate-200">...</span> <span id="txtVisits">zobrazení</span>
+          <div>© 2026 <strong><a href="https://hazda.cz" target="_blank">Adam Hazda</a></strong>. <span id="txtAllRights" data-i18n="footerRights">All rights reserved.</span></div>
+          <div style="font-size: 0.75rem; margin-top: 0.2rem;" id="txtPrivacyNote" data-i18n="footerPrivacy">All calculations run 100% locally in your browser.</div>
         </div>
 
         <div class="footer-right">
@@ -330,48 +312,6 @@
     }
 
     const translations = {
-      cs: {
-        appTitle: "3D Box Generator",
-        tabPreview: "3D Náhled",
-        tabControls: "Parametry & Export",
-        sectionInput: "1. Vstupní Tvar (2D SVG)",
-        presetShapes: "Předdefinované Tvary:",
-        shapeStar: "Hvězda (Star)",
-        shapeHeart: "Srdce (Heart)",
-        shapeHexagon: "Šestiúhelník (Hexagon)",
-        shapeShield: "Štít (Shield)",
-        shapeCircle: "Kruh (Circle)",
-        uploadSvg: "Nebo nahrát vlastní SVG:",
-        sectionDimensions: "2. Rozměry Krabičky",
-        paramWidth: "Šířka / Vnější Rozměr",
-        paramBoxHeight: "Výška Krabičky (Celková)",
-        paramLidHeight: "Výška Víka",
-        paramWallThickness: "Tloušťka Stěny",
-        paramFloorThickness: "Tloušťka Dna / Stropu",
-        paramLipHeight: "Výška Zámku / Osazení",
-        paramTolerance: "Vůle / Tolerance Zámku",
-        lidStyleLabel: "Typ / Styl Víka:",
-        lidStyleInset: "Vnitřní zámek (Stejná šířka / Osazení)",
-        lidStyleShoebox: "Přesahující víko (Jako od bot)",
-        sectionView: "3. Náhled a Zobrazení",
-        viewBoth: "Obojí",
-        viewBase: "Pouze Dno",
-        viewLid: "Pouze Víko",
-        paramExplode: "Rozestup Dílů (Explode)",
-        checkCutaway: "Názorný Řez Modelem",
-        exportBase: "Stáhnout Dno (STL)",
-        exportLid: "Stáhnout Víko (STL)",
-        controlsTitle: "Ovládání 3D Pohledu",
-        controlRotate: "• Levá myš: Otáčení",
-        controlPan: "• Pravá myš: Posun",
-        controlZoom: "• Kolečko: Zoom",
-        toastWallErr: "Chyba: Tloušťka stěny je příliš velká!",
-        toastSvgSuccess: "Vlastní SVG bylo úspěšně načteno!",
-        toastSvgErr: "Chyba: V SVG nebyly nalezeny platné obrysy!",
-        toastFileErr: "Chyba při zpracování SVG souboru!",
-        toastDownloaded: "Soubor {filename} byl úspěšně stažen!",
-        txtVisits: "zobrazení"
-      },
       en: {
         appTitle: "3D Box Generator",
         tabPreview: "3D Preview",
@@ -412,7 +352,51 @@
         toastSvgErr: "Error: No valid outlines found in SVG!",
         toastFileErr: "Error processing SVG file!",
         toastDownloaded: "File {filename} successfully downloaded!",
-        txtVisits: "views"
+        footerRights: "All rights reserved.",
+        footerPrivacy: "All calculations run 100% locally in your browser."
+      },
+      cs: {
+        appTitle: "3D Box Generator",
+        tabPreview: "3D Náhled",
+        tabControls: "Parametry & Export",
+        sectionInput: "1. Vstupní Tvar (2D SVG)",
+        presetShapes: "Předdefinované Tvary:",
+        shapeStar: "Hvězda (Star)",
+        shapeHeart: "Srdce (Heart)",
+        shapeHexagon: "Šestiúhelník (Hexagon)",
+        shapeShield: "Štít (Shield)",
+        shapeCircle: "Kruh (Circle)",
+        uploadSvg: "Nebo nahrát vlastní SVG:",
+        sectionDimensions: "2. Rozměry Krabičky",
+        paramWidth: "Šířka / Vnější Rozměr",
+        paramBoxHeight: "Výška Krabičky (Celková)",
+        paramLidHeight: "Výška Víka",
+        paramWallThickness: "Tloušťka Stěny",
+        paramFloorThickness: "Tloušťka Dna / Stropu",
+        paramLipHeight: "Výška Zámku / Osazení",
+        paramTolerance: "Vůle / Tolerance Zámku",
+        lidStyleLabel: "Typ / Styl Víka:",
+        lidStyleInset: "Vnitřní zámek (Stejná šířka / Osazení)",
+        lidStyleShoebox: "Přesahující víko (Jako od bot)",
+        sectionView: "3. Náhled a Zobrazení",
+        viewBoth: "Obojí",
+        viewBase: "Pouze Dno",
+        viewLid: "Pouze Víko",
+        paramExplode: "Rozestup Dílů (Explode)",
+        checkCutaway: "Názorný Řez Modelem",
+        exportBase: "Stáhnout Dno (STL)",
+        exportLid: "Stáhnout Víko (STL)",
+        controlsTitle: "Ovládání 3D Pohledu",
+        controlRotate: "• Levá myš: Otáčení",
+        controlPan: "• Pravá myš: Posun",
+        controlZoom: "• Kolečko: Zoom",
+        toastWallErr: "Chyba: Tloušťka stěny je příliš velká!",
+        toastSvgSuccess: "Vlastní SVG bylo úspěšně načteno!",
+        toastSvgErr: "Chyba: V SVG nebyly nalezeny platné obrysy!",
+        toastFileErr: "Chyba při zpracování SVG souboru!",
+        toastDownloaded: "Soubor {filename} byl úspěšně stažen!",
+        footerRights: "Všechna práva vyhrazena.",
+        footerPrivacy: "Všechny výpočty probíhají 100% lokálně ve vašem prohlížeči."
       },
       de: {
         appTitle: "3D-Box-Generator",
@@ -454,7 +438,8 @@
         toastSvgErr: "Fehler: Keine gültigen Konturen in SVG gefunden!",
         toastFileErr: "Fehler beim Verarbeiten der SVG-Datei!",
         toastDownloaded: "Datei {filename} erfolgreich heruntergeladen!",
-        txtVisits: "Aufrufe"
+        footerRights: "Alle Rechte vorbehalten.",
+        footerPrivacy: "Alle Berechnungen laufen zu 100% lokal in Ihrem Browser."
       },
       es: {
         appTitle: "Generador de Cajas 3D",
@@ -496,7 +481,8 @@
         toastSvgErr: "¡Error: No se encontraron contornos válidos!",
         toastFileErr: "¡Error al procesar el archivo SVG!",
         toastDownloaded: "¡Archivo {filename} descargado con éxito!",
-        txtVisits: "visitas"
+        footerRights: "Todos los derechos reservados.",
+        footerPrivacy: "Cálculos 100% locales en tu navegador."
       },
       fr: {
         appTitle: "Générateur de Boîte 3D",
@@ -538,11 +524,12 @@
         toastSvgErr: "Erreur: Aucun contour valide trouvé!",
         toastFileErr: "Erreur lors du traitement du fichier SVG!",
         toastDownloaded: "Fichier {filename} téléchargé avec succès!",
-        txtVisits: "vues"
+        footerRights: "Tous droits réservés.",
+        footerPrivacy: "Calculs 100% locaux dans votre navigateur."
       }
     };
 
-    let currentLang = 'cs';
+    let currentLang = 'en'; // Výchozí jazyk: Angličtina
     let currentUnit = 'mm'; // 'mm' nebo 'in'
     const MM_PER_INCH = 25.4;
 
@@ -556,15 +543,9 @@
           el.textContent = translations[lang][key];
         }
       });
-
-      const visitsTextEl = document.getElementById('txtVisits');
-      if (visitsTextEl && translations[lang].txtVisits) {
-        visitsTextEl.textContent = translations[lang].txtVisits;
-      }
       updateValueLabels();
     }
 
-    // Převodní funkce pro hodnoty v UI
     function valToDisplay(mmVal) {
       if (currentUnit === 'in') {
         return (mmVal / MM_PER_INCH);
@@ -1087,21 +1068,6 @@
       setTimeout(() => toast.classList.add('hidden'), 4000);
     }
 
-    function initVisitorCounter() {
-      fetch('https://api.counterapi.dev/v1/boxgenerator-hazda-cz/visits/up')
-        .then(response => response.json())
-        .then(data => {
-          const countEl = document.getElementById('visitCount');
-          if (countEl && data && typeof data.count !== 'undefined') {
-            countEl.textContent = data.count.toLocaleString();
-          }
-        })
-        .catch(err => {
-          const countEl = document.getElementById('visitCount');
-          if (countEl) countEl.textContent = "100+";
-        });
-    }
-
     function bindEvents() {
       const inputs = [paramWidth, paramBoxHeight, paramLidHeight, paramWallThickness, paramFloorThickness, paramLipHeight, paramTolerance, paramExplode];
 
@@ -1177,9 +1143,8 @@
     window.onload = () => {
       initThree();
       bindEvents();
-      setLanguage('cs');
+      setLanguage('en'); // Nastaví výchozí angličtinu
       updateValueLabels();
-      initVisitorCounter();
       animate();
     };
   </script>
