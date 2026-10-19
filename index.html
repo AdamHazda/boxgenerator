@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="cs" class="h-full bg-slate-900 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Box Generator from SVG</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    input[type=range] { accent-color: #3b82f6; }
+  </style>
+</head>
+<body class="h-full flex flex-col md:flex-row overflow-hidden font-sans antialiased">
+
+  <!-- LEFT PANEL: Controls -->
+  <aside class="w-full md:w-96 bg-slate-950 border-r border-slate-800 flex flex-col h-auto md:h-full z-10 shadow-2xl flex-shrink-0">
+    <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
+      <div class="flex items-center space-x-2">
+        <i class="fa-solid fa-cube text-blue-500 text-xl"></i>
+        <h1 class="font-bold text-lg text-slate-100 tracking-wide" data-i18n="appTitle">3D Box Generator</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <select id="langSelect" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded px-2 py-1 focus:outline-none focus:border-blue-500">
+          <option value="cs">🇨🇿 CS</option>
+          <option value="en">🇬🇧 EN</option>
+          <option value="de">🇩🇪 DE</option>
+          <option value="es">🇪🇸 ES</option>
+          <option value="fr">🇫🇷 FR</option>
+        </select>
+        <span class="text-xs px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/20">v2.7</span>
+      </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-4 space-y-6">
+      <!-- 1. SVG Input -->
+      <section class="space-y-3">
+        <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+          <i class="fa-solid fa-shapes text-blue-400"></i> <span data-i18n="sectionInput">1. Input Shape (2D SVG)</span>
+        </label>
+        <div>
+          <label class="text-xs text-slate-300 mb-1 block" data-i18n="presetShapes">Preset Shapes:</label>
+          <select id="presetSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="star" data-i18n="shapeStar">Star</option>
+            <option value="heart" data-i18n="shapeHeart">Heart</option>
+            <option value="hexagon" data-i18n="shapeHexagon">Hexagon</option>
+            <option value="shield" data-i18n="shapeShield">Shield</option>
+            <option value="circle" data-i18n="shapeCircle">Circle</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs text-slate-300 mb-1 block" data-i18n="uploadSvg">Or upload custom SVG:</label>
+          <input type="file" id="svgFileInput" accept=".svg" class="block w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-blue-400 hover:file:bg-slate-700 cursor-pointer border border-slate-800 rounded-lg bg-slate-900/50">
+        </div>
+      </section>
+
+      <hr class="border-slate-800">
+
+      <!-- 2. Dimensions -->
+      <section class="space-y-4">
+        <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+          <i class="fa-solid fa-ruler-combined text-blue-400"></i> <span data-i18n="sectionDimensions">2. Box Dimensions (mm)</span>
+        </label>
+
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-300" data-i18n="paramWidth">Width / Outer Size</span>
+            <span id="paramWidthVal" class="font-mono text-blue-400 font-bold">80.0 mm</span>
+          </div>
+          <input type="range" id="paramWidth" min="30" max="250" value="80" class="w-full">
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-300" data-i18n="paramBoxHeight">Total Box Height</span>
+            <span id="paramBoxHeightVal" class="font-mono text-blue-400 font-bold">40.0 mm</span>
+          </div>
+          <input type="range" id="paramBoxHeight" min="15" max="150" value="40" class="w-full">
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-300" data-i18n="paramLidHeight">Lid Height</span>
+            <span id="paramLidHeightVal" class="font-mono text-blue-400 font-bold">15.0 mm</span>
+          </div>
+          <input type="range" id="paramLidHeight" min="8" max="80" value="15" class="w-full">
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-300" data-i18n="paramWallThickness">Wall Thickness</span>
+            <span id="paramWallThicknessVal" class="font-mono text-blue-400 font-bold">2.4 mm</span>
+          </div>
+          <input type="range" id="paramWallThickness" min="1.2" max="6.0" step="0.2" value="2.4" class="w-full">
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-300" data-i18n="paramFloorThickness">Bottom/Top Thickness</span>
+            <span id="paramFloorThicknessVal" class="font-mono text-blue-400 font-bold">2.0 mm</span>
+          </div>
+          <input type="range" id="paramFloorThickness" min="1.0" max="6.0" step="0.2" value="2.0" class="w-full">
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-300" data-i18n="paramLipHeight">Lip / Lock Height</span>
+            <span id="paramLipHeightVal" class="font-mono text-blue-400 font-bold">5.0 mm</span>
+          </div>
+          <input type="range" id="paramLipHeight" min="2" max="15" step="0.5" value="5.0" class="w-full">
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-300" data-i18n="paramTolerance">Lock Tolerance / Clearance</span>
+            <span id="paramToleranceVal" class="font-mono text-blue-400 font-bold">0.30 mm</span>
+          </div>
+          <input type="range" id="paramTolerance" min="0.05" max="1.0" step="0.05" value="0.30" class="w-full">
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-300 mb-1 block font-medium" data-i18n="lidStyleLabel">Lid Style:</label>
+          <select id="lidStyleSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="inset" data-i18n="lidStyleInset">Internal Lip / Flush (Stepped)</option>
+            <option value="shoebox" data-i18n="lidStyleShoebox">Cap / Shoe-Box Style (Overlapping)</option>
+          </select>
+        </div>
+      </section>
+
+      <hr class="border-slate-800">
+
+      <!-- 3. View Settings -->
+      <section class="space-y-3">
+        <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+          <i class="fa-solid fa-eye text-blue-400"></i> <span data-i18n="sectionView">3. Preview & View Settings</span>
+        </label>
+
+        <div class="grid grid-cols-3 gap-2">
+          <button id="btnViewBoth" class="px-3 py-1.5 bg-blue-600 text-white rounded text-xs font-medium hover:bg-blue-500 transition" data-i18n="viewBoth">Both</button>
+          <button id="btnViewBox" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded text-xs font-medium hover:bg-slate-700 transition" data-i18n="viewBase">Base Only</button>
+          <button id="btnViewLid" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded text-xs font-medium hover:bg-slate-700 transition" data-i18n="viewLid">Lid Only</button>
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-300" data-i18n="paramExplode">Parts Separation (Explode)</span>
+            <span id="paramExplodeVal" class="font-mono text-blue-400">30.0 mm</span>
+          </div>
+          <!-- Umožnění záporné hodnoty pro posun víka nad osazení zámku -->
+          <input type="range" id="paramExplode" min="-25" max="120" value="30" class="w-full">
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-slate-300 font-medium text-amber-400" data-i18n="checkCutaway">Cutaway View</span>
+          <input type="checkbox" id="checkCutaway" class="w-4 h-4 accent-blue-500 cursor-pointer">
+        </div>
+      </section>
+    </div>
+
+    <!-- Export Action Footer -->
+    <div class="p-4 border-t border-slate-800 bg-slate-900/80 space-y-2">
+      <button id="btnExportBase" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition">
+        <i class="fa-solid fa-download"></i> <span data-i18n="exportBase">Download Base (STL)</span>
+      </button>
+      <button id="btnExportLid" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition">
+        <i class="fa-solid fa-download"></i> <span data-i18n="exportLid">Download Lid (STL)</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- RIGHT PANEL: 3D Viewport -->
+  <main class="flex-1 relative bg-slate-900 h-64 md:h-full">
+    <div id="viewport" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
+
+    <div class="absolute top-4 right-4 bg-slate-950/80 backdrop-blur border border-slate-800 rounded-lg p-3 text-xs text-slate-400 space-y-1 pointer-events-none shadow-xl">
+      <div class="flex items-center gap-2 text-slate-200 font-semibold mb-1">
+        <i class="fa-solid fa-arrows-spin text-blue-400"></i> <span data-i18n="controlsTitle">3D View Controls</span>
+      </div>
+      <div data-i18n="controlRotate">• Left mouse: Rotate</div>
+      <div data-i18n="controlPan">• Right mouse: Pan</div>
+      <div data-i18n="controlZoom">• Scroll wheel: Zoom</div>
+    </div>
+
+    <div id="toast" class="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 max-w-md bg-slate-800 text-slate-200 border border-slate-700 px-4 py-3 rounded-lg shadow-2xl hidden flex items-center justify-between text-xs z-50">
+      <span id="toastMsg">Notification</span>
+      <button onclick="document.getElementById('toast').classList.add('hidden')" class="text-slate-400 hover:text-white ml-3"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+  </main>
+
+  <script>
+    const translations = {
+      cs: {
+        appTitle: "3D Box Generator",
+        sectionInput: "1. Vstupní Tvar (2D SVG)",
+        presetShapes: "Předdefinované Tvary:",
+        shapeStar: "Hvězda (Star)",
+        shapeHeart: "Srdce (Heart)",
+        shapeHexagon: "Šestiúhelník (Hexagon)",
+        shapeShield: "Štít (Shield)",
+        shapeCircle: "Kruh (Circle)",
+        uploadSvg: "Nebo nahrát vlastní SVG:",
+        sectionDimensions: "2. Rozměry Krabičky (mm)",
+        paramWidth: "Šířka / Vnější Rozměr",
+        paramBoxHeight: "Výška Krabičky (Celková)",
+        paramLidHeight: "Výška Víka",
+        paramWallThickness: "Tloušťka Stěny",
+        paramFloorThickness: "Tloušťka Dna / Stropu",
+        paramLipHeight: "Výška Zámku / Osazení",
+        paramTolerance: "Vůle / Tolerance Zámku",
+        lidStyleLabel: "Typ / Styl Víka:",
+        lidStyleInset: "Vnitřní zámek (Stejná šířka / Osazení)",
+        lidStyleShoebox: "Přesahující víko (Jako od bot)",
+        sectionView: "3. Náhled a Zobrazení",
+        viewBoth: "Obojí",
+        viewBase: "Pouze Dno",
+        viewLid: "Pouze Víko",
+        paramExplode: "Rozestup Dílů (Explode)",
+        checkCutaway: "Názorný Řez Modelem",
+        exportBase: "Stáhnout Dno (STL)",
+        exportLid: "Stáhnout Víko (STL)",
+        controlsTitle: "Ovládání 3D Pohledu",
+        controlRotate: "• Levá myš: Otáčení",
+        controlPan: "• Pravá myš: Posun",
+        controlZoom: "• Kolečko: Zoom",
+        toastWallErr: "Chyba: Tloušťka stěny je příliš velká!",
+        toastSvgSuccess: "Vlastní SVG bylo úspěšně načteno!",
+        toastSvgErr: "Chyba: V SVG nebyly nalezeny platné obrysy!",
+        toastFileErr: "Chyba při zpracování SVG souboru!",
+        toastDownloaded: "Soubor {filename} byl úspěšně stažen!"
+      },
+      en: {
+        appTitle: "3D Box Generator",
+        sectionInput: "1. Input Shape (2D SVG)",
+        presetShapes: "Preset Shapes:",
+        shapeStar: "Star",
+        shapeHeart: "Heart",
+        shapeHexagon: "Hexagon",
+        shapeShield: "Shield",
+        shapeCircle: "Circle",
+        uploadSvg: "Or upload custom SVG:",
+        sectionDimensions: "2. Box Dimensions (mm)",
+        paramWidth: "Width / Outer Size",
+        paramBoxHeight: "Total Box Height",
+        paramLidHeight: "Lid Height",
+        paramWallThickness: "Wall Thickness",
+        paramFloorThickness: "Bottom/Top Thickness",
+        paramLipHeight: "Lip / Lock Height",
+        paramTolerance: "Lock Clearance / Tolerance",
+        lidStyleLabel: "Lid Style:",
+        lidStyleInset: "Internal Lip (Flush / Same Width)",
+        lidStyleShoebox: "Cap / Shoe-Box Style (Overlapping)",
+        sectionView: "3. Preview & View Settings",
+        viewBoth: "Both",
+        viewBase: "Base Only",
+        viewLid: "Lid Only",
+        paramExplode: "Parts Separation (Explode)",
+        checkCutaway: "Cutaway View",
+        exportBase: "Download Base (STL)",
+        exportLid: "Download Lid (STL)",
+        controlsTitle: "3D View Controls",
+        controlRotate: "• Left mouse: Rotate",
+        controlPan: "• Right mouse: Pan",
+        controlZoom: "• Scroll wheel: Zoom",
+        toastWallErr: "Error: Wall thickness is too large!",
+        toastSvgSuccess: "Custom SVG successfully loaded!",
+        toastSvgErr: "Error: No valid outlines found in SVG!",
+        toastFileErr: "Error processing SVG file!",
+        toastDownloaded: "File {filename} successfully downloaded!"
+      },
+      de: {
+        appTitle: "3D-Box-Generator",
+        sectionInput: "1. Eingabeform (2D SVG)",
+        presetShapes: "Vorgegebene Formen:",
+        shapeStar: "Stern",
+        shapeHeart: "Herz",
+        shapeHexagon: "Sechseck",
+        shapeShield: "Schild",
+        shapeCircle: "Kreis",
+        uploadSvg: "Oder eigene SVG hochladen:",
+        sectionDimensions: "2. Boxabmessungen (mm)",
+        paramWidth: "Breite / Außenmaß",
+        paramBoxHeight: "Gesamthöhe der Box",
+        paramLidHeight: "Deckelhöhe",
+        paramWallThickness: "Wandstärke",
+        paramFloorThickness: "Boden-/Deckelstärke",
+        paramLipHeight: "Lippen-/Verschluss-Höhe",
+        paramTolerance: "Toleranz / Spielraum",
+        lidStyleLabel: "Deckelstil:",
+        lidStyleInset: "Innenlippe (Bündig / Gleiche Breite)",
+        lidStyleShoebox: "Überstehend (Schuhkarton-Stil)",
+        sectionView: "3. Vorschau-Einstellungen",
+        viewBoth: "Beide",
+        viewBase: "Nur Unterteil",
+        viewLid: "Nur Deckel",
+        paramExplode: "Teile-Abstand (Explode)",
+        checkCutaway: "Schnittansicht",
+        exportBase: "Unterteil Herunterladen (STL)",
+        exportLid: "Deckel Herunterladen (STL)",
+        controlsTitle: "3D-Ansicht Steuerung",
+        controlRotate: "• Linke Maustaste: Drehen",
+        controlPan: "• Rechte Maustaste: Verschieben",
+        controlZoom: "• Mausrad: Zoomen",
+        toastWallErr: "Fehler: Wandstärke ist zu groß!",
+        toastSvgSuccess: "Eigene SVG erfolgreich geladen!",
+        toastSvgErr: "Fehler: Keine gültigen Konturen in SVG gefunden!",
+        toastFileErr: "Fehler beim Verarbeiten der SVG-Datei!",
+        toastDownloaded: "Datei {filename} erfolgreich heruntergeladen!"
+      },
+      es: {
+        appTitle: "Generador de Cajas 3D",
+        sectionInput: "1. Forma de Entrada (2D SVG)",
+        presetShapes: "Formas Predeterminadas:",
+        shapeStar: "Estrella",
+        shapeHeart: "Corazón",
+        shapeHexagon: "Hexágono",
+        shapeShield: "Escudo",
+        shapeCircle: "Círculo",
+        uploadSvg: "O subir SVG personalizado:",
+        sectionDimensions: "2. Dimensiones de la Caja (mm)",
+        paramWidth: "Ancho / Tamaño Exterior",
+        paramBoxHeight: "Altura Total de la Caja",
+        paramLidHeight: "Altura de la Tapa",
+        paramWallThickness: "Grosor de la Pared",
+        paramFloorThickness: "Grosor de Base/Tapa",
+        paramLipHeight: "Altura del Cierre/Pestaña",
+        paramTolerance: "Tolerancia / Holgura",
+        lidStyleLabel: "Estilo de Tapa:",
+        lidStyleInset: "Pestaña Interior (Mismo Ancho)",
+        lidStyleShoebox: "Superpuesta (Estilo Caja de Zapatos)",
+        sectionView: "3. Configuración de Vista",
+        viewBoth: "Ambos",
+        viewBase: "Solo Base",
+        viewLid: "Solo Tapa",
+        paramExplode: "Separación de Partes",
+        checkCutaway: "Vista en Corte",
+        exportBase: "Descargar Base (STL)",
+        exportLid: "Descargar Tapa (STL)",
+        controlsTitle: "Control de Vista 3D",
+        controlRotate: "• Clic izquierdo: Rotar",
+        controlPan: "• Clic derecho: Mover",
+        controlZoom: "• Scroll: Zoom",
+        toastWallErr: "¡Error: El grosor de la pared es demasiado grande!",
+        toastSvgSuccess: "¡SVG personalizado cargado con éxito!",
+        toastSvgErr: "¡Error: No se encontraron contornos válidos!",
+        toastFileErr: "¡Error al procesar el archivo SVG!",
+        toastDownloaded: "¡Archivo {filename} descargado con éxito!"
+      },
+      fr: {
+        appTitle: "Générateur de Boîte 3D",
+        sectionInput: "1. Forme d'Entrée (2D SVG)",
+        presetShapes: "Formes Prédéfinies:",
+        shapeStar: "Étoile",
+        shapeHeart: "Cœur",
+        shapeHexagon: "Hexagone",
+        shapeShield: "Bouclier",
+        shapeCircle: "Cercle",
+        uploadSvg: "Ou importer un SVG personnalisé:",
+        sectionDimensions: "2. Dimensions de la Boîte (mm)",
+        paramWidth: "Largeur / Taille Extérieure",
+        paramBoxHeight: "Hauteur Totale",
+        paramLidHeight: "Hauteur du Couvercle",
+        paramWallThickness: "Épaisseur du Mur",
+        paramFloorThickness: "Épaisseur Fond/Haut",
+        paramLipHeight: "Hauteur de la Rebord",
+        paramTolerance: "Tolérance / Jeu",
+        lidStyleLabel: "Style du Couvercle:",
+        lidStyleInset: "Rebord Intérieur (Même Largeur)",
+        lidStyleShoebox: "Recouvrant (Boîte à Chaussures)",
+        sectionView: "3. Paramètres de Vue",
+        viewBoth: "Les deux",
+        viewBase: "Base Uniquement",
+        viewLid: "Couvercle Uniquement",
+        paramExplode: "Vue Éclatée",
+        checkCutaway: "Vue en Coupe",
+        exportBase: "Télécharger la Base (STL)",
+        exportLid: "Télécharger le Couvercle (STL)",
+        controlsTitle: "Contrôles de Vue 3D",
+        controlRotate: "• Clic gauche: Tourner",
+        controlPan: "• Clic droit: Déplacer",
+        controlZoom: "• Molette: Zoomer",
+        toastWallErr: "Erreur: L'épaisseur du mur est trop grande!",
+        toastSvgSuccess: "SVG personnalisé chargé avec succès!",
+        toastSvgErr: "Erreur: Aucun contour valide trouvé!",
+        toastFileErr: "Erreur lors du traitement du fichier SVG!",
+        toastDownloaded: "Fichier {filename} téléchargé avec succès!"
+      }
+    };
+
+    let currentLang = 'cs';
+
+    function setLanguage(lang) {
+      if (!translations[lang]) return;
+      currentLang = lang;
+      
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+    }
+
+    let scene, camera, renderer, controls;
+    let boxGroup, baseMesh, lidMesh;
+    let currentShapes = [];
+    let currentViewMode = 'both';
+
+    // UI Elements
+    const presetSelect = document.getElementById('presetSelect');
+    const svgFileInput = document.getElementById('svgFileInput');
+    const langSelect = document.getElementById('langSelect');
+    
+    const paramWidth = document.getElementById('paramWidth');
+    const paramBoxHeight = document.getElementById('paramBoxHeight');
+    const paramLidHeight = document.getElementById('paramLidHeight');
+    const paramWallThickness = document.getElementById('paramWallThickness');
+    const paramFloorThickness = document.getElementById('paramFloorThickness');
+    const paramLipHeight = document.getElementById('paramLipHeight');
+    const paramTolerance = document.getElementById('paramTolerance');
+    const lidStyleSelect = document.getElementById('lidStyleSelect');
+    const paramExplode = document.getElementById('paramExplode');
+    const checkCutaway = document.getElementById('checkCutaway');
+
+    const paramWidthVal = document.getElementById('paramWidthVal');
+    const paramBoxHeightVal = document.getElementById('paramBoxHeightVal');
+    const paramLidHeightVal = document.getElementById('paramLidHeightVal');
+    const paramWallThicknessVal = document.getElementById('paramWallThicknessVal');
+    const paramFloorThicknessVal = document.getElementById('paramFloorThicknessVal');
+    const paramLipHeightVal = document.getElementById('paramLipHeightVal');
+    const paramToleranceVal = document.getElementById('paramToleranceVal');
+    const paramExplodeVal = document.getElementById('paramExplodeVal');
+
+    function createPresetShapes(type) {
+      const shape = new THREE.Shape();
+      if (type === 'star') {
+        const pts = 5, R = 50, r = 22;
+        for (let i = 0; i < 2 * pts; i++) {
+          const radius = (i % 2 === 0) ? R : r;
+          const angle = (i * Math.PI) / pts - Math.PI / 2;
+          const x = radius * Math.cos(angle);
+          const y = radius * Math.sin(angle);
+          if (i === 0) shape.moveTo(x, y);
+          else shape.lineTo(x, y);
+        }
+        shape.closePath();
+      } else if (type === 'heart') {
+        shape.moveTo(0, 25);
+        shape.bezierCurveTo(0, 40, -35, 40, -35, 15);
+        shape.bezierCurveTo(-35, -10, -15, -30, 0, -45);
+        shape.bezierCurveTo(15, -30, 35, -10, 35, 15);
+        shape.bezierCurveTo(35, 40, 0, 40, 0, 25);
+      } else if (type === 'hexagon') {
+        const radius = 45;
+        for (let i = 0; i < 6; i++) {
+          const angle = (i * Math.PI) / 3;
+          const x = radius * Math.cos(angle);
+          const y = radius * Math.sin(angle);
+          if (i === 0) shape.moveTo(x, y);
+          else shape.lineTo(x, y);
+        }
+        shape.closePath();
+      } else if (type === 'shield') {
+        shape.moveTo(0, 45);
+        shape.lineTo(35, 45);
+        shape.quadraticCurveTo(40, 0, 0, -45);
+        shape.quadraticCurveTo(-40, 0, -35, 45);
+        shape.closePath();
+      } else if (type === 'circle') {
+        shape.absarc(0, 0, 45, 0, Math.PI * 2, false);
+      }
+      return [shape];
+    }
+
+    function getSignedArea(pts) {
+      let area = 0;
+      for (let i = 0; i < pts.length; i++) {
+        const p1 = pts[i];
+        const p2 = pts[(i + 1) % pts.length];
+        area += (p1.x * p2.y - p2.x * p1.y);
+      }
+      return area / 2;
+    }
+
+    function ensureOrientation(pts, ccw) {
+      const isCCW = getSignedArea(pts) > 0;
+      if (isCCW !== ccw) {
+        return pts.slice().reverse();
+      }
+      return pts.slice();
+    }
+
+    function createOffsetPath(points, offset) {
+      if (!points || points.length < 3) return [];
+
+      let cleanPts = points.slice();
+      if (cleanPts[0].equals(cleanPts[cleanPts.length - 1])) {
+        cleanPts.pop();
+      }
+
+      cleanPts = ensureOrientation(cleanPts, false);
+
+      const num = cleanPts.length;
+      const offsetPts = [];
+
+      for (let i = 0; i < num; i++) {
+        const prev = cleanPts[(i - 1 + num) % num];
+        const curr = cleanPts[i];
+        const next = cleanPts[(i + 1) % num];
+
+        const v1 = new THREE.Vector2().subVectors(curr, prev).normalize();
+        const v2 = new THREE.Vector2().subVectors(next, curr).normalize();
+
+        const n1 = new THREE.Vector2(-v1.y, v1.x);
+        const n2 = new THREE.Vector2(-v2.y, v2.x);
+
+        let bisector = new THREE.Vector2().addVectors(n1, n2);
+        if (bisector.lengthSq() < 0.0001) {
+          bisector = n1.clone();
+        } else {
+          bisector.normalize();
+        }
+
+        let cosAlpha = bisector.dot(n1);
+        if (Math.abs(cosAlpha) < 0.15) cosAlpha = 0.15;
+
+        const dist = offset / cosAlpha;
+        const newPt = new THREE.Vector2().addVectors(curr, bisector.clone().multiplyScalar(dist));
+        offsetPts.push(newPt);
+      }
+
+      return ensureOrientation(offsetPts, false);
+    }
+
+    function initThree() {
+      const container = document.getElementById('viewport');
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0f172a);
+
+      camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 2000);
+      camera.position.set(130, 150, 190);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, localClippingEnabled: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.shadowMap.enabled = true;
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      dirLight.position.set(100, 200, 100);
+      dirLight.castShadow = true;
+      scene.add(dirLight);
+
+      const dirLight2 = new THREE.DirectionalLight(0x3b82f6, 0.4);
+      dirLight2.position.set(-100, -100, -100);
+      scene.add(dirLight2);
+
+      const grid = new THREE.GridHelper(300, 30, 0x334155, 0x1e293b);
+      scene.add(grid);
+
+      boxGroup = new THREE.Group();
+      scene.add(boxGroup);
+
+      window.addEventListener('resize', onWindowResize);
+
+      currentShapes = createPresetShapes('star');
+      rebuildBox();
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById('viewport');
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    function getNormalizedPoints(shapes, targetWidth) {
+      if (!shapes || shapes.length === 0) return [];
+      const outerShape = shapes[0];
+      const pts = outerShape.extractPoints(32).shape;
+
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      pts.forEach(p => {
+        if (p.x < minX) minX = p.x;
+        if (p.x > maxX) maxX = p.x;
+        if (p.y < minY) minY = p.y;
+        if (p.y > maxY) maxY = p.y;
+      });
+
+      const maxDim = Math.max(maxX - minX, maxY - minY);
+      const scale = targetWidth / maxDim;
+      const centerX = (minX + maxX) / 2;
+      const centerY = (minY + maxY) / 2;
+
+      const normalized = pts.map(p => new THREE.Vector2((p.x - centerX) * scale, (p.y - centerY) * scale));
+      return ensureOrientation(normalized, false);
+    }
+
+    function createSolidExtrusion(outerPts, height) {
+      const shape = new THREE.Shape(outerPts);
+      return new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false });
+    }
+
+    function createHollowExtrusion(outerPts, innerPts, height) {
+      const shape = new THREE.Shape(outerPts);
+      const ccwInner = ensureOrientation(innerPts, true);
+      shape.holes = [new THREE.Path(ccwInner)];
+      return new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false });
+    }
+
+    function rebuildBox() {
+      while (boxGroup.children.length > 0) {
+        const obj = boxGroup.children[0];
+        if (obj.geometry) obj.geometry.dispose();
+        boxGroup.remove(obj);
+      }
+
+      const targetW = parseFloat(paramWidth.value);
+      const boxH = parseFloat(paramBoxHeight.value);
+      const lidH = parseFloat(paramLidHeight.value);
+      const wallT = parseFloat(paramWallThickness.value);
+      const floorT = parseFloat(paramFloorThickness.value);
+      const lipH = parseFloat(paramLipHeight.value);
+      const tol = parseFloat(paramTolerance.value);
+      const lidStyle = lidStyleSelect ? lidStyleSelect.value : 'inset';
+      const explodeOffset = parseFloat(paramExplode.value);
+      const isCutaway = checkCutaway.checked;
+
+      const baseMaterial = new THREE.MeshStandardMaterial({
+        color: 0x2563eb, roughness: 0.3, metalness: 0.1, side: THREE.DoubleSide
+      });
+      const lidMaterial = new THREE.MeshStandardMaterial({
+        color: 0x38bdf8, roughness: 0.3, metalness: 0.1, transparent: true, opacity: 0.9, side: THREE.DoubleSide
+      });
+
+      const outerPts = getNormalizedPoints(currentShapes, targetW);
+      if (outerPts.length < 3) return;
+
+      const innerPts = createOffsetPath(outerPts, -wallT);
+
+      if (innerPts.length < 3) {
+        showToast(translations[currentLang].toastWallErr);
+        return;
+      }
+
+      // ---------------- 1. BASE BOX ----------------
+      baseMesh = new THREE.Group();
+
+      if (lidStyle === 'inset') {
+        const mainWallHeight = Math.max(1, boxH - lipH - floorT);
+        const lipOuterPts = createOffsetPath(outerPts, -(wallT / 2 + tol / 2));
+
+        const baseFloorGeo = createSolidExtrusion(outerPts, floorT);
+        baseMesh.add(new THREE.Mesh(baseFloorGeo, baseMaterial));
+
+        const baseWallGeo = createHollowExtrusion(outerPts, innerPts, mainWallHeight);
+        baseWallGeo.translate(0, 0, floorT);
+        baseMesh.add(new THREE.Mesh(baseWallGeo, baseMaterial));
+
+        const lipGeo = createHollowExtrusion(lipOuterPts, innerPts, lipH);
+        lipGeo.translate(0, 0, floorT + mainWallHeight);
+        baseMesh.add(new THREE.Mesh(lipGeo, baseMaterial));
+      } else {
+        const wallHeight = Math.max(1, boxH - floorT);
+
+        const baseFloorGeo = createSolidExtrusion(outerPts, floorT);
+        baseMesh.add(new THREE.Mesh(baseFloorGeo, baseMaterial));
+
+        const baseWallGeo = createHollowExtrusion(outerPts, innerPts, wallHeight);
+        baseWallGeo.translate(0, 0, floorT);
+        baseMesh.add(new THREE.Mesh(baseWallGeo, baseMaterial));
+      }
+
+      baseMesh.rotation.x = -Math.PI / 2;
+
+      // ---------------- 2. LID (VÍKO) ----------------
+      lidMesh = new THREE.Group();
+
+      if (lidStyle === 'inset') {
+        const lidWallHeight = Math.max(2, lidH - floorT);
+        const lipOverlapH = Math.min(lipH, lidWallHeight);
+        const topWallH = lidWallHeight - lipOverlapH;
+        const lidOuterRecessPts = createOffsetPath(outerPts, -(wallT / 2));
+
+        if (lipOverlapH > 0) {
+          const lidRecessGeo = createHollowExtrusion(outerPts, lidOuterRecessPts, lipOverlapH);
+          lidMesh.add(new THREE.Mesh(lidRecessGeo, lidMaterial));
+        }
+
+        if (topWallH > 0) {
+          const lidUpperWallGeo = createHollowExtrusion(outerPts, innerPts, topWallH);
+          lidUpperWallGeo.translate(0, 0, lipOverlapH);
+          lidMesh.add(new THREE.Mesh(lidUpperWallGeo, lidMaterial));
+        }
+
+        const lidTopGeo = createSolidExtrusion(outerPts, floorT);
+        lidTopGeo.translate(0, 0, lidWallHeight);
+        lidMesh.add(new THREE.Mesh(lidTopGeo, lidMaterial));
+      } else {
+        const shoeBoxOuterPts = createOffsetPath(outerPts, wallT + tol);
+        const shoeBoxInnerPts = createOffsetPath(outerPts, tol);
+        const lidWallHeight = Math.max(2, lidH - floorT);
+
+        const lidWallGeo = createHollowExtrusion(shoeBoxOuterPts, shoeBoxInnerPts, lidWallHeight);
+        lidMesh.add(new THREE.Mesh(lidWallGeo, lidMaterial));
+
+        const lidTopGeo = createSolidExtrusion(shoeBoxOuterPts, floorT);
+        lidTopGeo.translate(0, 0, lidWallHeight);
+        lidMesh.add(new THREE.Mesh(lidTopGeo, lidMaterial));
+      }
+
+      lidMesh.rotation.x = -Math.PI / 2;
+
+      // Pozice víka podle záporného/kladného rozestupu
+      if (lidStyle === 'inset') {
+        lidMesh.position.y = (boxH - lipH) + explodeOffset;
+      } else {
+        lidMesh.position.y = (boxH - lidH + floorT) + explodeOffset;
+      }
+
+      if (currentViewMode === 'both' || currentViewMode === 'box') {
+        boxGroup.add(baseMesh);
+      }
+      if (currentViewMode === 'both' || currentViewMode === 'lid') {
+        boxGroup.add(lidMesh);
+      }
+
+      if (isCutaway) {
+        const clipPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0);
+        renderer.clippingPlanes = [clipPlane];
+      } else {
+        renderer.clippingPlanes = [];
+      }
+    }
+
+    function exportGroupToSTL(group, filename, isLid = false) {
+      if (!group) return;
+
+      scene.updateMatrixWorld(true);
+
+      const geometries = [];
+      group.traverse(child => {
+        if (child.isMesh && child.geometry) {
+          const clonedGeo = child.geometry.clone();
+          clonedGeo.applyMatrix4(child.matrixWorld);
+
+          if (isLid) {
+            const boxH = parseFloat(paramBoxHeight.value);
+            const lipH = parseFloat(paramLipHeight.value);
+            const explodeOffset = parseFloat(paramExplode.value);
+            const lidStyle = lidStyleSelect ? lidStyleSelect.value : 'inset';
+            const lidPosY = (lidStyle === 'inset') ? ((boxH - lipH) + explodeOffset) : ((boxH - parseFloat(paramLidHeight.value) + parseFloat(paramFloorThickness.value)) + explodeOffset);
+
+            // Vracíme lid do nuly v Y
+            clonedGeo.translate(0, -lidPosY, 0);
+
+            // Otočení o -180° (-PI) kolem osy X, aby vnější horní strana víka ležela přesně na podložce (Z = 0)
+            clonedGeo.rotateX(-Math.PI / 2);
+          } else {
+            clonedGeo.rotateX(Math.PI / 2);
+          }
+
+          geometries.push(clonedGeo);
+        }
+      });
+
+      if (geometries.length === 0) {
+        showToast(translations[currentLang].toastSvgErr || "No geometry to export!");
+        return;
+      }
+
+      let totalTriangles = 0;
+      geometries.forEach(geo => {
+        const pos = geo.attributes.position;
+        if (geo.index) {
+          totalTriangles += geo.index.count / 3;
+        } else if (pos) {
+          totalTriangles += pos.count / 3;
+        }
+      });
+
+      if (totalTriangles === 0) {
+        showToast("No triangles found!");
+        return;
+      }
+
+      const bufferLength = 80 + 4 + totalTriangles * 50;
+      const buffer = new ArrayBuffer(bufferLength);
+      const dataView = new DataView(buffer);
+
+      const headerStr = "Binary STL - 3D Box Generator";
+      for (let i = 0; i < 80; i++) {
+        dataView.setUint8(i, i < headerStr.length ? headerStr.charCodeAt(i) : 32);
+      }
+
+      dataView.setUint32(80, totalTriangles, true);
+
+      let offset = 84;
+
+      geometries.forEach(geo => {
+        const nonIndexedGeo = geo.index ? geo.toNonIndex() : geo;
+        const posAttr = nonIndexedGeo.attributes.position;
+
+        for (let i = 0; i < posAttr.count; i += 3) {
+          const v1 = new THREE.Vector3(posAttr.getX(i), posAttr.getY(i), posAttr.getZ(i));
+          const v2 = new THREE.Vector3(posAttr.getX(i + 1), posAttr.getY(i + 1), posAttr.getZ(i + 1));
+          const v3 = new THREE.Vector3(posAttr.getX(i + 2), posAttr.getY(i + 2), posAttr.getZ(i + 2));
+
+          const cb = new THREE.Vector3().subVectors(v3, v2);
+          const ab = new THREE.Vector3().subVectors(v1, v2);
+          const normal = cb.cross(ab).normalize();
+
+          dataView.setFloat32(offset, normal.x, true); offset += 4;
+          dataView.setFloat32(offset, normal.y, true); offset += 4;
+          dataView.setFloat32(offset, normal.z, true); offset += 4;
+
+          [v1, v2, v3].forEach(v => {
+            dataView.setFloat32(offset, v.x, true); offset += 4;
+            dataView.setFloat32(offset, v.y, true); offset += 4;
+            dataView.setFloat32(offset, v.z, true); offset += 4;
+          });
+
+          dataView.setUint16(offset, 0, true); offset += 2;
+        }
+      });
+
+      const blob = new Blob([buffer], { type: 'application/octet-stream' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+
+      const msg = translations[currentLang].toastDownloaded.replace('{filename}', filename);
+      showToast(msg);
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 4000);
+    }
+
+    function bindEvents() {
+      const inputs = [
+        { el: paramWidth, label: paramWidthVal, unit: ' mm' },
+        { el: paramBoxHeight, label: paramBoxHeightVal, unit: ' mm' },
+        { el: paramLidHeight, label: paramLidHeightVal, unit: ' mm' },
+        { el: paramWallThickness, label: paramWallThicknessVal, unit: ' mm' },
+        { el: paramFloorThickness, label: paramFloorThicknessVal, unit: ' mm' },
+        { el: paramLipHeight, label: paramLipHeightVal, unit: ' mm' },
+        { el: paramTolerance, label: paramToleranceVal, unit: ' mm' },
+        { el: paramExplode, label: paramExplodeVal, unit: ' mm' }
+      ];
+
+      inputs.forEach(item => {
+        item.el.addEventListener('input', () => {
+          item.label.textContent = parseFloat(item.el.value).toFixed(2) + item.unit;
+          rebuildBox();
+        });
+      });
+
+      langSelect.addEventListener('change', (e) => {
+        setLanguage(e.target.value);
+      });
+
+      if (lidStyleSelect) {
+        lidStyleSelect.addEventListener('change', rebuildBox);
+      }
+
+      checkCutaway.addEventListener('change', rebuildBox);
+
+      presetSelect.addEventListener('change', (e) => {
+        currentShapes = createPresetShapes(e.target.value);
+        rebuildBox();
+      });
+
+      svgFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          try {
+            const loader = new THREE.SVGLoader();
+            const svgData = loader.parse(evt.target.result);
+            const shapes = [];
+            svgData.paths.forEach(path => {
+              const pathShapes = THREE.SVGLoader.createShapes(path);
+              shapes.push(...pathShapes);
+            });
+
+            if (shapes.length > 0) {
+              currentShapes = shapes;
+              rebuildBox();
+              showToast(translations[currentLang].toastSvgSuccess);
+            } else {
+              showToast(translations[currentLang].toastSvgErr);
+            }
+          } catch (err) {
+            showToast(translations[currentLang].toastFileErr);
+          }
+        };
+        reader.readAsText(file);
+      });
+
+      document.getElementById('btnViewBoth').addEventListener('click', () => { currentViewMode = 'both'; rebuildBox(); });
+      document.getElementById('btnViewBox').addEventListener('click', () => { currentViewMode = 'box'; rebuildBox(); });
+      document.getElementById('btnViewLid').addEventListener('click', () => { currentViewMode = 'lid'; rebuildBox(); });
+
+      document.getElementById('btnExportBase').addEventListener('click', () => exportGroupToSTL(baseMesh, 'krabicka_dno.stl', false));
+      document.getElementById('btnExportLid').addEventListener('click', () => exportGroupToSTL(lidMesh, 'krabicka_viko.stl', true));
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    window.onload = () => {
+      initThree();
+      bindEvents();
+      setLanguage('cs');
+      animate();
+    };
+  </script>
+</body>
+</html>
