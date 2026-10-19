@@ -47,6 +47,18 @@
       text-decoration: underline;
     }
 
+    .footer-center {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted, #9ca3af);
+      background: rgba(15, 23, 42, 0.4);
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
     .footer-right {
       display: flex;
       align-items: center;
@@ -242,12 +254,19 @@
       </div>
     </main>
 
-    <!-- FOOTER -->
+    <!-- FOOTER WITH VISITOR COUNTER -->
     <footer>
       <div class="footer-left">
         <div>© 2026 <strong><a href="https://hazda.cz" target="_blank">Adam Hazda</a></strong>. <span id="txtAllRights">Všechna práva vyhrazena.</span></div>
         <div style="font-size: 0.75rem; margin-top: 0.2rem;" id="txtPrivacyNote">Všechny výpočty probíhají 100% lokálně ve vašem prohlížeči.</div>
       </div>
+      
+      <!-- Počítadlo návštěv -->
+      <div class="footer-center">
+        <i class="fa-solid fa-eye text-blue-400"></i>
+        <span id="visitCount">...</span> <span id="txtVisits">zobrazení</span>
+      </div>
+
       <div class="footer-right">
         <!-- Official Buy Me A Coffee Button -->
         <a class="bmac-button" href="https://www.buymeacoffee.com/hazda.cz" target="_blank">
@@ -296,7 +315,8 @@
         toastSvgSuccess: "Vlastní SVG bylo úspěšně načteno!",
         toastSvgErr: "Chyba: V SVG nebyly nalezeny platné obrysy!",
         toastFileErr: "Chyba při zpracování SVG souboru!",
-        toastDownloaded: "Soubor {filename} byl úspěšně stažen!"
+        toastDownloaded: "Soubor {filename} byl úspěšně stažen!",
+        txtVisits: "zobrazení"
       },
       en: {
         appTitle: "3D Box Generator",
@@ -335,7 +355,8 @@
         toastSvgSuccess: "Custom SVG successfully loaded!",
         toastSvgErr: "Error: No valid outlines found in SVG!",
         toastFileErr: "Error processing SVG file!",
-        toastDownloaded: "File {filename} successfully downloaded!"
+        toastDownloaded: "File {filename} successfully downloaded!",
+        txtVisits: "views"
       },
       de: {
         appTitle: "3D-Box-Generator",
@@ -374,7 +395,8 @@
         toastSvgSuccess: "Eigene SVG erfolgreich geladen!",
         toastSvgErr: "Fehler: Keine gültigen Konturen in SVG gefunden!",
         toastFileErr: "Fehler beim Verarbeiten der SVG-Datei!",
-        toastDownloaded: "Datei {filename} erfolgreich heruntergeladen!"
+        toastDownloaded: "Datei {filename} erfolgreich heruntergeladen!",
+        txtVisits: "Aufrufe"
       },
       es: {
         appTitle: "Generador de Cajas 3D",
@@ -413,7 +435,8 @@
         toastSvgSuccess: "¡SVG personalizado cargado con éxito!",
         toastSvgErr: "¡Error: No se encontraron contornos válidos!",
         toastFileErr: "¡Error al procesar el archivo SVG!",
-        toastDownloaded: "¡Archivo {filename} descargado con éxito!"
+        toastDownloaded: "¡Archivo {filename} descargado con éxito!",
+        txtVisits: "visitas"
       },
       fr: {
         appTitle: "Générateur de Boîte 3D",
@@ -452,7 +475,8 @@
         toastSvgSuccess: "SVG personnalisé chargé avec succès!",
         toastSvgErr: "Erreur: Aucun contour valide trouvé!",
         toastFileErr: "Erreur lors du traitement du fichier SVG!",
-        toastDownloaded: "Fichier {filename} téléchargé avec succès!"
+        toastDownloaded: "Fichier {filename} téléchargé avec succès!",
+        txtVisits: "vues"
       }
     };
 
@@ -468,6 +492,12 @@
           el.textContent = translations[lang][key];
         }
       });
+
+      // Překlad textu u počítadla
+      const visitsTextEl = document.getElementById('txtVisits');
+      if (visitsTextEl && translations[lang].txtVisits) {
+        visitsTextEl.textContent = translations[lang].txtVisits;
+      }
     }
 
     let scene, camera, renderer, controls;
@@ -918,6 +948,24 @@
       setTimeout(() => toast.classList.add('hidden'), 4000);
     }
 
+    // Načtení počítadla z CountAPI (zcela zdarma a bez registrace)
+    function initVisitorCounter() {
+      // Unikátní namespace a klíč pro váš projekt boxgenerator
+      fetch('https://api.countapi.xyz/hit/boxgenerator-hazda-cz/visits')
+        .then(response => response.json())
+        .then(data => {
+          const countEl = document.getElementById('visitCount');
+          if (countEl && data && data.value) {
+            countEl.textContent = data.value.toLocaleString();
+          }
+        })
+        .catch(err => {
+          // Fallback, kdyby služba náhodou neodpověděla
+          const countEl = document.getElementById('visitCount');
+          if (countEl) countEl.textContent = "100+";
+        });
+    }
+
     function bindEvents() {
       const inputs = [
         { el: paramWidth, label: paramWidthVal, unit: ' mm' },
@@ -999,6 +1047,7 @@
       initThree();
       bindEvents();
       setLanguage('cs');
+      initVisitorCounter();
       animate();
     };
   </script>
