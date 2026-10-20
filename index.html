@@ -104,7 +104,7 @@
             <option value="es">🇪🇸 ES</option>
             <option value="fr">🇫🇷 FR</option>
           </select>
-          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v2.9</span>
+          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v3.0.0</span>
         </div>
       </div>
 
@@ -122,13 +122,32 @@
               <option value="circle" data-i18n="shapeCircle">Circle</option>
               <option value="star" data-i18n="shapeStar">Star</option>
               <option value="heart" data-i18n="shapeHeart">Heart</option>
+              <option value="tree" data-i18n="shapeTree">Tree with Star</option>
               <option value="hexagon" data-i18n="shapeHexagon">Hexagon</option>
               <option value="shield" data-i18n="shapeShield">Shield</option>
+              <option value="fish" data-i18n="shapeFish">Fish</option>
             </select>
           </div>
           <div>
             <label class="text-xs text-slate-300 mb-1 block" data-i18n="uploadSvg">Or upload custom SVG:</label>
-            <input type="file" id="svgFileInput" accept=".svg" class="block w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-blue-400 hover:file:bg-slate-700 cursor-pointer border border-slate-800 rounded-lg bg-slate-900/50">
+            <div class="flex items-center gap-2">
+              <input type="file" id="svgFileInput" accept=".svg" class="block w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-blue-400 hover:file:bg-slate-700 cursor-pointer border border-slate-800 rounded-lg bg-slate-900/50">
+              <button id="btnRemoveSvg" title="Remove SVG / Back to Presets" class="hidden p-2 bg-rose-600/80 hover:bg-rose-600 text-white rounded-lg transition text-xs flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-xmark text-sm"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Mirror / Flip of the template outline -->
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <label class="flex items-center justify-between gap-2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 cursor-pointer">
+              <span class="text-xs text-slate-300" data-i18n="checkFlipX">Mirror (left ↔ right)</span>
+              <input type="checkbox" id="checkFlipX" class="w-4 h-4 accent-blue-500 cursor-pointer">
+            </label>
+            <label class="flex items-center justify-between gap-2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 cursor-pointer">
+              <span class="text-xs text-slate-300" data-i18n="checkFlipY">Flip (top ↕ bottom)</span>
+              <input type="checkbox" id="checkFlipY" class="w-4 h-4 accent-blue-500 cursor-pointer">
+            </label>
           </div>
         </section>
 
@@ -153,7 +172,6 @@
             <input type="range" id="paramWidth" min="30" max="250" value="80" class="w-full">
           </div>
 
-          <!-- Secondary Height/Depth Slider (Shown when Keep Aspect Ratio is unticked) -->
           <div id="containerDepth" class="space-y-1 hidden">
             <div class="flex justify-between text-xs">
               <span class="text-slate-300" data-i18n="paramDepth">Length / Depth (2D)</span>
@@ -245,16 +263,27 @@
             <span class="text-xs text-slate-300 font-medium text-amber-400" data-i18n="checkCutaway">Cutaway View</span>
             <input type="checkbox" id="checkCutaway" class="w-4 h-4 accent-blue-500 cursor-pointer">
           </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-300" data-i18n="paramRotate">Rotate Box (View)</span>
+              <span id="paramRotateVal" class="font-mono text-blue-400">0°</span>
+            </div>
+            <input type="range" id="paramRotate" min="0" max="360" step="1" value="0" class="w-full">
+          </div>
         </section>
       </div>
 
       <!-- Export Action Footer -->
       <div class="p-4 border-t border-slate-800 bg-slate-900/80 space-y-2">
-        <button id="btnExportBase" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition">
+        <button id="btnExportBase" class="w-full py-2 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg shadow flex items-center justify-center gap-2 text-xs transition">
           <i class="fa-solid fa-download"></i> <span data-i18n="exportBase">Download Base (STL)</span>
         </button>
-        <button id="btnExportLid" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition">
+        <button id="btnExportLid" class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg shadow flex items-center justify-center gap-2 text-xs transition">
           <i class="fa-solid fa-download"></i> <span data-i18n="exportLid">Download Lid (STL)</span>
+        </button>
+        <button id="btnExportBoth" class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition">
+          <i class="fa-solid fa-download"></i> <span data-i18n="exportBoth">Download All (STL)</span>
         </button>
       </div>
     </aside>
@@ -335,8 +364,13 @@
         shapeCircle: "Circle",
         shapeStar: "Star",
         shapeHeart: "Heart",
+        shapeTree: "Tree with Star",
         shapeHexagon: "Hexagon",
         shapeShield: "Shield",
+        shapeFish: "Fish",
+        checkFlipX: "Mirror (left ↔ right)",
+        checkFlipY: "Flip (top ↕ bottom)",
+        paramRotate: "Rotate Box (View)",
         uploadSvg: "Or upload custom SVG:",
         sectionDimensions: "2. Box Dimensions",
         checkKeepAspect: "Keep Aspect Ratio",
@@ -359,6 +393,7 @@
         checkCutaway: "Cutaway View",
         exportBase: "Download Base (STL)",
         exportLid: "Download Lid (STL)",
+        exportBoth: "Download All (STL)",
         controlsTitle: "3D View Controls",
         controlRotate: "• Left mouse: Rotate",
         controlPan: "• Right mouse: Pan",
@@ -382,8 +417,13 @@
         shapeCircle: "Kruh",
         shapeStar: "Hvězda",
         shapeHeart: "Srdce",
+        shapeTree: "Stromeček s hvězdou",
         shapeHexagon: "Šestiúhelník",
         shapeShield: "Štít",
+        shapeFish: "Ryba",
+        checkFlipX: "Zrcadlit (vlevo ↔ vpravo)",
+        checkFlipY: "Převrátit (nahoru ↕ dolů)",
+        paramRotate: "Otočení krabičky (náhled)",
         uploadSvg: "Nebo nahrát vlastní SVG:",
         sectionDimensions: "2. Rozměry Krabičky",
         checkKeepAspect: "Zachovat poměr stran",
@@ -406,6 +446,7 @@
         checkCutaway: "Názorný Řez Modelem",
         exportBase: "Stáhnout Dno (STL)",
         exportLid: "Stáhnout Víko (STL)",
+        exportBoth: "Stáhnout Vše (STL)",
         controlsTitle: "Ovládání 3D Pohledu",
         controlRotate: "• Levá myš: Otáčení",
         controlPan: "• Pravá myš: Posun",
@@ -429,8 +470,13 @@
         shapeCircle: "Kreis",
         shapeStar: "Stern",
         shapeHeart: "Herz",
+        shapeTree: "Tannenbaum mit Stern",
         shapeHexagon: "Sechseck",
         shapeShield: "Schild",
+        shapeFish: "Fisch",
+        checkFlipX: "Spiegeln (links ↔ rechts)",
+        checkFlipY: "Umkehren (oben ↕ unten)",
+        paramRotate: "Box drehen (Ansicht)",
         uploadSvg: "Oder eigene SVG hochladen:",
         sectionDimensions: "2. Boxabmessungen",
         checkKeepAspect: "Seitenverhältnis beibehalten",
@@ -453,6 +499,7 @@
         checkCutaway: "Schnittansicht",
         exportBase: "Unterteil Herunterladen (STL)",
         exportLid: "Deckel Herunterladen (STL)",
+        exportBoth: "Alles Herunterladen (STL)",
         controlsTitle: "3D-Ansicht Steuerung",
         controlRotate: "• Linke Maustaste: Drehen",
         controlPan: "• Rechte Maustaste: Verschieben",
@@ -476,8 +523,13 @@
         shapeCircle: "Círculo",
         shapeStar: "Estrella",
         shapeHeart: "Corazón",
+        shapeTree: "Árbol con estrella",
         shapeHexagon: "Hexágono",
         shapeShield: "Escudo",
+        shapeFish: "Pez",
+        checkFlipX: "Espejo (izq. ↔ der.)",
+        checkFlipY: "Voltear (arriba ↕ abajo)",
+        paramRotate: "Girar caja (vista)",
         uploadSvg: "O subir SVG personalizado:",
         sectionDimensions: "2. Dimensiones de la Caja",
         checkKeepAspect: "Mantener relación de aspecto",
@@ -500,6 +552,7 @@
         checkCutaway: "Vista en Corte",
         exportBase: "Descargar Base (STL)",
         exportLid: "Descargar Tapa (STL)",
+        exportBoth: "Descargar Todo (STL)",
         controlsTitle: "Control de Vista 3D",
         controlRotate: "• Clic izquierdo: Rotar",
         controlPan: "• Clic derecho: Mover",
@@ -523,8 +576,13 @@
         shapeCircle: "Cercle",
         shapeStar: "Étoile",
         shapeHeart: "Cœur",
+        shapeTree: "Sapin avec étoile",
         shapeHexagon: "Hexagone",
         shapeShield: "Bouclier",
+        shapeFish: "Poisson",
+        checkFlipX: "Miroir (gauche ↔ droite)",
+        checkFlipY: "Retourner (haut ↕ bas)",
+        paramRotate: "Pivoter la boîte (vue)",
         uploadSvg: "Ou importer un SVG personnalisé:",
         sectionDimensions: "2. Dimensions de la Boîte",
         checkKeepAspect: "Conserver le ratio d'aspect",
@@ -547,6 +605,7 @@
         checkCutaway: "Vue en Coupe",
         exportBase: "Télécharger la Base (STL)",
         exportLid: "Télécharger le Couvercle (STL)",
+        exportBoth: "Télécharger Tout (STL)",
         controlsTitle: "Contrôles de Vue 3D",
         controlRotate: "• Clic gauche: Tourner",
         controlPan: "• Clic droit: Déplacer",
@@ -662,6 +721,7 @@
     // UI Elements
     const presetSelect = document.getElementById('presetSelect');
     const svgFileInput = document.getElementById('svgFileInput');
+    const btnRemoveSvg = document.getElementById('btnRemoveSvg');
     const langSelect = document.getElementById('langSelect');
     const unitSelect = document.getElementById('unitSelect');
     
@@ -678,6 +738,10 @@
     const lidStyleSelect = document.getElementById('lidStyleSelect');
     const paramExplode = document.getElementById('paramExplode');
     const checkCutaway = document.getElementById('checkCutaway');
+    const checkFlipX = document.getElementById('checkFlipX');
+    const checkFlipY = document.getElementById('checkFlipY');
+    const paramRotate = document.getElementById('paramRotate');
+    const paramRotateVal = document.getElementById('paramRotateVal');
 
     const paramWidthVal = document.getElementById('paramWidthVal');
     const paramDepthVal = document.getElementById('paramDepthVal');
@@ -724,6 +788,25 @@
         shape.bezierCurveTo(-35, -10, -15, -30, 0, -45);
         shape.bezierCurveTo(15, -30, 35, -10, 35, 15);
         shape.bezierCurveTo(35, 40, 0, 40, 0, 25);
+      } else if (type === 'tree') {
+        // Pravá polovina obrysu odshora dolů: hvězda na špičce, čtyři patra větví, kmen
+        const right = [
+          [0, 64],                      // špička hvězdy
+          [2.35, 57.24], [9.51, 57.09], // pravé rameno hvězdy
+          [3.80, 52.76], [5.88, 45.91], // pravý spodní cíp hvězdy
+          [13, 35], [8, 35],            // 1. patro
+          [20, 18], [11, 18],           // 2. patro
+          [28, 0], [13, 0],             // 3. patro
+          [36, -20], [6, -20],          // 4. patro
+          [6, -38]                      // kmen
+        ];
+        const pts = right.map(p => [p[0], p[1]]);
+        for (let i = right.length - 1; i >= 1; i--) {
+          pts.push([-right[i][0], right[i][1]]); // zrcadlená levá polovina
+        }
+        shape.moveTo(pts[0][0], pts[0][1]);
+        for (let i = 1; i < pts.length; i++) shape.lineTo(pts[i][0], pts[i][1]);
+        shape.closePath();
       } else if (type === 'hexagon') {
         const radius = 45;
         for (let i = 0; i < 6; i++) {
@@ -733,6 +816,22 @@
           if (i === 0) shape.moveTo(x, y);
           else shape.lineTo(x, y);
         }
+        shape.closePath();
+      } else if (type === 'fish') {
+        // Ryba hlavou doprava: tělo, hřbetní ploutev, ocasní ploutev
+        shape.moveTo(50, 0);                                   // nos
+        shape.bezierCurveTo(38, 16, 20, 22, 8, 21);            // hřbet
+        shape.lineTo(-4, 32);                                  // hřbetní ploutev
+        shape.lineTo(-10, 19);
+        shape.bezierCurveTo(-16, 15, -22, 10, -26, 7);         // zúžení k ocasu
+        shape.lineTo(-48, 24);                                 // horní špička ocasu
+        shape.lineTo(-40, 0);                                  // zářez ocasu
+        shape.lineTo(-48, -24);                                // dolní špička ocasu
+        shape.lineTo(-26, -7);
+        shape.bezierCurveTo(-22, -10, -16, -15, -10, -19);     // zúžení k ocasu (spodek)
+        shape.lineTo(-2, -29);                                 // spodní ploutev
+        shape.lineTo(8, -21);
+        shape.bezierCurveTo(20, -22, 38, -16, 50, 0);          // břicho
         shape.closePath();
       } else if (type === 'shield') {
         shape.moveTo(0, 45);
@@ -857,7 +956,9 @@
     function getNormalizedPoints(shapes, targetWidth, targetDepth, keepAspect) {
       if (!shapes || shapes.length === 0) return [];
       const outerShape = shapes[0];
-      const pts = outerShape.extractPoints(32).shape;
+      const pts = outerShape.extractPoints(64).shape;
+
+      if (!pts || pts.length < 3) return [];
 
       let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
       pts.forEach(p => {
@@ -869,6 +970,8 @@
 
       const widthDim = maxX - minX;
       const heightDim = maxY - minY;
+      if (widthDim === 0 || heightDim === 0) return [];
+
       const centerX = (minX + maxX) / 2;
       const centerY = (minY + maxY) / 2;
 
@@ -882,7 +985,10 @@
         scaleY = targetDepth / heightDim;
       }
 
-      const normalized = pts.map(p => new THREE.Vector2((p.x - centerX) * scaleX, (p.y - centerY) * scaleY));
+      // Zrcadlení / převrácení předlohy – krabička se pak vygeneruje z převráceného obrysu
+      const flipX = checkFlipX.checked ? -1 : 1;
+      const flipY = checkFlipY.checked ? -1 : 1;
+      const normalized = pts.map(p => new THREE.Vector2((p.x - centerX) * scaleX * flipX, (p.y - centerY) * scaleY * flipY));
       return ensureOrientation(normalized, false);
     }
 
@@ -1025,38 +1131,110 @@
       }
     }
 
-    function exportGroupToSTL(group, filename, isLid = false) {
-      if (!group) return;
-
-      scene.updateMatrixWorld(true);
-
+    // Sloučí geometrii skupiny do jednoho dílu v lokálních souřadnicích (Z = nahoru).
+    // Víko se otočí o 180° (vršek z náhledu dolů) a položí na podložku (min Z = 0).
+    function getMergedGeometryForGroup(group, isLid) {
       const geometries = [];
-      group.traverse(child => {
+      group.children.forEach(child => {
         if (child.isMesh && child.geometry) {
-          const clonedGeo = child.geometry.clone();
-          clonedGeo.applyMatrix4(child.matrixWorld);
-
-          if (isLid) {
-            const boxH = getParamValue(paramBoxHeight);
-            const lipH = getParamValue(paramLipHeight);
-            const explodeOffset = getParamValue(paramExplode);
-            const lidStyle = lidStyleSelect ? lidStyleSelect.value : 'inset';
-            const lidPosY = (lidStyle === 'inset') ? ((boxH - lipH) + explodeOffset) : ((boxH - getParamValue(paramLidHeight) + getParamValue(paramFloorThickness)) + explodeOffset);
-
-            clonedGeo.translate(0, -lidPosY, 0);
-            clonedGeo.rotateX(-Math.PI / 2);
-          } else {
-            clonedGeo.rotateX(Math.PI / 2);
-          }
-
-          geometries.push(clonedGeo);
+          geometries.push(child.geometry.clone());
         }
       });
+      if (geometries.length === 0) return null;
 
-      if (geometries.length === 0) {
-        showToast(translations[currentLang].toastSvgErr || "No geometry to export!");
-        return;
+      const merged = mergeGeometriesManual(geometries);
+
+      if (isLid) {
+        merged.rotateY(Math.PI); // otočení o 180° – vršek víka je teď dole
       }
+
+      // Položení na podložku (nejnižší bod na Z = 0)
+      merged.computeBoundingBox();
+      merged.translate(0, 0, -merged.boundingBox.min.z);
+      merged.computeBoundingBox();
+      return merged;
+    }
+
+    // Manuální bezpečné spojení buffer geometrií
+    function mergeGeometriesManual(geometries) {
+      let totalVertices = 0;
+      let totalIndices = 0;
+
+      geometries.forEach(geo => {
+        totalVertices += geo.attributes.position.count;
+        if (geo.index) totalIndices += geo.index.count;
+      });
+
+      const positionArray = new Float32Array(totalVertices * 3);
+      const normalArray = new Float32Array(totalVertices * 3);
+      const indexArray = totalIndices > 0 ? new Uint32Array(totalIndices) : null;
+
+      let vertexOffset = 0;
+      let indexOffset = 0;
+
+      geometries.forEach(geo => {
+        const posAttr = geo.attributes.position;
+        const normAttr = geo.attributes.normal;
+        const indexAttr = geo.index;
+
+        for (let i = 0; i < posAttr.count; i++) {
+          positionArray[(vertexOffset + i) * 3] = posAttr.getX(i);
+          positionArray[(vertexOffset + i) * 3 + 1] = posAttr.getY(i);
+          positionArray[(vertexOffset + i) * 3 + 2] = posAttr.getZ(i);
+
+          if (normAttr) {
+            normalArray[(vertexOffset + i) * 3] = normAttr.getX(i);
+            normalArray[(vertexOffset + i) * 3 + 1] = normAttr.getY(i);
+            normalArray[(vertexOffset + i) * 3 + 2] = normAttr.getZ(i);
+          }
+        }
+
+        if (indexAttr && indexArray) {
+          for (let i = 0; i < indexAttr.count; i++) {
+            indexArray[indexOffset + i] = indexAttr.getX(i) + vertexOffset;
+          }
+          indexOffset += indexAttr.count;
+        }
+
+        vertexOffset += posAttr.count;
+      });
+
+      const mergedGeo = new THREE.BufferGeometry();
+      mergedGeo.setAttribute('position', new THREE.BufferAttribute(positionArray, 3));
+      if (normalArray.length > 0) {
+        mergedGeo.setAttribute('normal', new THREE.BufferAttribute(normalArray, 3));
+      }
+      if (indexArray) {
+        mergedGeo.setIndex(new THREE.BufferAttribute(indexArray, 1));
+      }
+
+      return mergedGeo;
+    }
+
+    function exportSingleGroupToSTL(group, filename, isLid) {
+      if (!group) return;
+      const mergedGeo = getMergedGeometryForGroup(group, isLid);
+      if (!mergedGeo) return;
+      downloadGeometries([mergedGeo], filename);
+    }
+
+    function exportBothToSTL(filename) {
+      if (!baseMesh || !lidMesh) return;
+
+      const baseGeo = getMergedGeometryForGroup(baseMesh, false);
+      const lidGeo = getMergedGeometryForGroup(lidMesh, true);
+      if (!baseGeo || !lidGeo) return;
+
+      // Víko vedle dna s mezerou 10 mm, aby se nepřekrývaly
+      const gap = 10;
+      const shiftX = baseGeo.boundingBox.max.x - lidGeo.boundingBox.min.x + gap;
+      lidGeo.translate(shiftX, 0, 0);
+
+      downloadGeometries([baseGeo, lidGeo], filename);
+    }
+
+    function downloadGeometries(geometries, filename) {
+      if (geometries.length === 0) return;
 
       let totalTriangles = 0;
       geometries.forEach(geo => {
@@ -1068,11 +1246,6 @@
         }
       });
 
-      if (totalTriangles === 0) {
-        showToast("No triangles found!");
-        return;
-      }
-
       const bufferLength = 80 + 4 + totalTriangles * 50;
       const buffer = new ArrayBuffer(bufferLength);
       const dataView = new DataView(buffer);
@@ -1081,13 +1254,11 @@
       for (let i = 0; i < 80; i++) {
         dataView.setUint8(i, i < headerStr.length ? headerStr.charCodeAt(i) : 32);
       }
-
       dataView.setUint32(80, totalTriangles, true);
 
       let offset = 84;
-
       geometries.forEach(geo => {
-        const nonIndexedGeo = geo.index ? geo.toNonIndex() : geo;
+        const nonIndexedGeo = geo.index ? geo.toNonIndexed() : geo;
         const posAttr = nonIndexedGeo.attributes.position;
 
         for (let i = 0; i < posAttr.count; i += 3) {
@@ -1165,15 +1336,26 @@
       }
 
       checkCutaway.addEventListener('change', rebuildBox);
+      checkFlipX.addEventListener('change', rebuildBox);
+      checkFlipY.addEventListener('change', rebuildBox);
+
+      // Otáčení celé krabičky v náhledu (hodí se hlavně s řezem). Export není ovlivněn.
+      paramRotate.addEventListener('input', () => {
+        const deg = parseFloat(paramRotate.value);
+        paramRotateVal.textContent = deg.toFixed(0) + '°';
+        boxGroup.rotation.y = THREE.MathUtils.degToRad(deg);
+      });
 
       presetSelect.addEventListener('change', (e) => {
+        svgFileInput.value = '';
+        btnRemoveSvg.classList.add('hidden');
         currentShapes = createPresetShapes(e.target.value);
         if (e.target.value === 'rectangle') {
           checkKeepAspect.checked = false;
           containerDepth.classList.remove('hidden');
           paramWidth.value = 80;
           paramDepth.value = 50;
-        } else if (e.target.value === 'square') {
+        } else {
           checkKeepAspect.checked = true;
           containerDepth.classList.add('hidden');
         }
@@ -1198,6 +1380,9 @@
 
             if (shapes.length > 0) {
               currentShapes = shapes;
+              checkKeepAspect.checked = true;
+              containerDepth.classList.add('hidden');
+              btnRemoveSvg.classList.remove('hidden');
               rebuildBox();
               showToast(translations[currentLang].toastSvgSuccess);
             } else {
@@ -1210,12 +1395,22 @@
         reader.readAsText(file);
       });
 
+      btnRemoveSvg.addEventListener('click', () => {
+        svgFileInput.value = '';
+        btnRemoveSvg.classList.add('hidden');
+        currentShapes = createPresetShapes(presetSelect.value);
+        checkKeepAspect.checked = true;
+        containerDepth.classList.add('hidden');
+        rebuildBox();
+      });
+
       document.getElementById('btnViewBoth').addEventListener('click', () => { currentViewMode = 'both'; rebuildBox(); });
       document.getElementById('btnViewBox').addEventListener('click', () => { currentViewMode = 'box'; rebuildBox(); });
       document.getElementById('btnViewLid').addEventListener('click', () => { currentViewMode = 'lid'; rebuildBox(); });
 
-      document.getElementById('btnExportBase').addEventListener('click', () => exportGroupToSTL(baseMesh, 'krabicka_dno.stl', false));
-      document.getElementById('btnExportLid').addEventListener('click', () => exportGroupToSTL(lidMesh, 'krabicka_viko.stl', true));
+      document.getElementById('btnExportBase').addEventListener('click', () => exportSingleGroupToSTL(baseMesh, 'custom-shaped-box-base.stl', false));
+      document.getElementById('btnExportLid').addEventListener('click', () => exportSingleGroupToSTL(lidMesh, 'custom-shaped-box-lid.stl', true));
+      document.getElementById('btnExportBoth').addEventListener('click', () => exportBothToSTL('custom-shaped-box.stl'));
     }
 
     function animate() {
@@ -1229,6 +1424,8 @@
       bindEvents();
       setLanguage('en');
       updateValueLabels();
+      currentShapes = createPresetShapes('square');
+      rebuildBox();
       animate();
     };
   </script>
