@@ -118,7 +118,7 @@
             <option value="es">ES</option>
             <option value="fr">FR</option>
           </select>
-          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v3.0.5</span>
+          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v4.0.0</span>
         </div>
       </div>
 
@@ -159,6 +159,37 @@
               <button id="btnRemoveSvg" title="Remove SVG / Back to Presets" class="hidden p-2 bg-rose-600/80 hover:bg-rose-600 text-white rounded-lg transition text-xs flex items-center justify-center shrink-0">
                 <i class="fa-solid fa-xmark text-sm"></i>
               </button>
+            </div>
+          </div>
+
+          <div>
+            <label class="text-xs text-slate-300 mb-1 block" data-i18n="uploadImage">Or create the shape from an image (JPG, PNG, WebP):</label>
+            <div class="flex items-center gap-2">
+              <input type="file" id="imgFileInput" accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp" class="block w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-blue-400 hover:file:bg-slate-700 cursor-pointer border border-slate-800 rounded-lg bg-slate-900/50">
+              <button id="btnRemoveImg" data-i18n-title="removeImg" title="Remove image / Back to Presets" class="hidden p-2 bg-rose-600/80 hover:bg-rose-600 text-white rounded-lg transition text-xs flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-xmark text-sm"></i>
+              </button>
+            </div>
+            <div id="containerImage" class="hidden space-y-3 mt-3">
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-300" data-i18n="imgThreshold">Detection threshold</span>
+                  <span id="imgThresholdVal" class="font-mono text-blue-400 font-bold">128</span>
+                </div>
+                <input type="range" id="imgThreshold" min="10" max="245" step="1" value="128" class="w-full">
+              </div>
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-300" data-i18n="imgSmooth">Edge smoothing</span>
+                  <span id="imgSmoothVal" class="font-mono text-blue-400 font-bold">1.2</span>
+                </div>
+                <input type="range" id="imgSmooth" min="0" max="4" step="0.1" value="1.2" class="w-full">
+              </div>
+              <label class="flex items-center justify-between gap-2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 cursor-pointer">
+                <span class="text-xs text-slate-300" data-i18n="imgInvert">Invert (light object on dark background)</span>
+                <input type="checkbox" id="imgInvert" class="w-4 h-4 accent-blue-500 cursor-pointer">
+              </label>
+              <p class="text-[11px] leading-snug text-slate-500" data-i18n="imgHint">The largest outline in the image becomes the box shape.</p>
             </div>
           </div>
 
@@ -446,6 +477,15 @@
         toastSvgSuccess: "Custom SVG successfully loaded!",
         toastSvgErr: "Error: No valid outlines found in SVG!",
         toastFileErr: "Error processing SVG file!",
+        uploadImage: "Or create the shape from an image (JPG, PNG, WebP):",
+        imgThreshold: "Detection threshold",
+        imgSmooth: "Edge smoothing",
+        imgInvert: "Invert (light object on dark background)",
+        imgHint: "The largest outline in the image becomes the box shape. Holes and small separate parts are ignored. For the best result, keep “Smooth shape” below turned off.",
+        toastImgSuccess: "Image successfully converted to a box shape!",
+        toastImgErr: "Error: No shape found in the image. Try changing the threshold!",
+        toastImgFileErr: "Error processing the image file!",
+        removeImg: "Remove image / Back to Presets",
         toastDownloaded: "File {filename} successfully downloaded!",
         footerRights: "All rights reserved.",
         footerPrivacy: "All calculations run 100% locally in your browser.",
@@ -506,6 +546,15 @@
         toastSvgSuccess: "Vlastní SVG bylo úspěšně načteno!",
         toastSvgErr: "Chyba: V SVG nebyly nalezeny platné obrysy!",
         toastFileErr: "Chyba při zpracování SVG souboru!",
+        uploadImage: "Nebo vytvořit tvar z obrázku (JPG, PNG, WebP):",
+        imgThreshold: "Práh detekce",
+        imgSmooth: "Vyhlazení hran",
+        imgInvert: "Invertovat (světlý objekt na tmavém pozadí)",
+        imgHint: "Tvarem krabičky se stane největší obrys v obrázku. Díry a malé oddělené části se ignorují. Pro nejlepší výsledek nech níže vypnuté „Vyhladit tvar“.",
+        toastImgSuccess: "Obrázek byl úspěšně převeden na tvar krabičky!",
+        toastImgErr: "Chyba: V obrázku nebyl nalezen žádný tvar. Zkus změnit práh!",
+        toastImgFileErr: "Chyba při zpracování obrázku!",
+        removeImg: "Odebrat obrázek / Zpět na předvolby",
         toastDownloaded: "Soubor {filename} byl úspěšně stažen!",
         footerRights: "Všechna práva vyhrazena.",
         footerPrivacy: "Všechny výpočty probíhají 100% lokálně ve vašem prohlížeči.",
@@ -566,6 +615,15 @@
         toastSvgSuccess: "Eigene SVG erfolgreich geladen!",
         toastSvgErr: "Fehler: Keine gültigen Konturen in SVG gefunden!",
         toastFileErr: "Fehler beim Verarbeiten der SVG-Datei!",
+        uploadImage: "Oder Form aus einem Bild erstellen (JPG, PNG, WebP):",
+        imgThreshold: "Erkennungsschwelle",
+        imgSmooth: "Kantenglättung",
+        imgInvert: "Invertieren (helles Objekt auf dunklem Hintergrund)",
+        imgHint: "Die größte Kontur im Bild wird zur Boxform. Löcher und kleine getrennte Teile werden ignoriert. Für das beste Ergebnis lass „Form glätten“ unten ausgeschaltet.",
+        toastImgSuccess: "Bild erfolgreich in eine Boxform umgewandelt!",
+        toastImgErr: "Fehler: Im Bild wurde keine Form gefunden. Ändere die Schwelle!",
+        toastImgFileErr: "Fehler beim Verarbeiten der Bilddatei!",
+        removeImg: "Bild entfernen / Zurück zu den Formen",
         toastDownloaded: "Datei {filename} erfolgreich heruntergeladen!",
         footerRights: "Alle Rechte vorbehalten.",
         footerPrivacy: "Alle Berechnungen laufen zu 100% lokal in Ihrem Browser.",
@@ -626,6 +684,15 @@
         toastSvgSuccess: "¡SVG personalizado cargado con éxito!",
         toastSvgErr: "¡Error: No se encontraron contornos válidos!",
         toastFileErr: "¡Error al procesar el archivo SVG!",
+        uploadImage: "O crear la forma a partir de una imagen (JPG, PNG, WebP):",
+        imgThreshold: "Umbral de detección",
+        imgSmooth: "Suavizado de bordes",
+        imgInvert: "Invertir (objeto claro sobre fondo oscuro)",
+        imgHint: "El contorno más grande de la imagen se convierte en la forma de la caja. Los huecos y las partes pequeñas separadas se ignoran. Para el mejor resultado, deja desactivado «Suavizar forma» más abajo.",
+        toastImgSuccess: "¡Imagen convertida correctamente en la forma de la caja!",
+        toastImgErr: "Error: No se encontró ninguna forma en la imagen. ¡Prueba a cambiar el umbral!",
+        toastImgFileErr: "¡Error al procesar el archivo de imagen!",
+        removeImg: "Quitar imagen / Volver a las formas",
         toastDownloaded: "¡Archivo {filename} descargado con éxito!",
         footerRights: "Todos los derechos reservados.",
         footerPrivacy: "Cálculos 100% locales en tu navegador.",
@@ -686,6 +753,15 @@
         toastSvgSuccess: "SVG personnalisé chargé avec succès!",
         toastSvgErr: "Erreur: Aucun contour valide trouvé!",
         toastFileErr: "Erreur lors du traitement du fichier SVG!",
+        uploadImage: "Ou créer la forme à partir d'une image (JPG, PNG, WebP) :",
+        imgThreshold: "Seuil de détection",
+        imgSmooth: "Lissage des bords",
+        imgInvert: "Inverser (objet clair sur fond sombre)",
+        imgHint: "Le plus grand contour de l'image devient la forme de la boîte. Les trous et les petites parties séparées sont ignorés. Pour un meilleur résultat, laissez « Lisser la forme » désactivé ci-dessous.",
+        toastImgSuccess: "Image convertie avec succès en forme de boîte !",
+        toastImgErr: "Erreur : aucune forme trouvée dans l'image. Essayez de modifier le seuil !",
+        toastImgFileErr: "Erreur lors du traitement du fichier image !",
+        removeImg: "Retirer l'image / Retour aux formes",
         toastDownloaded: "Fichier {filename} téléchargé avec succès!",
         footerRights: "Tous droits réservés.",
         footerPrivacy: "Calculs 100% locaux dans votre navigateur.",
@@ -697,6 +773,26 @@
 
     // Seznam změn podle verzí (nejnovější nahoře)
     const changelogData = [
+      {
+        version: '4',
+        items: {
+          en: [
+            "Added creating a box straight from an image (JPG, PNG or WebP) – the image is traced into an outline automatically, with adjustable threshold and edge smoothing."
+          ],
+          cs: [
+            "Přidáno vytvoření krabičky přímo z obrázku (JPG, PNG nebo WebP) – obrázek se automaticky převede na obrys, s nastavitelným prahem a vyhlazením hran."
+          ],
+          de: [
+            "Neu: Box direkt aus einem Bild (JPG, PNG oder WebP) erstellen – das Bild wird automatisch in eine Kontur umgewandelt, mit einstellbarer Schwelle und Kantenglättung."
+          ],
+          es: [
+            "Nueva función: crear una caja directamente a partir de una imagen (JPG, PNG o WebP); la imagen se convierte automáticamente en un contorno, con umbral y suavizado de bordes ajustables."
+          ],
+          fr: [
+            "Nouveau : créer une boîte directement à partir d'une image (JPG, PNG ou WebP) – l'image est convertie automatiquement en contour, avec seuil et lissage des bords réglables."
+          ]
+        }
+      },
       {
         version: '3',
         items: {
@@ -821,6 +917,10 @@
         if (translations[lang][key]) {
           el.textContent = translations[lang][key];
         }
+      });
+      document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        const txt = translations[lang][el.getAttribute('data-i18n-title')];
+        if (txt) el.setAttribute('title', txt);
       });
       updateValueLabels();
     }
@@ -1134,7 +1234,183 @@
       return pts.slice();
     }
 
+function blurField(f, w, h, sg) {
+  const r = Math.max(1, Math.ceil(sg * 3)), k = new Float32Array(2 * r + 1);
+  let sum = 0;
+  for (let i = -r; i <= r; i++) { k[i + r] = Math.exp(-i * i / (2 * sg * sg)); sum += k[i + r]; }
+  for (let i = 0; i < k.length; i++) k[i] /= sum;
+  const t = new Float32Array(f.length), o = new Float32Array(f.length);
+  for (let y = 0; y < h; y++) {
+    const row = y * w;
+    for (let x = 0; x < w; x++) {
+      let acc = 0;
+      for (let i = -r; i <= r; i++) { let xx = x + i; xx = xx < 0 ? 0 : xx >= w ? w - 1 : xx; acc += f[row + xx] * k[i + r]; }
+      t[row + x] = acc;
+    }
+  }
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      let acc = 0;
+      for (let i = -r; i <= r; i++) { let yy = y + i; yy = yy < 0 ? 0 : yy >= h ? h - 1 : yy; acc += t[yy * w + x] * k[i + r]; }
+      o[y * w + x] = acc;
+    }
+  }
+  return o;
+}
+
+// Euklidovská distanční transformace (Felzenszwalb) - čtverec vzdálenosti k nejbližšímu pixelu s feat=1
+function sqDistMap(feat, w, h) {
+  const INF = 1e20, g = new Float32Array(w * h), n = Math.max(w, h);
+  for (let i = 0; i < g.length; i++) g[i] = feat[i] ? 0 : INF;
+  const v = new Int32Array(n), z = new Float64Array(n + 1), col = new Float64Array(n), out = new Float64Array(n);
+  const pass = len => {
+    let k = 0; v[0] = 0; z[0] = -INF; z[1] = INF;
+    for (let q = 1; q < len; q++) {
+      let sx = ((col[q] + q * q) - (col[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]);
+      while (sx <= z[k]) { k--; sx = ((col[q] + q * q) - (col[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]); }
+      k++; v[k] = q; z[k] = sx; z[k + 1] = INF;
+    }
+    k = 0;
+    for (let q = 0; q < len; q++) { while (z[k + 1] < q) k++; const dq = q - v[k]; out[q] = dq * dq + col[v[k]]; }
+  };
+  for (let x = 0; x < w; x++) { for (let y = 0; y < h; y++) col[y] = g[y * w + x]; pass(h); for (let y = 0; y < h; y++) g[y * w + x] = out[y]; }
+  for (let y = 0; y < h; y++) { for (let x = 0; x < w; x++) col[x] = g[y * w + x]; pass(w); for (let x = 0; x < w; x++) g[y * w + x] = out[x]; }
+  return g;
+}
+
+// Marching squares s lineární interpolací -> uzavřené smyčky bodů
+function contourLoops(f, fw, fh, L) {
+  const adj = new Map();
+  const add = (a, b) => {
+    (adj.get(a) || adj.set(a, []).get(a)).push(b);
+    (adj.get(b) || adj.set(b, []).get(b)).push(a);
+  };
+  for (let y = 0; y < fh - 1; y++) {
+    for (let x = 0; x < fw - 1; x++) {
+      const i = y * fw + x;
+      const va = f[i], vb = f[i + 1], vc = f[i + fw + 1], vd = f[i + fw];
+      const idx = (va > L ? 8 : 0) | (vb > L ? 4 : 0) | (vc > L ? 2 : 0) | (vd > L ? 1 : 0);
+      if (idx === 0 || idx === 15) continue;
+      const T = i * 2, B = (i + fw) * 2, Lf = i * 2 + 1, R = (i + 1) * 2 + 1;
+      switch (idx) {
+        case 1: case 14: add(Lf, B); break;
+        case 2: case 13: add(B, R); break;
+        case 3: case 12: add(Lf, R); break;
+        case 4: case 11: add(T, R); break;
+        case 6: case 9: add(T, B); break;
+        case 7: case 8: add(T, Lf); break;
+        case 5: case 10: {
+          const inside = (va + vb + vc + vd) / 4 > L;
+          const aIso = (idx === 5) === inside;   // oddělit rohy a,c (T-L, B-R) nebo b,d
+          if (aIso) { add(T, Lf); add(B, R); } else { add(T, R); add(Lf, B); }
+        }
+      }
+    }
+  }
+  const pt = key => {
+    const t = key & 1, id = key >> 1, y = Math.floor(id / fw), x = id - y * fw;
+    if (t === 0) { const a = f[id], b = f[id + 1]; return [x + (L - a) / (b - a), y]; }
+    const a = f[id], b = f[id + fw]; return [x, y + (L - a) / (b - a)];
+  };
+  const visited = new Set(), loops = [];
+  for (const k0 of adj.keys()) {
+    if (visited.has(k0)) continue;
+    const pts = [];
+    let prev = -1, cur = k0;
+    while (true) {
+      visited.add(cur); pts.push(pt(cur));
+      const n = adj.get(cur);
+      if (n.length < 2) break;
+      const nx = n[0] !== prev ? n[0] : n[1];
+      prev = cur; cur = nx;
+      if (cur === k0 || visited.has(cur)) break;
+    }
+    if (pts.length > 3) loops.push(pts);
+  }
+  return loops;
+}
+
+function loopArea(p) {
+  let a = 0;
+  for (let i = 0, n = p.length; i < n; i++) { const q = p[(i + 1) % n]; a += p[i][0] * q[1] - q[0] * p[i][1]; }
+  return a / 2;
+}
+
+// Ramer–Douglas–Peucker (iterativně) pro uzavřenou smyčku
+function rdpClosed(pts, tol) {
+  const n = pts.length;
+  let m = 0, best = -1;
+  for (let i = 1; i < n; i++) {
+    const dx = pts[i][0] - pts[0][0], dy = pts[i][1] - pts[0][1], dd = dx * dx + dy * dy;
+    if (dd > best) { best = dd; m = i; }
+  }
+  const ext = pts.concat([pts[0]]);
+  const keep = new Uint8Array(ext.length);
+  keep[0] = keep[m] = keep[n] = 1;
+  const stack = [[0, m], [m, n]];
+  while (stack.length) {
+    const [a, b] = stack.pop();
+    if (b - a < 2) continue;
+    const A = ext[a], B = ext[b];
+    const dx = B[0] - A[0], dy = B[1] - A[1], len = Math.hypot(dx, dy) || 1e-9;
+    let md = -1, mi = -1;
+    for (let i = a + 1; i < b; i++) {
+      const dist = Math.abs((ext[i][0] - A[0]) * dy - (ext[i][1] - A[1]) * dx) / len;
+      if (dist > md) { md = dist; mi = i; }
+    }
+    if (md > tol) { keep[mi] = 1; stack.push([a, mi], [mi, b]); }
+  }
+  const out = [];
+  for (let i = 0; i < n; i++) if (keep[i]) out.push(ext[i]);
+  return out;
+}
+
+
+    // Robustní odsazení obrysu (dovnitř i ven) přes rastr + distanční pole.
+    // Nevznikají smyčky ani hroty; tenké výběžky se při odsazení dovnitř prostě ztratí.
+    function rasterOffset(points, offset) {
+      let pts = points.slice();
+      if (pts[0].equals(pts[pts.length - 1])) pts.pop();
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      pts.forEach(p => { minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x); minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y); });
+      const cell = Math.max(maxX - minX, maxY - minY) / 1100;
+      const pad = Math.ceil(Math.max(0, offset) / cell) + 6;
+      const W = Math.ceil((maxX - minX) / cell) + 2 * pad, H = Math.ceil((maxY - minY) / cell) + 2 * pad;
+      const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      const c = cv.getContext('2d', { willReadFrequently: true });
+      c.fillStyle = '#000'; c.beginPath();
+      pts.forEach((p, i) => { const x = (p.x - minX) / cell + pad, y = (p.y - minY) / cell + pad; if (i) c.lineTo(x, y); else c.moveTo(x, y); });
+      c.closePath(); c.fill();
+      const img = c.getImageData(0, 0, W, H).data;
+      const n = W * H, inside = new Uint8Array(n), outside = new Uint8Array(n);
+      for (let i = 0; i < n; i++) { if (img[i * 4 + 3] > 127) inside[i] = 1; else outside[i] = 1; }
+      const dOut = sqDistMap(inside, W, H), dIn = sqDistMap(outside, W, H);
+      let f = new Float32Array(n);
+      for (let i = 0; i < n; i++) f[i] = inside[i] ? Math.sqrt(dIn[i]) - 0.5 : 0.5 - Math.sqrt(dOut[i]);
+      f = blurField(f, W, H, 1.0);
+      const loops = contourLoops(f, W, H, -offset / cell);
+      if (!loops.length) return [];
+      const big = loops.reduce((a, b) => Math.abs(loopArea(a)) >= Math.abs(loopArea(b)) ? a : b);
+      const simp = rdpClosed(big, 0.6);
+      if (simp.length < 3) return [];
+      return ensureOrientation(simp.map(q => new THREE.Vector2(minX + (q[0] + 0.5 - pad) * cell, minY + (q[1] + 0.5 - pad) * cell)), false);
+    }
+
+    const offsetCache = new Map();
     function createOffsetPath(points, offset) {
+      if (!points || points.length < 3) return [];
+      let sx = 0, sy = 0;
+      points.forEach(p => { sx += p.x; sy += p.y * 1.0001; });
+      const key = points.length + '|' + offset.toFixed(3) + '|' + sx.toFixed(3) + '|' + sy.toFixed(3);
+      if (offsetCache.has(key)) return offsetCache.get(key).map(p => p.clone());
+      let res;
+      try { res = rasterOffset(points, offset); } catch (e) { console.warn(e); res = createOffsetPathLegacy(points, offset); }
+      if (offsetCache.size > 24) offsetCache.delete(offsetCache.keys().next().value);
+      offsetCache.set(key, res.map(p => p.clone()));
+      return res;
+    }
+
+    function createOffsetPathLegacy(points, offset) {
       if (!points || points.length < 3) return [];
 
       let cleanPts = points.slice();
@@ -1228,8 +1504,11 @@
 
     function getNormalizedPoints(shapes, targetWidth, targetDepth, keepAspect) {
       if (!shapes || shapes.length === 0) return [];
-      const outerShape = shapes[0];
-      let pts = outerShape.extractPoints(64).shape;
+      let pts = null, bestA = -1;   // použij největší tvar, ne jen první
+      shapes.forEach(sh => {
+        const pp = sh.extractPoints(64).shape;
+        if (pp && pp.length >= 3) { const ar = Math.abs(getSignedArea(pp)); if (ar > bestA) { bestA = ar; pts = pp; } }
+      });
       if (checkSmooth.checked && pts && pts.length >= 3) {
         pts = smoothClosedPolyline(pts, parseInt(paramSmooth.value, 10) || 2);
       }
@@ -1606,6 +1885,38 @@
       setTimeout(() => toast.classList.add('hidden'), 4000);
     }
 
+    // Obrázek (JPG/PNG/WebP) -> tvar krabičky: vyhlazené pole jasu/průhlednosti, kontura (marching squares), největší obrys
+    function traceImageToShape(img, thr, smooth, inv) {
+      const w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
+      const s = Math.min(3, 1400 / Math.max(w, h));
+      const W = Math.max(1, Math.round(w * s)), H = Math.max(1, Math.round(h * s));
+      const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      const c = cv.getContext('2d', { willReadFrequently: true });
+      c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
+      c.drawImage(img, 0, 0, W, H);
+      const d = c.getImageData(0, 0, W, H).data;
+      let hasAlpha = false;   // průhledné PNG: tvar určuje jen průhlednost
+      for (let i = 3; i < d.length; i += 4) if (d[i] < 250) { hasAlpha = true; break; }
+      const PAD = 4, fw = W + 2 * PAD, fh = H + 2 * PAD;
+      let f = new Float32Array(fw * fh);
+      for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+          const i = (y * W + x) * 4, a = d[i + 3] / 255;
+          const lum = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) / 255;
+          f[(y + PAD) * fw + x + PAD] = hasAlpha ? a : a * (inv ? lum : 1 - lum);
+        }
+      }
+      const sigma = smooth * s;
+      if (sigma > 0.3) f = blurField(f, fw, fh, sigma);
+      const loops = contourLoops(f, fw, fh, 1 - thr / 255);
+      if (!loops.length) return null;
+      const big = loops.reduce((a, b) => Math.abs(loopArea(a)) >= Math.abs(loopArea(b)) ? a : b);
+      let tl = 0.3 * s, pts = rdpClosed(big, tl), g = 0;
+      while (pts.length > 700 && g++ < 40) { tl *= 1.25; pts = rdpClosed(big, tl); }
+      if (pts.length < 3) return null;
+      return new THREE.Shape(pts.map(q => new THREE.Vector2((q[0] - PAD) / s, (q[1] - PAD) / s)));
+    }
+
     function bindEvents() {
       const inputs = [paramWidth, paramDepth, paramBoxHeight, paramLidHeight, paramWallThickness, paramFloorThickness, paramLipHeight, paramTolerance, paramExplode];
 
@@ -1685,6 +1996,7 @@
 
       presetSelect.addEventListener('change', (e) => {
         svgFileInput.value = '';
+        resetImage();
         btnRemoveSvg.classList.add('hidden');
         currentShapes = createPresetShapes(e.target.value);
         updateSidesVisibility();
@@ -1718,6 +2030,7 @@
 
             if (shapes.length > 0) {
               currentShapes = shapes;
+              resetImage();
               checkKeepAspect.checked = true;
               containerDepth.classList.add('hidden');
               btnRemoveSvg.classList.remove('hidden');
@@ -1734,8 +2047,78 @@
         reader.readAsText(file);
       });
 
+      // ----- Tvar z obrázku (JPG / PNG / WebP) -----
+      const imgFileInput = document.getElementById('imgFileInput');
+      const containerImage = document.getElementById('containerImage');
+      const imgThreshold = document.getElementById('imgThreshold');
+      const imgThresholdVal = document.getElementById('imgThresholdVal');
+      const imgSmooth = document.getElementById('imgSmooth');
+      const imgSmoothVal = document.getElementById('imgSmoothVal');
+      const imgInvert = document.getElementById('imgInvert');
+      const btnRemoveImg = document.getElementById('btnRemoveImg');
+      let loadedImage = null, imgTimer = null;
+
+      function resetImage() {
+        loadedImage = null;
+        imgFileInput.value = '';
+        containerImage.classList.add('hidden');
+        btnRemoveImg.classList.add('hidden');
+        btnRemoveSvg.style.display = '';
+      }
+
+      // křížek u obrázku vrací tvar na předvolby (stejná akce jako křížek u SVG)
+      btnRemoveImg.addEventListener('click', () => btnRemoveSvg.click());
+
+      function retraceImage() {
+        if (!loadedImage) return false;
+        const t = translations[currentLang];
+        let shape = null;
+        try {
+          shape = traceImageToShape(loadedImage, parseInt(imgThreshold.value, 10), parseFloat(imgSmooth.value), imgInvert.checked);
+        } catch (err) {
+          console.error(err);
+          showToast(t.toastImgFileErr);
+          return false;
+        }
+        if (!shape) { showToast(t.toastImgErr); return false; }
+        currentShapes = [shape];
+        checkKeepAspect.checked = true;
+        containerDepth.classList.add('hidden');
+        btnRemoveSvg.classList.remove('hidden');   // příznak "vlastní tvar" (název souboru, počet stran)
+        btnRemoveSvg.style.display = 'none';       // u obrázku se místo něj ukazuje křížek vedle výběru obrázku
+        btnRemoveImg.classList.remove('hidden');
+        updateSidesVisibility();
+        rebuildBox();
+        return true;
+      }
+
+      imgFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          URL.revokeObjectURL(url);
+          loadedImage = img;
+          svgFileInput.value = '';
+          containerImage.classList.remove('hidden');
+          if (retraceImage()) showToast(translations[currentLang].toastImgSuccess);
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(url);
+          showToast(translations[currentLang].toastImgFileErr);
+        };
+        img.src = url;
+      });
+
+      function scheduleRetrace() { clearTimeout(imgTimer); imgTimer = setTimeout(retraceImage, 250); }
+      imgThreshold.addEventListener('input', () => { imgThresholdVal.textContent = imgThreshold.value; scheduleRetrace(); });
+      imgSmooth.addEventListener('input', () => { imgSmoothVal.textContent = parseFloat(imgSmooth.value).toFixed(1); scheduleRetrace(); });
+      imgInvert.addEventListener('change', scheduleRetrace);
+
       btnRemoveSvg.addEventListener('click', () => {
         svgFileInput.value = '';
+        resetImage();
         btnRemoveSvg.classList.add('hidden');
         currentShapes = createPresetShapes(presetSelect.value);
         updateSidesVisibility();
