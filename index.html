@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Box Generator from SVG,PNG,JPG</title>
+  <title>3D Box Generator from SVG, JPG & PNG</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -73,6 +73,20 @@
 </head>
 <body class="h-full flex flex-col overflow-hidden font-sans antialiased">
 
+  <!-- About bubble -->
+  <div id="aboutModal" class="hidden fixed inset-0 z-[100] items-center justify-center p-4 bg-black/60">
+    <div class="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between px-5 py-3 border-b border-slate-800">
+        <h2 class="font-bold text-slate-100 flex items-center gap-2">
+          <i class="fa-solid fa-circle-info text-blue-400"></i>
+          <span data-i18n="aboutTitle">About BoxGenerator</span>
+        </h2>
+        <button id="btnAboutClose" type="button" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="aboutBody" class="p-5 space-y-4 overflow-y-auto text-sm text-slate-300"></div>
+    </div>
+  </div>
+
   <!-- Changelog bubble -->
   <div id="changelogModal" class="hidden fixed inset-0 z-[100] items-center justify-center p-4 bg-black/60">
     <div class="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl w-full max-w-md max-h-[80vh] flex flex-col">
@@ -118,7 +132,7 @@
             <option value="es">ES</option>
             <option value="fr">FR</option>
           </select>
-          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v4.0.0</span>
+          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v4.0.1</span>
         </div>
       </div>
 
@@ -126,7 +140,7 @@
         <!-- 1. SVG Input -->
         <section class="space-y-3">
           <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-            <i class="fa-solid fa-shapes text-blue-400"></i> <span data-i18n="sectionInput">1. Input Shape (2D SVG)</span>
+            <i class="fa-solid fa-shapes text-blue-400"></i> <span data-i18n="sectionInput">1. Input Shape (SVG, JPG, PNG)</span>
           </label>
           <div>
             <label class="text-xs text-slate-300 mb-1 block" data-i18n="presetShapes">Preset Shapes:</label>
@@ -381,7 +395,8 @@
         <div class="footer-left">
           <div>© 2026 <strong><a href="https://hazda.cz" target="_blank">Adam Hazda</a></strong>. <span id="txtAllRights" data-i18n="footerRights">All rights reserved.</span></div>
           <div style="font-size: 0.75rem; margin-top: 0.2rem;" id="txtPrivacyNote" data-i18n="footerPrivacy">All calculations run 100% locally in your browser.</div>
-          <div style="font-size: 0.75rem;">
+          <div style="font-size: 0.75rem;" class="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <button id="btnAbout" type="button" class="underline hover:text-slate-200 text-left" data-i18n="footerAbout">About BoxGenerator</button>
             <button id="btnChangelog" type="button" class="underline hover:text-slate-200 text-left" data-i18n="footerChangelog">Changelog</button>
           </div>
         </div>
@@ -428,7 +443,7 @@
         appTitle: "3D Box Generator",
         tabPreview: "3D Preview",
         tabControls: "Parameters & Export",
-        sectionInput: "1. Input Shape (2D SVG)",
+        sectionInput: "1. Input Shape (SVG, JPG, PNG)",
         presetShapes: "Preset Shapes:",
         shapeSquare: "Square",
         shapeRectangle: "Rectangle",
@@ -489,6 +504,8 @@
         toastDownloaded: "File {filename} successfully downloaded!",
         footerRights: "All rights reserved.",
         footerPrivacy: "All calculations run 100% locally in your browser.",
+        footerAbout: "About BoxGenerator",
+        aboutTitle: "About BoxGenerator",
         footerChangelog: "Changelog",
         changelogTitle: "Changelog",
         changelogVersion: "Version"
@@ -497,7 +514,7 @@
         appTitle: "3D Box Generator",
         tabPreview: "3D Náhled",
         tabControls: "Parametry & Export",
-        sectionInput: "1. Vstupní Tvar (2D SVG)",
+        sectionInput: "1. Vstupní tvar (SVG, JPG, PNG)",
         presetShapes: "Předdefinované Tvary:",
         shapeSquare: "Čtverec",
         shapeRectangle: "Obdélník",
@@ -558,6 +575,8 @@
         toastDownloaded: "Soubor {filename} byl úspěšně stažen!",
         footerRights: "Všechna práva vyhrazena.",
         footerPrivacy: "Všechny výpočty probíhají 100% lokálně ve vašem prohlížeči.",
+        footerAbout: "O BoxGeneratoru",
+        aboutTitle: "O BoxGeneratoru",
         footerChangelog: "Seznam změn",
         changelogTitle: "Seznam změn",
         changelogVersion: "Verze"
@@ -566,7 +585,7 @@
         appTitle: "3D-Box-Generator",
         tabPreview: "3D-Vorschau",
         tabControls: "Parameter & Export",
-        sectionInput: "1. Eingabeform (2D SVG)",
+        sectionInput: "1. Eingabeform (SVG, JPG, PNG)",
         presetShapes: "Vorgegebene Formen:",
         shapeSquare: "Quadrat",
         shapeRectangle: "Rechteck",
@@ -627,6 +646,8 @@
         toastDownloaded: "Datei {filename} erfolgreich heruntergeladen!",
         footerRights: "Alle Rechte vorbehalten.",
         footerPrivacy: "Alle Berechnungen laufen zu 100% lokal in Ihrem Browser.",
+        footerAbout: "Über BoxGenerator",
+        aboutTitle: "Über BoxGenerator",
         footerChangelog: "Änderungsprotokoll",
         changelogTitle: "Änderungsprotokoll",
         changelogVersion: "Version"
@@ -635,7 +656,7 @@
         appTitle: "Generador de Cajas 3D",
         tabPreview: "Vista 3D",
         tabControls: "Parámetros y Exportar",
-        sectionInput: "1. Forma de Entrada (2D SVG)",
+        sectionInput: "1. Forma de entrada (SVG, JPG, PNG)",
         presetShapes: "Formas Predeterminadas:",
         shapeSquare: "Cuadrado",
         shapeRectangle: "Rectángulo",
@@ -696,6 +717,8 @@
         toastDownloaded: "¡Archivo {filename} descargado con éxito!",
         footerRights: "Todos los derechos reservados.",
         footerPrivacy: "Cálculos 100% locales en tu navegador.",
+        footerAbout: "Acerca de BoxGenerator",
+        aboutTitle: "Acerca de BoxGenerator",
         footerChangelog: "Historial de cambios",
         changelogTitle: "Historial de cambios",
         changelogVersion: "Versión"
@@ -704,7 +727,7 @@
         appTitle: "Générateur de Boîte 3D",
         tabPreview: "Aperçu 3D",
         tabControls: "Paramètres & Export",
-        sectionInput: "1. Forme d'Entrée (2D SVG)",
+        sectionInput: "1. Forme d'entrée (SVG, JPG, PNG)",
         presetShapes: "Formes Prédéfinies:",
         shapeSquare: "Carré",
         shapeRectangle: "Rectangle",
@@ -765,6 +788,8 @@
         toastDownloaded: "Fichier {filename} téléchargé avec succès!",
         footerRights: "Tous droits réservés.",
         footerPrivacy: "Calculs 100% locaux dans votre navigateur.",
+        footerAbout: "À propos de BoxGenerator",
+        aboutTitle: "À propos de BoxGenerator",
         footerChangelog: "Historique des modifications",
         changelogTitle: "Historique des modifications",
         changelogVersion: "Version"
@@ -777,19 +802,24 @@
         version: '4',
         items: {
           en: [
-            "Added creating a box straight from an image (JPG, PNG or WebP) – the image is traced into an outline automatically, with adjustable threshold and edge smoothing."
+            "Added creating a box straight from an image (JPG, PNG or WebP) – the image is traced into an outline automatically, with adjustable threshold and edge smoothing.",
+            "Added the About BoxGenerator section, and the input section title now mentions JPG and PNG."
           ],
           cs: [
-            "Přidáno vytvoření krabičky přímo z obrázku (JPG, PNG nebo WebP) – obrázek se automaticky převede na obrys, s nastavitelným prahem a vyhlazením hran."
+            "Přidáno vytvoření krabičky přímo z obrázku (JPG, PNG nebo WebP) – obrázek se automaticky převede na obrys, s nastavitelným prahem a vyhlazením hran.",
+            "Přidána sekce O BoxGeneratoru a titulek vstupního tvaru nyní zmiňuje i JPG a PNG."
           ],
           de: [
-            "Neu: Box direkt aus einem Bild (JPG, PNG oder WebP) erstellen – das Bild wird automatisch in eine Kontur umgewandelt, mit einstellbarer Schwelle und Kantenglättung."
+            "Neu: Box direkt aus einem Bild (JPG, PNG oder WebP) erstellen – das Bild wird automatisch in eine Kontur umgewandelt, mit einstellbarer Schwelle und Kantenglättung.",
+            "Neuer Bereich „Über BoxGenerator“; der Titel der Eingabeform nennt jetzt auch JPG und PNG."
           ],
           es: [
-            "Nueva función: crear una caja directamente a partir de una imagen (JPG, PNG o WebP); la imagen se convierte automáticamente en un contorno, con umbral y suavizado de bordes ajustables."
+            "Nueva función: crear una caja directamente a partir de una imagen (JPG, PNG o WebP); la imagen se convierte automáticamente en un contorno, con umbral y suavizado de bordes ajustables.",
+            "Nueva sección «Acerca de BoxGenerator»; el título de la forma de entrada ahora menciona también JPG y PNG."
           ],
           fr: [
-            "Nouveau : créer une boîte directement à partir d'une image (JPG, PNG ou WebP) – l'image est convertie automatiquement en contour, avec seuil et lissage des bords réglables."
+            "Nouveau : créer une boîte directement à partir d'une image (JPG, PNG ou WebP) – l'image est convertie automatiquement en contour, avec seuil et lissage des bords réglables.",
+            "Nouvelle section « À propos de BoxGenerator » ; le titre de la forme d'entrée mentionne désormais aussi JPG et PNG."
           ]
         }
       },
@@ -865,6 +895,180 @@
       }
     ];
 
+    // Obsah okna "About BoxGenerator" (lokalizovaný)
+    const BMAC_URL = 'https://www.buymeacoffee.com/hazda.cz';
+    const aboutData = {
+      en: {
+        intro: "BoxGenerator turns any 2D outline into a 3D-printable box with a matching lid, right in your browser. Pick a shape, set the dimensions and download the STL files for your slicer.",
+        featuresTitle: "What it can do",
+        features: [
+          "Ready-made shapes (square, circle, star, heart, tree, fish, polygon with an adjustable number of sides and more).",
+          "Your own shape from an SVG file, or from a JPG, PNG or WebP image that is traced into an outline automatically.",
+          "Mirror and flip the template, and smooth rounded shapes so the walls are not faceted.",
+          "Full control of the box: size, height, lid height, wall and floor thickness, lock lip and clearance.",
+          "Two lid styles: an internal lip (flush) or an overlapping cap like a shoe box.",
+          "3D preview with exploded view, cutaway and rotation; millimetres or inches.",
+          "STL export of the base, the lid, or both together. The lid is exported upside down and lying flat, ready to print."
+        ],
+        howTitle: "How to use it",
+        how: [
+          "Choose a preset shape, or upload your own SVG or image.",
+          "Set the dimensions and the lock clearance that suits your printer.",
+          "Check the result in the 3D preview (exploded view, cutaway, rotation).",
+          "Download the STL, open it in your slicer and print."
+        ],
+        freeTitle: "About the project",
+        free: "I develop BoxGenerator in my free time as a free helper for all 3D printing enthusiasts. Everything runs locally in your browser and nothing is uploaded anywhere.",
+        support: "If it saves you some time and you would like to support further development, you can send me a small contribution. It is entirely optional and much appreciated.",
+        coffee: "Buy me a coffee"
+      },
+      cs: {
+        intro: "BoxGenerator promění libovolný 2D obrys v krabičku s víkem pro 3D tisk, přímo ve vašem prohlížeči. Vyberete tvar, nastavíte rozměry a stáhnete STL soubory pro slicer.",
+        featuresTitle: "Co umí",
+        features: [
+          "Hotové tvary (čtverec, kruh, hvězda, srdce, stromek, ryba, mnohoúhelník s nastavitelným počtem stran a další).",
+          "Vlastní tvar ze souboru SVG, nebo z obrázku JPG, PNG či WebP, který se automaticky převede na obrys.",
+          "Zrcadlení a převrácení předlohy a vyhlazení zaoblených tvarů, aby stěny nebyly hranaté.",
+          "Plná kontrola nad krabičkou: velikost, výška, výška víka, tloušťka stěn a dna, výška zámku a vůle.",
+          "Dva styly víka: vnitřní osazení (v jedné rovině) nebo přesahující víko jako od krabice od bot.",
+          "3D náhled s rozloženým pohledem, řezem a otáčením; milimetry nebo palce.",
+          "Export STL pro spodek, víko, nebo obojí dohromady. Víko se exportuje vrškem dolů a položené na podložce, připravené k tisku."
+        ],
+        howTitle: "Jak ho používat",
+        how: [
+          "Vyberte předdefinovaný tvar, nebo nahrajte vlastní SVG či obrázek.",
+          "Nastavte rozměry a vůli zámku podle své tiskárny.",
+          "Zkontrolujte výsledek v 3D náhledu (rozložení, řez, otáčení).",
+          "Stáhněte STL, otevřete ho ve sliceru a vytiskněte."
+        ],
+        freeTitle: "O projektu",
+        free: "BoxGenerator vyvíjím ve svém volném čase jako bezplatnou pomůcku pro všechny 3D tiskaře. Vše běží lokálně ve vašem prohlížeči a nic se nikam nenahrává.",
+        support: "Pokud vám ušetří čas a chcete podpořit další vývoj, můžete mi poslat drobný příspěvek. Je to zcela dobrovolné a moc mě to potěší.",
+        coffee: "Buy me a coffee"
+      },
+      de: {
+        intro: "BoxGenerator verwandelt jede 2D-Kontur direkt in Ihrem Browser in eine 3D-druckbare Box mit passendem Deckel. Form wählen, Maße einstellen und die STL-Dateien für den Slicer herunterladen.",
+        featuresTitle: "Was es kann",
+        features: [
+          "Fertige Formen (Quadrat, Kreis, Stern, Herz, Baum, Fisch, Vieleck mit einstellbarer Seitenanzahl und mehr).",
+          "Eigene Form aus einer SVG-Datei oder aus einem JPG-, PNG- oder WebP-Bild, das automatisch in eine Kontur umgewandelt wird.",
+          "Vorlage spiegeln und umkehren sowie runde Formen glätten, damit die Wände nicht kantig sind.",
+          "Volle Kontrolle über die Box: Größe, Höhe, Deckelhöhe, Wand- und Bodenstärke, Lippenhöhe und Spiel.",
+          "Zwei Deckelstile: Innenlippe (bündig) oder überstehender Deckel wie bei einem Schuhkarton.",
+          "3D-Vorschau mit Explosionsansicht, Schnittansicht und Drehen; Millimeter oder Zoll.",
+          "STL-Export von Unterteil, Deckel oder beidem zusammen. Der Deckel wird auf den Kopf gedreht und flach liegend exportiert, druckfertig."
+        ],
+        howTitle: "So wird es benutzt",
+        how: [
+          "Eine vorgegebene Form wählen oder eine eigene SVG-Datei bzw. ein Bild hochladen.",
+          "Maße und Spiel des Verschlusses passend zu Ihrem Drucker einstellen.",
+          "Das Ergebnis in der 3D-Vorschau prüfen (Explosion, Schnitt, Drehen).",
+          "STL herunterladen, im Slicer öffnen und drucken."
+        ],
+        freeTitle: "Über das Projekt",
+        free: "Ich entwickle BoxGenerator in meiner Freizeit als kostenloses Hilfsmittel für alle 3D-Druck-Fans. Alles läuft lokal in Ihrem Browser, es wird nichts hochgeladen.",
+        support: "Wenn es Ihnen Zeit spart und Sie die Weiterentwicklung unterstützen möchten, freue ich mich über einen kleinen Beitrag. Er ist völlig freiwillig.",
+        coffee: "Buy me a coffee"
+      },
+      es: {
+        intro: "BoxGenerator convierte cualquier contorno 2D en una caja imprimible en 3D con su tapa, directamente en tu navegador. Elige una forma, ajusta las medidas y descarga los archivos STL para tu slicer.",
+        featuresTitle: "Qué puede hacer",
+        features: [
+          "Formas listas para usar (cuadrado, círculo, estrella, corazón, árbol, pez, polígono con número de lados ajustable y más).",
+          "Tu propia forma a partir de un archivo SVG o de una imagen JPG, PNG o WebP que se convierte automáticamente en contorno.",
+          "Espejo y volteo de la plantilla, y suavizado de formas redondeadas para que las paredes no queden facetadas.",
+          "Control total de la caja: tamaño, altura, altura de la tapa, grosor de paredes y base, altura del cierre y holgura.",
+          "Dos estilos de tapa: pestaña interior (al ras) o tapa superpuesta como una caja de zapatos.",
+          "Vista previa 3D con vista explosionada, corte y rotación; milímetros o pulgadas.",
+          "Exportación STL de la base, de la tapa o de ambas juntas. La tapa se exporta boca abajo y apoyada en la cama, lista para imprimir."
+        ],
+        howTitle: "Cómo se usa",
+        how: [
+          "Elige una forma predeterminada o sube tu propio SVG o imagen.",
+          "Ajusta las medidas y la holgura del cierre según tu impresora.",
+          "Revisa el resultado en la vista previa 3D (explosión, corte, rotación).",
+          "Descarga el STL, ábrelo en tu slicer e imprime."
+        ],
+        freeTitle: "Sobre el proyecto",
+        free: "Desarrollo BoxGenerator en mi tiempo libre como una herramienta gratuita para todos los aficionados a la impresión 3D. Todo funciona de forma local en tu navegador y no se sube nada.",
+        support: "Si te ahorra tiempo y quieres apoyar el desarrollo, puedes enviarme una pequeña contribución. Es totalmente voluntario y se agradece mucho.",
+        coffee: "Buy me a coffee"
+      },
+      fr: {
+        intro: "BoxGenerator transforme n'importe quel contour 2D en une boîte imprimable en 3D avec son couvercle, directement dans votre navigateur. Choisissez une forme, réglez les dimensions et téléchargez les fichiers STL pour votre slicer.",
+        featuresTitle: "Ce qu'il sait faire",
+        features: [
+          "Formes prêtes à l'emploi (carré, cercle, étoile, cœur, sapin, poisson, polygone avec nombre de côtés réglable et plus).",
+          "Votre propre forme à partir d'un fichier SVG ou d'une image JPG, PNG ou WebP convertie automatiquement en contour.",
+          "Miroir et retournement de la forme, et lissage des formes arrondies pour éviter les parois à facettes.",
+          "Contrôle complet de la boîte : taille, hauteur, hauteur du couvercle, épaisseur des parois et du fond, hauteur du rebord et jeu.",
+          "Deux styles de couvercle : rebord intérieur (affleurant) ou couvercle recouvrant comme une boîte à chaussures.",
+          "Aperçu 3D avec vue éclatée, coupe et rotation ; millimètres ou pouces.",
+          "Export STL de la base, du couvercle ou des deux ensemble. Le couvercle est exporté retourné et posé à plat, prêt à imprimer."
+        ],
+        howTitle: "Comment l'utiliser",
+        how: [
+          "Choisissez une forme prédéfinie ou importez votre propre SVG ou image.",
+          "Réglez les dimensions et le jeu de fermeture selon votre imprimante.",
+          "Vérifiez le résultat dans l'aperçu 3D (éclaté, coupe, rotation).",
+          "Téléchargez le STL, ouvrez-le dans votre slicer et imprimez."
+        ],
+        freeTitle: "À propos du projet",
+        free: "Je développe BoxGenerator pendant mon temps libre comme un outil gratuit pour tous les passionnés d'impression 3D. Tout fonctionne en local dans votre navigateur et rien n'est envoyé.",
+        support: "Si cela vous fait gagner du temps et que vous souhaitez soutenir son développement, vous pouvez m'envoyer une petite contribution. C'est entièrement facultatif et très apprécié.",
+        coffee: "Buy me a coffee"
+      }
+    };
+
+    function renderAbout() {
+      const body = document.getElementById('aboutBody');
+      if (!body) return;
+      const d = aboutData[currentLang] || aboutData.en;
+      body.innerHTML = '';
+
+      const addHeading = (text) => {
+        const h = document.createElement('div');
+        h.className = 'text-blue-400 font-semibold mb-1';
+        h.textContent = text;
+        body.appendChild(h);
+      };
+      const addParagraph = (text) => {
+        const p = document.createElement('p');
+        p.textContent = text;
+        body.appendChild(p);
+      };
+      const addList = (items, ordered) => {
+        const list = document.createElement(ordered ? 'ol' : 'ul');
+        list.className = (ordered ? 'list-decimal' : 'list-disc') + ' pl-5 space-y-1';
+        items.forEach(text => {
+          const li = document.createElement('li');
+          li.textContent = text;
+          list.appendChild(li);
+        });
+        body.appendChild(list);
+      };
+
+      addParagraph(d.intro);
+      addHeading(d.featuresTitle);
+      addList(d.features, false);
+      addHeading(d.howTitle);
+      addList(d.how, true);
+      addHeading(d.freeTitle);
+      addParagraph(d.free);
+      addParagraph(d.support);
+
+      const link = document.createElement('a');
+      link.href = BMAC_URL;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-900 font-semibold text-sm transition';
+      link.innerHTML = '<i class="fa-solid fa-mug-hot"></i>';
+      const label = document.createElement('span');
+      label.textContent = d.coffee;
+      link.appendChild(label);
+      body.appendChild(link);
+    }
+
     function renderChangelog() {
       const body = document.getElementById('changelogBody');
       if (!body) return;
@@ -903,6 +1107,18 @@
       modal.classList.remove('flex');
     }
 
+    function openAbout() {
+      const modal = document.getElementById('aboutModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeAbout() {
+      const modal = document.getElementById('aboutModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
     let currentLang = 'en';
     let currentUnit = 'mm';
     const MM_PER_INCH = 25.4;
@@ -911,6 +1127,7 @@
       if (!translations[lang]) return;
       currentLang = lang;
       renderChangelog();
+      renderAbout();
       
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
@@ -1958,8 +2175,13 @@ function rdpClosed(pts, tol) {
       document.getElementById('changelogModal').addEventListener('click', (e) => {
         if (e.target.id === 'changelogModal') closeChangelog();
       });
+      document.getElementById('btnAbout').addEventListener('click', openAbout);
+      document.getElementById('btnAboutClose').addEventListener('click', closeAbout);
+      document.getElementById('aboutModal').addEventListener('click', (e) => {
+        if (e.target.id === 'aboutModal') closeAbout();
+      });
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeChangelog();
+        if (e.key === 'Escape') { closeChangelog(); closeAbout(); }
       });
       checkFlipX.addEventListener('change', rebuildBox);
       checkFlipY.addEventListener('change', rebuildBox);
