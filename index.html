@@ -73,6 +73,20 @@
 </head>
 <body class="h-full flex flex-col overflow-hidden font-sans antialiased">
 
+  <!-- Changelog bubble -->
+  <div id="changelogModal" class="hidden fixed inset-0 z-[100] items-center justify-center p-4 bg-black/60">
+    <div class="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl w-full max-w-md max-h-[80vh] flex flex-col">
+      <div class="flex items-center justify-between px-5 py-3 border-b border-slate-800">
+        <h2 class="font-bold text-slate-100 flex items-center gap-2">
+          <i class="fa-solid fa-clock-rotate-left text-blue-400"></i>
+          <span data-i18n="changelogTitle">Changelog</span>
+        </h2>
+        <button id="btnChangelogClose" type="button" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="changelogBody" class="p-5 space-y-4 overflow-y-auto text-sm text-slate-300"></div>
+    </div>
+  </div>
+
   <!-- Mobile Tab Bar -->
   <div class="flex md:hidden bg-slate-950/95 border-b border-slate-800 text-xs font-semibold z-30 flex-shrink-0">
     <button id="mobileTabPreview" onclick="switchMobileTab('preview')" class="flex-1 py-3 text-center text-blue-400 border-b-2 border-blue-500 bg-slate-900/55 flex items-center justify-center gap-2">
@@ -104,7 +118,7 @@
             <option value="es">ES</option>
             <option value="fr">FR</option>
           </select>
-          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v3.0.1</span>
+          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v3.0.5</span>
         </div>
       </div>
 
@@ -126,7 +140,17 @@
               <option value="hexagon" data-i18n="shapeHexagon">Hexagon</option>
               <option value="shield" data-i18n="shapeShield">Shield</option>
               <option value="fish" data-i18n="shapeFish">Fish</option>
+              <option value="polygon" data-i18n="shapePolygon">Polygon</option>
             </select>
+          </div>
+
+          <!-- Number of sides (visible only for Polygon preset) -->
+          <div id="containerSides" class="space-y-1 hidden">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-300" data-i18n="paramSides">Number of Sides</span>
+              <span id="paramSidesVal" class="font-mono text-blue-400 font-bold">6</span>
+            </div>
+            <input type="range" id="paramSides" min="3" max="24" step="1" value="6" class="w-full">
           </div>
           <div>
             <label class="text-xs text-slate-300 mb-1 block" data-i18n="uploadSvg">Or upload custom SVG:</label>
@@ -148,6 +172,19 @@
               <span class="text-xs text-slate-300" data-i18n="checkFlipY">Flip (top ↕ bottom)</span>
               <input type="checkbox" id="checkFlipY" class="w-4 h-4 accent-blue-500 cursor-pointer">
             </label>
+          </div>
+
+          <!-- Smoothing of the outline -->
+          <label class="flex items-center justify-between gap-2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 cursor-pointer">
+            <span class="text-xs text-slate-300" data-i18n="checkSmooth">Smooth shape (rounded transitions)</span>
+            <input type="checkbox" id="checkSmooth" class="w-4 h-4 accent-blue-500 cursor-pointer">
+          </label>
+          <div id="containerSmooth" class="space-y-1 hidden">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-300" data-i18n="paramSmooth">Smoothing Strength</span>
+              <span id="paramSmoothVal" class="font-mono text-blue-400 font-bold">2</span>
+            </div>
+            <input type="range" id="paramSmooth" min="1" max="4" step="1" value="2" class="w-full">
           </div>
         </section>
 
@@ -313,6 +350,9 @@
         <div class="footer-left">
           <div>© 2026 <strong><a href="https://hazda.cz" target="_blank">Adam Hazda</a></strong>. <span id="txtAllRights" data-i18n="footerRights">All rights reserved.</span></div>
           <div style="font-size: 0.75rem; margin-top: 0.2rem;" id="txtPrivacyNote" data-i18n="footerPrivacy">All calculations run 100% locally in your browser.</div>
+          <div style="font-size: 0.75rem;">
+            <button id="btnChangelog" type="button" class="underline hover:text-slate-200 text-left" data-i18n="footerChangelog">Changelog</button>
+          </div>
         </div>
 
         <div class="footer-right">
@@ -368,6 +408,10 @@
         shapeHexagon: "Hexagon",
         shapeShield: "Shield",
         shapeFish: "Fish",
+        shapePolygon: "Polygon",
+        paramSides: "Number of Sides",
+        checkSmooth: "Smooth shape (rounded transitions)",
+        paramSmooth: "Smoothing Strength",
         checkFlipX: "Mirror (left ↔ right)",
         checkFlipY: "Flip (top ↕ bottom)",
         paramRotate: "Rotate Box (View)",
@@ -404,7 +448,10 @@
         toastFileErr: "Error processing SVG file!",
         toastDownloaded: "File {filename} successfully downloaded!",
         footerRights: "All rights reserved.",
-        footerPrivacy: "All calculations run 100% locally in your browser."
+        footerPrivacy: "All calculations run 100% locally in your browser.",
+        footerChangelog: "Changelog",
+        changelogTitle: "Changelog",
+        changelogVersion: "Version"
       },
       cs: {
         appTitle: "3D Box Generator",
@@ -421,6 +468,10 @@
         shapeHexagon: "Šestiúhelník",
         shapeShield: "Štít",
         shapeFish: "Ryba",
+        shapePolygon: "Mnohoúhelník",
+        paramSides: "Počet stran",
+        checkSmooth: "Vyhladit tvar (hladké přechody)",
+        paramSmooth: "Síla vyhlazení",
         checkFlipX: "Zrcadlit (vlevo ↔ vpravo)",
         checkFlipY: "Převrátit (nahoru ↕ dolů)",
         paramRotate: "Otočení krabičky (náhled)",
@@ -457,7 +508,10 @@
         toastFileErr: "Chyba při zpracování SVG souboru!",
         toastDownloaded: "Soubor {filename} byl úspěšně stažen!",
         footerRights: "Všechna práva vyhrazena.",
-        footerPrivacy: "Všechny výpočty probíhají 100% lokálně ve vašem prohlížeči."
+        footerPrivacy: "Všechny výpočty probíhají 100% lokálně ve vašem prohlížeči.",
+        footerChangelog: "Seznam změn",
+        changelogTitle: "Seznam změn",
+        changelogVersion: "Verze"
       },
       de: {
         appTitle: "3D-Box-Generator",
@@ -474,6 +528,10 @@
         shapeHexagon: "Sechseck",
         shapeShield: "Schild",
         shapeFish: "Fisch",
+        shapePolygon: "Vieleck",
+        paramSides: "Anzahl der Seiten",
+        checkSmooth: "Form glätten (weiche Übergänge)",
+        paramSmooth: "Glättungsstärke",
         checkFlipX: "Spiegeln (links ↔ rechts)",
         checkFlipY: "Umkehren (oben ↕ unten)",
         paramRotate: "Box drehen (Ansicht)",
@@ -510,7 +568,10 @@
         toastFileErr: "Fehler beim Verarbeiten der SVG-Datei!",
         toastDownloaded: "Datei {filename} erfolgreich heruntergeladen!",
         footerRights: "Alle Rechte vorbehalten.",
-        footerPrivacy: "Alle Berechnungen laufen zu 100% lokal in Ihrem Browser."
+        footerPrivacy: "Alle Berechnungen laufen zu 100% lokal in Ihrem Browser.",
+        footerChangelog: "Änderungsprotokoll",
+        changelogTitle: "Änderungsprotokoll",
+        changelogVersion: "Version"
       },
       es: {
         appTitle: "Generador de Cajas 3D",
@@ -527,6 +588,10 @@
         shapeHexagon: "Hexágono",
         shapeShield: "Escudo",
         shapeFish: "Pez",
+        shapePolygon: "Polígono",
+        paramSides: "Número de lados",
+        checkSmooth: "Suavizar forma (transiciones redondeadas)",
+        paramSmooth: "Intensidad de suavizado",
         checkFlipX: "Espejo (izq. ↔ der.)",
         checkFlipY: "Voltear (arriba ↕ abajo)",
         paramRotate: "Girar caja (vista)",
@@ -563,7 +628,10 @@
         toastFileErr: "¡Error al procesar el archivo SVG!",
         toastDownloaded: "¡Archivo {filename} descargado con éxito!",
         footerRights: "Todos los derechos reservados.",
-        footerPrivacy: "Cálculos 100% locales en tu navegador."
+        footerPrivacy: "Cálculos 100% locales en tu navegador.",
+        footerChangelog: "Historial de cambios",
+        changelogTitle: "Historial de cambios",
+        changelogVersion: "Versión"
       },
       fr: {
         appTitle: "Générateur de Boîte 3D",
@@ -580,6 +648,10 @@
         shapeHexagon: "Hexagone",
         shapeShield: "Bouclier",
         shapeFish: "Poisson",
+        shapePolygon: "Polygone",
+        paramSides: "Nombre de côtés",
+        checkSmooth: "Lisser la forme (transitions arrondies)",
+        paramSmooth: "Intensité du lissage",
         checkFlipX: "Miroir (gauche ↔ droite)",
         checkFlipY: "Retourner (haut ↕ bas)",
         paramRotate: "Pivoter la boîte (vue)",
@@ -616,9 +688,124 @@
         toastFileErr: "Erreur lors du traitement du fichier SVG!",
         toastDownloaded: "Fichier {filename} téléchargé avec succès!",
         footerRights: "Tous droits réservés.",
-        footerPrivacy: "Calculs 100% locaux dans votre navigateur."
+        footerPrivacy: "Calculs 100% locaux dans votre navigateur.",
+        footerChangelog: "Historique des modifications",
+        changelogTitle: "Historique des modifications",
+        changelogVersion: "Version"
       }
     };
+
+    // Seznam změn podle verzí (nejnovější nahoře)
+    const changelogData = [
+      {
+        version: '3',
+        items: {
+          en: [
+            "Added the Polygon shape with a slider for the number of sides (3–24).",
+            "Fixed the object orientation in the STL export.",
+            "Added the option to export the lid and the base together.",
+            "Downloaded file names now follow the selected shape and dimensions, e.g. “square box 20x20x10.stl” or “custom box 10x10x10.stl”.",
+            "Added the Smooth shape option (rounded outline transitions and smooth shading) with adjustable strength."
+          ],
+          cs: [
+            "Přidán tvar Mnohoúhelník s posuvníkem počtu stran (3–24).",
+            "Opravena orientace objektu při exportu do STL.",
+            "Přidána možnost exportovat víko i spodek dohromady.",
+            "Název staženého souboru odpovídá vybranému tvaru a rozměrům, např. „square box 20x20x10.stl“ nebo „custom box 10x10x10.stl“.",
+            "Přidána funkce Vyhladit tvar (hladké přechody obrysu a hladké stínování) s nastavitelnou silou."
+          ],
+          de: [
+            "Neue Form „Vieleck“ mit Schieberegler für die Seitenanzahl (3–24).",
+            "Ausrichtung des Objekts beim STL-Export korrigiert.",
+            "Deckel und Unterteil können jetzt gemeinsam exportiert werden.",
+            "Der Dateiname richtet sich nach Form und Maßen, z. B. „square box 20x20x10.stl“ oder „custom box 10x10x10.stl“.",
+            "Neue Option „Form glätten“ (weiche Konturübergänge und glatte Schattierung) mit einstellbarer Stärke."
+          ],
+          es: [
+            "Nueva forma Polígono con control deslizante para el número de lados (3–24).",
+            "Corregida la orientación del objeto en la exportación STL.",
+            "Añadida la opción de exportar la tapa y la base juntas.",
+            "El nombre del archivo descargado sigue la forma y las medidas elegidas, p. ej. «square box 20x20x10.stl» o «custom box 10x10x10.stl».",
+            "Nueva opción Suavizar forma (transiciones redondeadas del contorno y sombreado suave) con intensidad ajustable."
+          ],
+          fr: [
+            "Nouvelle forme Polygone avec curseur pour le nombre de côtés (3–24).",
+            "Orientation de l'objet corrigée dans l'export STL.",
+            "Possibilité d'exporter le couvercle et la base ensemble.",
+            "Le nom du fichier téléchargé suit la forme et les dimensions choisies, p. ex. « square box 20x20x10.stl » ou « custom box 10x10x10.stl ».",
+            "Nouvelle option Lisser la forme (transitions de contour arrondies et ombrage lisse) avec intensité réglable."
+          ]
+        }
+      },
+      {
+        version: '2',
+        items: {
+          en: [
+            "More preset shapes (tree with star, fish and others).",
+            "Rotate the whole box in the preview – handy together with the cutaway view.",
+            "Mirror and flip the template outline; the box is generated from the flipped shape."
+          ],
+          cs: [
+            "Více předdefinovaných tvarů (stromeček s hvězdou, ryba a další).",
+            "Otáčení celé krabičky v náhledu – hodí se spolu s řezem.",
+            "Zrcadlení a převrácení předlohy; krabička se vygeneruje z převráceného tvaru."
+          ],
+          de: [
+            "Mehr vorgegebene Formen (Tannenbaum mit Stern, Fisch und weitere).",
+            "Die ganze Box in der Vorschau drehen – praktisch zusammen mit der Schnittansicht.",
+            "Vorlage spiegeln und umkehren; die Box wird aus der umgekehrten Form erzeugt."
+          ],
+          es: [
+            "Más formas predeterminadas (árbol con estrella, pez y otras).",
+            "Girar toda la caja en la vista previa, útil junto con la vista en corte.",
+            "Espejo y volteo de la plantilla; la caja se genera a partir de la forma volteada."
+          ],
+          fr: [
+            "Plus de formes prédéfinies (sapin avec étoile, poisson et autres).",
+            "Faire pivoter toute la boîte dans l'aperçu, pratique avec la vue en coupe.",
+            "Miroir et retournement de la forme ; la boîte est générée à partir de la forme retournée."
+          ]
+        }
+      }
+    ];
+
+    function renderChangelog() {
+      const body = document.getElementById('changelogBody');
+      if (!body) return;
+      const t = translations[currentLang];
+      body.innerHTML = '';
+      changelogData.forEach(entry => {
+        const section = document.createElement('div');
+
+        const heading = document.createElement('div');
+        heading.className = 'text-blue-400 font-semibold mb-1';
+        heading.textContent = t.changelogVersion + ' ' + entry.version;
+        section.appendChild(heading);
+
+        const list = document.createElement('ul');
+        list.className = 'list-disc pl-5 space-y-1';
+        (entry.items[currentLang] || entry.items.en).forEach(text => {
+          const li = document.createElement('li');
+          li.textContent = text;
+          list.appendChild(li);
+        });
+        section.appendChild(list);
+
+        body.appendChild(section);
+      });
+    }
+
+    function openChangelog() {
+      const modal = document.getElementById('changelogModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeChangelog() {
+      const modal = document.getElementById('changelogModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
 
     let currentLang = 'en';
     let currentUnit = 'mm';
@@ -627,6 +814,7 @@
     function setLanguage(lang) {
       if (!translations[lang]) return;
       currentLang = lang;
+      renderChangelog();
       
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
@@ -715,6 +903,7 @@
 
     let scene, camera, renderer, controls;
     let boxGroup, baseMesh, lidMesh;
+    let exportDims = { w: 0, d: 0 }; // skutečné vnější rozměry obrysu (pro název souboru)
     let currentShapes = [];
     let currentViewMode = 'both';
 
@@ -742,6 +931,13 @@
     const checkFlipY = document.getElementById('checkFlipY');
     const paramRotate = document.getElementById('paramRotate');
     const paramRotateVal = document.getElementById('paramRotateVal');
+    const containerSides = document.getElementById('containerSides');
+    const paramSides = document.getElementById('paramSides');
+    const paramSidesVal = document.getElementById('paramSidesVal');
+    const checkSmooth = document.getElementById('checkSmooth');
+    const containerSmooth = document.getElementById('containerSmooth');
+    const paramSmooth = document.getElementById('paramSmooth');
+    const paramSmoothVal = document.getElementById('paramSmoothVal');
 
     const paramWidthVal = document.getElementById('paramWidthVal');
     const paramDepthVal = document.getElementById('paramDepthVal');
@@ -817,6 +1013,20 @@
           else shape.lineTo(x, y);
         }
         shape.closePath();
+      } else if (type === 'polygon') {
+        // Pravidelný mnohoúhelník; počet stran z posuvníku.
+        // Lichý počet: vrchol nahoře, sudý počet: rovná strana nahoře.
+        const n = Math.max(3, parseInt(paramSides.value, 10) || 6);
+        const radius = 45;
+        const startAngle = (n % 2 === 1) ? Math.PI / 2 : Math.PI / 2 + Math.PI / n;
+        for (let i = 0; i < n; i++) {
+          const angle = startAngle + (i * 2 * Math.PI) / n;
+          const x = radius * Math.cos(angle);
+          const y = radius * Math.sin(angle);
+          if (i === 0) shape.moveTo(x, y);
+          else shape.lineTo(x, y);
+        }
+        shape.closePath();
       } else if (type === 'fish') {
         // Ryba hlavou doprava: tělo, hřbetní ploutev, ocasní ploutev
         shape.moveTo(50, 0);                                   // nos
@@ -841,6 +1051,69 @@
         shape.closePath();
       }
       return [shape];
+    }
+
+    // Vyhlazení obrysu: Chaikinovo "ořezávání rohů". Každá iterace zaoblí rohy a zdvojnásobí počet bodů.
+    // Provádí se před přepočtem na cílové rozměry, takže výsledná velikost zůstane přesná.
+    function smoothClosedPolyline(pts, iterations) {
+      let cur = pts.slice();
+      if (cur.length > 1 && cur[0].equals(cur[cur.length - 1])) cur.pop();
+      if (cur.length < 3) return pts;
+
+      for (let it = 0; it < iterations; it++) {
+        if (cur.length * 2 > 2500) break; // pojistka proti příliš těžké geometrii
+        const next = [];
+        for (let i = 0; i < cur.length; i++) {
+          const p = cur[i];
+          const q = cur[(i + 1) % cur.length];
+          next.push(new THREE.Vector2(0.75 * p.x + 0.25 * q.x, 0.75 * p.y + 0.25 * q.y));
+          next.push(new THREE.Vector2(0.25 * p.x + 0.75 * q.x, 0.25 * p.y + 0.75 * q.y));
+        }
+        cur = next;
+      }
+      return cur;
+    }
+
+    // Hladké stínování bočních stěn (jen vzhled náhledu, STL se tím nemění).
+    // Normály stěn se zprůměrují mezi sousedními ploškami, pokud jejich úhel nepřesáhne creaseDeg;
+    // ostré hrany zůstanou ostré. Horní a spodní plochy se nemění.
+    function smoothWallNormals(geo, creaseDeg) {
+      const pos = geo.attributes.position;
+      const nor = geo.attributes.normal;
+      if (!pos || !nor) return geo;
+
+      const cosLimit = Math.cos(creaseDeg * Math.PI / 180);
+      const groups = new Map();
+
+      for (let i = 0; i < pos.count; i++) {
+        if (Math.abs(nor.getZ(i)) > 0.5) continue; // horní/spodní plocha
+        const key = Math.round(pos.getX(i) * 1000) + ',' + Math.round(pos.getY(i) * 1000);
+        let list = groups.get(key);
+        if (!list) { list = []; groups.set(key, list); }
+        list.push(i);
+      }
+
+      const out = new Float32Array(nor.array);
+      groups.forEach(list => {
+        list.forEach(i => {
+          const nx = nor.getX(i), ny = nor.getY(i), nz = nor.getZ(i);
+          let ax = 0, ay = 0, az = 0;
+          list.forEach(j => {
+            const jx = nor.getX(j), jy = nor.getY(j), jz = nor.getZ(j);
+            if (nx * jx + ny * jy + nz * jz >= cosLimit) {
+              ax += jx; ay += jy; az += jz;
+            }
+          });
+          const len = Math.hypot(ax, ay, az) || 1;
+          out[i * 3] = ax / len;
+          out[i * 3 + 1] = ay / len;
+          out[i * 3 + 2] = az / len;
+        });
+      });
+
+      nor.array.set(out);
+      nor.needsUpdate = true;
+      return geo;
     }
 
     function getSignedArea(pts) {
@@ -956,7 +1229,10 @@
     function getNormalizedPoints(shapes, targetWidth, targetDepth, keepAspect) {
       if (!shapes || shapes.length === 0) return [];
       const outerShape = shapes[0];
-      const pts = outerShape.extractPoints(64).shape;
+      let pts = outerShape.extractPoints(64).shape;
+      if (checkSmooth.checked && pts && pts.length >= 3) {
+        pts = smoothClosedPolyline(pts, parseInt(paramSmooth.value, 10) || 2);
+      }
 
       if (!pts || pts.length < 3) return [];
 
@@ -994,14 +1270,18 @@
 
     function createSolidExtrusion(outerPts, height) {
       const shape = new THREE.Shape(outerPts);
-      return new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false });
+      const geo = new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false });
+      if (checkSmooth.checked) smoothWallNormals(geo, 40);
+      return geo;
     }
 
     function createHollowExtrusion(outerPts, innerPts, height) {
       const shape = new THREE.Shape(outerPts);
       const ccwInner = ensureOrientation(innerPts, true);
       shape.holes = [new THREE.Path(ccwInner)];
-      return new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false });
+      const geo = new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false });
+      if (checkSmooth.checked) smoothWallNormals(geo, 40);
+      return geo;
     }
 
     function rebuildBox() {
@@ -1034,6 +1314,18 @@
 
       const outerPts = getNormalizedPoints(currentShapes, targetW, targetD, keepAspect);
       if (outerPts.length < 3) return;
+
+      // Skutečné rozměry obrysu (šířka × hloubka) pro název exportovaného souboru
+      {
+        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        outerPts.forEach(p => {
+          if (p.x < minX) minX = p.x;
+          if (p.x > maxX) maxX = p.x;
+          if (p.y < minY) minY = p.y;
+          if (p.y > maxY) maxY = p.y;
+        });
+        exportDims = { w: maxX - minX, d: maxY - minY };
+      }
 
       const innerPts = createOffsetPath(outerPts, -wallT);
 
@@ -1211,6 +1503,18 @@
       return mergedGeo;
     }
 
+    // Název souboru podle tvaru a rozměrů, např. "square box 80x80x40" nebo "custom box 100x66x40"
+    function getExportBaseName() {
+      const fmt = (n) => parseFloat(n.toFixed(1)).toString();
+      const isCustom = !btnRemoveSvg.classList.contains('hidden');
+      let name = isCustom ? 'custom' : presetSelect.value;
+      if (!isCustom && presetSelect.value === 'polygon') {
+        name = 'polygon-' + paramSides.value;
+      }
+      const dims = [exportDims.w, exportDims.d, getParamValue(paramBoxHeight)].map(fmt).join('x');
+      return name + ' box ' + dims; // rozměry vždy v mm (STL je v mm)
+    }
+
     function exportSingleGroupToSTL(group, filename, isLid) {
       if (!group) return;
       const mergedGeo = getMergedGeometryForGroup(group, isLid);
@@ -1336,8 +1640,27 @@
       }
 
       checkCutaway.addEventListener('change', rebuildBox);
+
+      // Changelog bubble: otevření z patičky, zavření křížkem, klikem mimo okno nebo klávesou Esc
+      document.getElementById('btnChangelog').addEventListener('click', openChangelog);
+      document.getElementById('btnChangelogClose').addEventListener('click', closeChangelog);
+      document.getElementById('changelogModal').addEventListener('click', (e) => {
+        if (e.target.id === 'changelogModal') closeChangelog();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeChangelog();
+      });
       checkFlipX.addEventListener('change', rebuildBox);
       checkFlipY.addEventListener('change', rebuildBox);
+
+      checkSmooth.addEventListener('change', () => {
+        containerSmooth.classList.toggle('hidden', !checkSmooth.checked);
+        rebuildBox();
+      });
+      paramSmooth.addEventListener('input', () => {
+        paramSmoothVal.textContent = paramSmooth.value;
+        rebuildBox();
+      });
 
       // Otáčení celé krabičky v náhledu (hodí se hlavně s řezem). Export není ovlivněn.
       paramRotate.addEventListener('input', () => {
@@ -1346,10 +1669,25 @@
         boxGroup.rotation.y = THREE.MathUtils.degToRad(deg);
       });
 
+      // Posuvník počtu stran je vidět jen u tvaru Mnohoúhelník (a ne při nahraném SVG)
+      function updateSidesVisibility() {
+        const show = presetSelect.value === 'polygon' && btnRemoveSvg.classList.contains('hidden');
+        containerSides.classList.toggle('hidden', !show);
+      }
+
+      paramSides.addEventListener('input', () => {
+        paramSidesVal.textContent = paramSides.value;
+        if (presetSelect.value === 'polygon' && btnRemoveSvg.classList.contains('hidden')) {
+          currentShapes = createPresetShapes('polygon');
+          rebuildBox();
+        }
+      });
+
       presetSelect.addEventListener('change', (e) => {
         svgFileInput.value = '';
         btnRemoveSvg.classList.add('hidden');
         currentShapes = createPresetShapes(e.target.value);
+        updateSidesVisibility();
         if (e.target.value === 'rectangle') {
           checkKeepAspect.checked = false;
           containerDepth.classList.remove('hidden');
@@ -1383,6 +1721,7 @@
               checkKeepAspect.checked = true;
               containerDepth.classList.add('hidden');
               btnRemoveSvg.classList.remove('hidden');
+              updateSidesVisibility();
               rebuildBox();
               showToast(translations[currentLang].toastSvgSuccess);
             } else {
@@ -1399,6 +1738,7 @@
         svgFileInput.value = '';
         btnRemoveSvg.classList.add('hidden');
         currentShapes = createPresetShapes(presetSelect.value);
+        updateSidesVisibility();
         checkKeepAspect.checked = true;
         containerDepth.classList.add('hidden');
         rebuildBox();
@@ -1408,9 +1748,9 @@
       document.getElementById('btnViewBox').addEventListener('click', () => { currentViewMode = 'box'; rebuildBox(); });
       document.getElementById('btnViewLid').addEventListener('click', () => { currentViewMode = 'lid'; rebuildBox(); });
 
-      document.getElementById('btnExportBase').addEventListener('click', () => exportSingleGroupToSTL(baseMesh, 'custom-shaped-box-base.stl', false));
-      document.getElementById('btnExportLid').addEventListener('click', () => exportSingleGroupToSTL(lidMesh, 'custom-shaped-box-lid.stl', true));
-      document.getElementById('btnExportBoth').addEventListener('click', () => exportBothToSTL('custom-shaped-box.stl'));
+      document.getElementById('btnExportBase').addEventListener('click', () => exportSingleGroupToSTL(baseMesh, getExportBaseName() + ' base.stl', false));
+      document.getElementById('btnExportLid').addEventListener('click', () => exportSingleGroupToSTL(lidMesh, getExportBaseName() + ' lid.stl', true));
+      document.getElementById('btnExportBoth').addEventListener('click', () => exportBothToSTL(getExportBaseName() + '.stl'));
     }
 
     function animate() {
