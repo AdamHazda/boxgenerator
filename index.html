@@ -23,6 +23,10 @@
       }
     }
 
+    input.dim-num::-webkit-outer-spin-button,
+    input.dim-num::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input.dim-num { -moz-appearance: textfield; appearance: textfield; }
+
     footer {
       background-color: var(--card-bg, #1e1e24);
       border-top: 1px solid var(--border-color, #374151);
@@ -132,7 +136,7 @@
             <option value="es">ES</option>
             <option value="fr">FR</option>
           </select>
-          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v4.0.1</span>
+          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v5.0.0</span>
         </div>
       </div>
 
@@ -249,7 +253,7 @@
           <div class="space-y-1">
             <div class="flex justify-between text-xs">
               <span id="labelWidth" class="text-slate-300" data-i18n="paramWidth">Width / Outer Size</span>
-              <span id="paramWidthVal" class="font-mono text-blue-400 font-bold">80.0 mm</span>
+              <span class="flex items-center gap-1"><input type="number" id="paramWidthNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramWidthVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
             </div>
             <input type="range" id="paramWidth" min="30" max="250" value="80" class="w-full">
           </div>
@@ -257,31 +261,33 @@
           <div id="containerDepth" class="space-y-1 hidden">
             <div class="flex justify-between text-xs">
               <span class="text-slate-300" data-i18n="paramDepth">Length / Depth (2D)</span>
-              <span id="paramDepthVal" class="font-mono text-blue-400 font-bold">80.0 mm</span>
+              <span class="flex items-center gap-1"><input type="number" id="paramDepthNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramDepthVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
             </div>
             <input type="range" id="paramDepth" min="30" max="250" value="80" class="w-full">
           </div>
 
+          <div id="outlineInfo" class="text-[11px] leading-snug text-slate-500 font-mono"></div>
+
           <div class="space-y-1">
             <div class="flex justify-between text-xs">
               <span class="text-slate-300" data-i18n="paramBoxHeight">Total Box Height</span>
-              <span id="paramBoxHeightVal" class="font-mono text-blue-400 font-bold">40.0 mm</span>
+              <span class="flex items-center gap-1"><input type="number" id="paramBoxHeightNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramBoxHeightVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
             </div>
-            <input type="range" id="paramBoxHeight" min="15" max="150" value="40" class="w-full">
+            <input type="range" id="paramBoxHeight" min="0" max="150" step="0.5" value="40" class="w-full">
           </div>
 
           <div class="space-y-1">
             <div class="flex justify-between text-xs">
               <span class="text-slate-300" data-i18n="paramLidHeight">Lid Height</span>
-              <span id="paramLidHeightVal" class="font-mono text-blue-400 font-bold">15.0 mm</span>
+              <span class="flex items-center gap-1"><input type="number" id="paramLidHeightNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramLidHeightVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
             </div>
-            <input type="range" id="paramLidHeight" min="8" max="80" value="15" class="w-full">
+            <input type="range" id="paramLidHeight" min="0" max="80" step="0.5" value="15" class="w-full">
           </div>
 
           <div class="space-y-1">
             <div class="flex justify-between text-xs">
               <span class="text-slate-300" data-i18n="paramWallThickness">Wall Thickness</span>
-              <span id="paramWallThicknessVal" class="font-mono text-blue-400 font-bold">2.4 mm</span>
+              <span class="flex items-center gap-1"><input type="number" id="paramWallThicknessNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramWallThicknessVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
             </div>
             <input type="range" id="paramWallThickness" min="1.2" max="6.0" step="0.2" value="2.4" class="w-full">
           </div>
@@ -289,7 +295,7 @@
           <div class="space-y-1">
             <div class="flex justify-between text-xs">
               <span class="text-slate-300" data-i18n="paramFloorThickness">Bottom/Top Thickness</span>
-              <span id="paramFloorThicknessVal" class="font-mono text-blue-400 font-bold">2.0 mm</span>
+              <span class="flex items-center gap-1"><input type="number" id="paramFloorThicknessNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramFloorThicknessVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
             </div>
             <input type="range" id="paramFloorThickness" min="1.0" max="6.0" step="0.2" value="2.0" class="w-full">
           </div>
@@ -297,15 +303,15 @@
           <div class="space-y-1">
             <div class="flex justify-between text-xs">
               <span class="text-slate-300" data-i18n="paramLipHeight">Lip / Lock Height</span>
-              <span id="paramLipHeightVal" class="font-mono text-blue-400 font-bold">5.0 mm</span>
+              <span class="flex items-center gap-1"><input type="number" id="paramLipHeightNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramLipHeightVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
             </div>
-            <input type="range" id="paramLipHeight" min="2" max="15" step="0.5" value="5.0" class="w-full">
+            <input type="range" id="paramLipHeight" min="0" max="15" step="0.5" value="5.0" class="w-full">
           </div>
 
           <div class="space-y-1">
             <div class="flex justify-between text-xs">
               <span class="text-slate-300" data-i18n="paramTolerance">Lock Tolerance / Clearance</span>
-              <span id="paramToleranceVal" class="font-mono text-blue-400 font-bold">0.30 mm</span>
+              <span class="flex items-center gap-1"><input type="number" id="paramToleranceNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramToleranceVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
             </div>
             <input type="range" id="paramTolerance" min="0.05" max="1.0" step="0.05" value="0.30" class="w-full">
           </div>
@@ -336,7 +342,7 @@
           <div class="space-y-1">
             <div class="flex justify-between text-xs">
               <span class="text-slate-300" data-i18n="paramExplode">Parts Separation (Explode)</span>
-              <span id="paramExplodeVal" class="font-mono text-blue-400">30.0 mm</span>
+              <span class="flex items-center gap-1"><input type="number" id="paramExplodeNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramExplodeVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
             </div>
             <input type="range" id="paramExplode" min="-25" max="120" value="30" class="w-full">
           </div>
@@ -505,6 +511,8 @@
         footerRights: "All rights reserved.",
         footerPrivacy: "All calculations run 100% locally in your browser.",
         footerAbout: "About BoxGenerator",
+        outlineSize: "Outline size",
+        toastSvgSize: "Size taken from the SVG: {w} × {d} {u}",
         aboutTitle: "About BoxGenerator",
         footerChangelog: "Changelog",
         changelogTitle: "Changelog",
@@ -576,6 +584,8 @@
         footerRights: "Všechna práva vyhrazena.",
         footerPrivacy: "Všechny výpočty probíhají 100% lokálně ve vašem prohlížeči.",
         footerAbout: "O BoxGeneratoru",
+        outlineSize: "Rozměr obrysu",
+        toastSvgSize: "Rozměr převzat ze SVG: {w} × {d} {u}",
         aboutTitle: "O BoxGeneratoru",
         footerChangelog: "Seznam změn",
         changelogTitle: "Seznam změn",
@@ -647,6 +657,8 @@
         footerRights: "Alle Rechte vorbehalten.",
         footerPrivacy: "Alle Berechnungen laufen zu 100% lokal in Ihrem Browser.",
         footerAbout: "Über BoxGenerator",
+        outlineSize: "Konturgröße",
+        toastSvgSize: "Größe aus der SVG übernommen: {w} × {d} {u}",
         aboutTitle: "Über BoxGenerator",
         footerChangelog: "Änderungsprotokoll",
         changelogTitle: "Änderungsprotokoll",
@@ -718,6 +730,8 @@
         footerRights: "Todos los derechos reservados.",
         footerPrivacy: "Cálculos 100% locales en tu navegador.",
         footerAbout: "Acerca de BoxGenerator",
+        outlineSize: "Tamaño del contorno",
+        toastSvgSize: "Tamaño tomado del SVG: {w} × {d} {u}",
         aboutTitle: "Acerca de BoxGenerator",
         footerChangelog: "Historial de cambios",
         changelogTitle: "Historial de cambios",
@@ -789,6 +803,8 @@
         footerRights: "Tous droits réservés.",
         footerPrivacy: "Calculs 100% locaux dans votre navigateur.",
         footerAbout: "À propos de BoxGenerator",
+        outlineSize: "Taille du contour",
+        toastSvgSize: "Taille reprise du SVG : {w} × {d} {u}",
         aboutTitle: "À propos de BoxGenerator",
         footerChangelog: "Historique des modifications",
         changelogTitle: "Historique des modifications",
@@ -798,6 +814,46 @@
 
     // Seznam změn podle verzí (nejnovější nahoře)
     const changelogData = [
+      {
+        version: '5',
+        items: {
+          en: [
+            "Exact dimensions: every size has a field next to the slider where you can type an exact value (up to 3 decimals).",
+            "An imported SVG keeps its real size from the file (e.g. 90 mm stays 90 mm) instead of being resized to the default width.",
+            "The lid can now be much lower – down to just a collar and a plate.",
+            "A line under the dimensions shows the real outline size (width × depth).",
+            "Fixed the values shown after switching to inches, and the Rectangle preset in inches."
+          ],
+          cs: [
+            "Přesné rozměry: každý rozměr má vedle posuvníku políčko, do kterého lze napsat přesnou hodnotu (na 3 desetinná místa).",
+            "Importované SVG si zachová skutečný rozměr ze souboru (např. 90 mm zůstane 90 mm) a nepřepočítá se na výchozí šířku.",
+            "Víko může být výrazně nižší – až jen límec a deska.",
+            "Pod rozměry je řádek se skutečným rozměrem obrysu (šířka × hloubka).",
+            "Opraveno zobrazení hodnot po přepnutí na palce a předvolba Obdélník v palcích."
+          ],
+          de: [
+            "Exakte Maße: Jedes Maß hat neben dem Schieberegler ein Feld zur Eingabe eines genauen Werts (bis 3 Nachkommastellen).",
+            "Eine importierte SVG behält ihre echte Größe aus der Datei (z. B. bleiben 90 mm 90 mm), statt auf die Standardbreite umgerechnet zu werden.",
+            "Der Deckel kann jetzt deutlich niedriger sein – bis hin zu nur einem Rand mit Platte.",
+            "Eine Zeile unter den Maßen zeigt die tatsächliche Konturgröße (Breite × Tiefe).",
+            "Anzeige der Werte nach dem Wechsel auf Zoll und die Vorlage Rechteck in Zoll korrigiert."
+          ],
+          es: [
+            "Medidas exactas: cada medida tiene un campo junto al control deslizante para escribir un valor exacto (hasta 3 decimales).",
+            "Un SVG importado conserva su tamaño real del archivo (p. ej. 90 mm siguen siendo 90 mm) en lugar de ajustarse al ancho predeterminado.",
+            "La tapa ahora puede ser mucho más baja, hasta quedar solo un borde con una placa.",
+            "Una línea bajo las medidas muestra el tamaño real del contorno (ancho × profundidad).",
+            "Corregidos los valores mostrados al cambiar a pulgadas y la plantilla Rectángulo en pulgadas."
+          ],
+          fr: [
+            "Dimensions exactes : chaque dimension a un champ à côté du curseur pour saisir une valeur précise (jusqu'à 3 décimales).",
+            "Un SVG importé conserve sa taille réelle issue du fichier (p. ex. 90 mm reste 90 mm) au lieu d'être redimensionné à la largeur par défaut.",
+            "Le couvercle peut maintenant être beaucoup plus bas, jusqu'à un simple rebord avec une plaque.",
+            "Une ligne sous les dimensions indique la taille réelle du contour (largeur × profondeur).",
+            "Correction de l'affichage des valeurs après le passage aux pouces et du modèle Rectangle en pouces."
+          ]
+        }
+      },
       {
         version: '4',
         items: {
@@ -903,9 +959,9 @@
         featuresTitle: "What it can do",
         features: [
           "Ready-made shapes (square, circle, star, heart, tree, fish, polygon with an adjustable number of sides and more).",
-          "Your own shape from an SVG file, or from a JPG, PNG or WebP image that is traced into an outline automatically.",
+          "Your own shape from an SVG file (it keeps its real size from the file), or from a JPG, PNG or WebP image that is traced into an outline automatically.",
           "Mirror and flip the template, and smooth rounded shapes so the walls are not faceted.",
-          "Full control of the box: size, height, lid height, wall and floor thickness, lock lip and clearance.",
+          "Full control of the box: every dimension has a slider and a field for typing an exact value (up to 3 decimals) – size, height, lid height (down to a thin collar with a plate), wall and floor thickness, lock lip and clearance.",
           "Two lid styles: an internal lip (flush) or an overlapping cap like a shoe box.",
           "3D preview with exploded view, cutaway and rotation; millimetres or inches.",
           "STL export of the base, the lid, or both together. The lid is exported upside down and lying flat, ready to print."
@@ -927,9 +983,9 @@
         featuresTitle: "Co umí",
         features: [
           "Hotové tvary (čtverec, kruh, hvězda, srdce, stromek, ryba, mnohoúhelník s nastavitelným počtem stran a další).",
-          "Vlastní tvar ze souboru SVG, nebo z obrázku JPG, PNG či WebP, který se automaticky převede na obrys.",
+          "Vlastní tvar ze souboru SVG (zachová si skutečný rozměr ze souboru), nebo z obrázku JPG, PNG či WebP, který se automaticky převede na obrys.",
           "Zrcadlení a převrácení předlohy a vyhlazení zaoblených tvarů, aby stěny nebyly hranaté.",
-          "Plná kontrola nad krabičkou: velikost, výška, výška víka, tloušťka stěn a dna, výška zámku a vůle.",
+          "Plná kontrola nad krabičkou: každý rozměr má posuvník i políčko pro zadání přesné hodnoty (na 3 desetinná místa) – velikost, výška, výška víka (až po nízký límec s deskou), tloušťka stěn a dna, výška zámku a vůle.",
           "Dva styly víka: vnitřní osazení (v jedné rovině) nebo přesahující víko jako od krabice od bot.",
           "3D náhled s rozloženým pohledem, řezem a otáčením; milimetry nebo palce.",
           "Export STL pro spodek, víko, nebo obojí dohromady. Víko se exportuje vrškem dolů a položené na podložce, připravené k tisku."
@@ -951,9 +1007,9 @@
         featuresTitle: "Was es kann",
         features: [
           "Fertige Formen (Quadrat, Kreis, Stern, Herz, Baum, Fisch, Vieleck mit einstellbarer Seitenanzahl und mehr).",
-          "Eigene Form aus einer SVG-Datei oder aus einem JPG-, PNG- oder WebP-Bild, das automatisch in eine Kontur umgewandelt wird.",
+          "Eigene Form aus einer SVG-Datei (behält ihre echte Größe) oder aus einem JPG-, PNG- oder WebP-Bild, das automatisch in eine Kontur umgewandelt wird.",
           "Vorlage spiegeln und umkehren sowie runde Formen glätten, damit die Wände nicht kantig sind.",
-          "Volle Kontrolle über die Box: Größe, Höhe, Deckelhöhe, Wand- und Bodenstärke, Lippenhöhe und Spiel.",
+          "Volle Kontrolle über die Box: jedes Maß hat einen Schieberegler und ein Feld für die exakte Eingabe (bis 3 Nachkommastellen) – Größe, Höhe, Deckelhöhe (bis hin zu einem flachen Rand mit Platte), Wand- und Bodenstärke, Lippenhöhe und Spiel.",
           "Zwei Deckelstile: Innenlippe (bündig) oder überstehender Deckel wie bei einem Schuhkarton.",
           "3D-Vorschau mit Explosionsansicht, Schnittansicht und Drehen; Millimeter oder Zoll.",
           "STL-Export von Unterteil, Deckel oder beidem zusammen. Der Deckel wird auf den Kopf gedreht und flach liegend exportiert, druckfertig."
@@ -975,9 +1031,9 @@
         featuresTitle: "Qué puede hacer",
         features: [
           "Formas listas para usar (cuadrado, círculo, estrella, corazón, árbol, pez, polígono con número de lados ajustable y más).",
-          "Tu propia forma a partir de un archivo SVG o de una imagen JPG, PNG o WebP que se convierte automáticamente en contorno.",
+          "Tu propia forma a partir de un archivo SVG (conserva su tamaño real) o de una imagen JPG, PNG o WebP que se convierte automáticamente en contorno.",
           "Espejo y volteo de la plantilla, y suavizado de formas redondeadas para que las paredes no queden facetadas.",
-          "Control total de la caja: tamaño, altura, altura de la tapa, grosor de paredes y base, altura del cierre y holgura.",
+          "Control total de la caja: cada medida tiene un control deslizante y un campo para escribir el valor exacto (hasta 3 decimales): tamaño, altura, altura de la tapa (hasta un borde bajo con placa), grosor de paredes y base, altura del cierre y holgura.",
           "Dos estilos de tapa: pestaña interior (al ras) o tapa superpuesta como una caja de zapatos.",
           "Vista previa 3D con vista explosionada, corte y rotación; milímetros o pulgadas.",
           "Exportación STL de la base, de la tapa o de ambas juntas. La tapa se exporta boca abajo y apoyada en la cama, lista para imprimir."
@@ -999,9 +1055,9 @@
         featuresTitle: "Ce qu'il sait faire",
         features: [
           "Formes prêtes à l'emploi (carré, cercle, étoile, cœur, sapin, poisson, polygone avec nombre de côtés réglable et plus).",
-          "Votre propre forme à partir d'un fichier SVG ou d'une image JPG, PNG ou WebP convertie automatiquement en contour.",
+          "Votre propre forme à partir d'un fichier SVG (il conserve sa taille réelle) ou d'une image JPG, PNG ou WebP convertie automatiquement en contour.",
           "Miroir et retournement de la forme, et lissage des formes arrondies pour éviter les parois à facettes.",
-          "Contrôle complet de la boîte : taille, hauteur, hauteur du couvercle, épaisseur des parois et du fond, hauteur du rebord et jeu.",
+          "Contrôle complet de la boîte : chaque dimension a un curseur et un champ pour saisir la valeur exacte (jusqu'à 3 décimales) – taille, hauteur, hauteur du couvercle (jusqu'à un simple rebord avec plaque), épaisseur des parois et du fond, hauteur du rebord et jeu.",
           "Deux styles de couvercle : rebord intérieur (affleurant) ou couvercle recouvrant comme une boîte à chaussures.",
           "Aperçu 3D avec vue éclatée, coupe et rotation ; millimètres ou pouces.",
           "Export STL de la base, du couvercle ou des deux ensemble. Le couvercle est exporté retourné et posé à plat, prêt à imprimer."
@@ -1161,61 +1217,150 @@
       return valToMM(raw);
     }
 
-    function updateValueLabels() {
-      const u = currentUnit === 'in' ? ' in' : ' mm';
-      
-      const inputs = [
-        { el: paramWidth, label: paramWidthVal, decimals: currentUnit === 'in' ? 2 : 1 },
-        { el: paramDepth, label: paramDepthVal, decimals: currentUnit === 'in' ? 2 : 1 },
-        { el: paramBoxHeight, label: paramBoxHeightVal, decimals: currentUnit === 'in' ? 2 : 1 },
-        { el: paramLidHeight, label: paramLidHeightVal, decimals: currentUnit === 'in' ? 2 : 1 },
-        { el: paramWallThickness, label: paramWallThicknessVal, decimals: currentUnit === 'in' ? 3 : 2 },
-        { el: paramFloorThickness, label: paramFloorThicknessVal, decimals: currentUnit === 'in' ? 3 : 2 },
-        { el: paramLipHeight, label: paramLipHeightVal, decimals: currentUnit === 'in' ? 2 : 1 },
-        { el: paramTolerance, label: paramToleranceVal, decimals: currentUnit === 'in' ? 3 : 2 },
-        { el: paramExplode, label: paramExplodeVal, decimals: currentUnit === 'in' ? 2 : 1 }
-      ];
+    // ----- Rozměry: posuvník + číselné políčko pro přesnou hodnotu -----
+    const MAX_DIM_MM = 2000;
+    // Nejmenší povolená hodnota (v mm) při ručním zadání
+    const HARD_MIN_MM = {
+      paramWidth: 2, paramDepth: 2, paramBoxHeight: 0, paramLidHeight: 0,
+      paramWallThickness: 0.2, paramFloorThickness: 0.2, paramLipHeight: 0,
+      paramTolerance: 0, paramExplode: -MAX_DIM_MM
+    };
 
-      inputs.forEach(item => {
-        const mmVal = parseFloat(item.el.value);
-        const displayVal = valToDisplay(mmVal);
-        item.label.textContent = displayVal.toFixed(item.decimals) + u;
+    function dimSliders() {
+      return [paramWidth, paramDepth, paramBoxHeight, paramLidHeight, paramWallThickness,
+              paramFloorThickness, paramLipHeight, paramTolerance, paramExplode];
+    }
+    function numFor(slider) { return document.getElementById(slider.id + 'Num'); }
+    function unitFactor() { return currentUnit === 'in' ? MM_PER_INCH : 1; }
+    function unitDecimals() { return currentUnit === 'in' ? 4 : 3; }
+    function fmtDisplay(v) { return String(parseFloat(Number(v).toFixed(unitDecimals()))); }
+
+    // Posuvníky mají step="any", aby šla zadat přesná hodnota. Při tažení se hodnota
+    // zaokrouhlí na původní krok (uložený v mm v data-step-mm).
+    function snapSliderToStep(slider) {
+      const step = parseFloat(slider.dataset.stepMm) / unitFactor();
+      if (!isFinite(step) || step <= 0) return;
+      const min = parseFloat(slider.min);
+      const max = parseFloat(slider.max);
+      let v = min + Math.round((parseFloat(slider.value) - min) / step) * step;
+      v = Math.min(max, Math.max(min, v));
+      slider.value = parseFloat(v.toFixed(6));
+    }
+
+    // Nastaví hodnotu (v aktuálních jednotkách); rozsah posuvníku se podle potřeby rozšíří.
+    function setParam(slider, displayValue) {
+      const v = Number(displayValue);
+      if (!isFinite(v)) return;
+      if (v > parseFloat(slider.max)) slider.max = v;
+      if (v < parseFloat(slider.min)) slider.min = v;
+      slider.value = v;
+    }
+    function setParamMM(slider, mm) { setParam(slider, mm / unitFactor()); }
+
+    function commitNumberInput(slider) {
+      const num = numFor(slider);
+      let v = parseFloat(String(num.value).replace(',', '.'));
+      if (!isFinite(v)) { num.value = fmtDisplay(slider.value); return; }
+      const f = unitFactor();
+      v = Math.min(MAX_DIM_MM / f, Math.max(HARD_MIN_MM[slider.id] / f, v));
+      const p = Math.pow(10, unitDecimals());
+      v = Math.round(v * p) / p;
+      setParam(slider, v);
+      num.value = fmtDisplay(v);
+      updateValueLabels();
+      rebuildBox();
+    }
+
+    function updateOutlineInfo() {
+      const el = document.getElementById('outlineInfo');
+      if (!el) return;
+      if (!exportDims || !(exportDims.w > 0)) { el.textContent = ''; return; }
+      const f = unitFactor();
+      el.textContent = translations[currentLang].outlineSize + ': ' +
+        fmtDisplay(exportDims.w / f) + ' × ' + fmtDisplay(exportDims.d / f) + ' ' + (currentUnit === 'in' ? 'in' : 'mm');
+    }
+
+    function updateValueLabels() {
+      const u = currentUnit === 'in' ? 'in' : 'mm';
+      dimSliders().forEach(slider => {
+        const unitEl = document.getElementById(slider.id + 'Val');
+        if (unitEl) unitEl.textContent = u;
+        const num = numFor(slider);
+        // pole, do kterého se právě píše, se nepřepisuje
+        if (num && document.activeElement !== num) num.value = fmtDisplay(slider.value);
       });
+      updateOutlineInfo();
     }
 
     function changeUnit(newUnit) {
       if (currentUnit === newUnit) return;
-      const oldUnit = currentUnit;
+      const k = newUnit === 'in' ? 1 / MM_PER_INCH : MM_PER_INCH; // převod ze staré jednotky na novou
       currentUnit = newUnit;
-
-      const sliders = [paramWidth, paramDepth, paramBoxHeight, paramLidHeight, paramWallThickness, paramFloorThickness, paramLipHeight, paramTolerance, paramExplode];
-
-      sliders.forEach(slider => {
-        let mmVal = parseFloat(slider.value);
-        let minMM = parseFloat(slider.min);
-        let maxMM = parseFloat(slider.max);
-        let stepMM = parseFloat(slider.step);
-
-        if (oldUnit === 'in' && newUnit === 'mm') {
-          mmVal *= MM_PER_INCH;
-          minMM *= MM_PER_INCH;
-          maxMM *= MM_PER_INCH;
-          stepMM *= MM_PER_INCH;
-        } else if (oldUnit === 'mm' && newUnit === 'in') {
-          mmVal /= MM_PER_INCH;
-          minMM /= MM_PER_INCH;
-          maxMM /= MM_PER_INCH;
-          stepMM /= MM_PER_INCH;
-        }
-
-        slider.min = minMM;
-        slider.max = maxMM;
-        slider.step = stepMM;
-        slider.value = mmVal;
+      dimSliders().forEach(slider => {
+        // nejdřív si přečteme staré hodnoty, jinak by je prohlížeč při změně min/max ořízl
+        const min = parseFloat(slider.min) * k;
+        const max = parseFloat(slider.max) * k;
+        const value = parseFloat(slider.value) * k;
+        slider.min = Math.min(min, value);
+        slider.max = Math.max(max, value);
+        slider.value = value;
       });
-
       updateValueLabels();
       rebuildBox();
+    }
+
+    // Skutečný rozměr SVG v mm podle atributů width/height/viewBox (CorelDRAW, Inkscape apod.).
+    // Bez jednotek se předpokládá 1 jednotka = 1 px při 96 dpi.
+    function getSvgNativeSizeMM(svgText, shapes) {
+      let pts = null, bestA = -1;
+      shapes.forEach(sh => {
+        const pp = sh.extractPoints(64).shape;
+        if (pp && pp.length >= 3) {
+          const ar = Math.abs(getSignedArea(pp));
+          if (ar > bestA) { bestA = ar; pts = pp; }
+        }
+      });
+      if (!pts) return null;
+
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      pts.forEach(p => {
+        if (p.x < minX) minX = p.x;
+        if (p.x > maxX) maxX = p.x;
+        if (p.y < minY) minY = p.y;
+        if (p.y > maxY) maxY = p.y;
+      });
+      const wUnits = maxX - minX, hUnits = maxY - minY;
+      if (!(wUnits > 0 && hUnits > 0)) return null;
+
+      const PX_MM = 25.4 / 96;
+      const UNIT_MM = { '': PX_MM, px: PX_MM, mm: 1, cm: 10, in: 25.4, pt: 25.4 / 72, pc: 25.4 / 6, q: 0.25 };
+      const parseLen = (str) => {
+        if (str == null) return null;
+        const m = String(str).trim().match(/^([+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?)\s*([a-z%]*)$/i);
+        if (!m) return null;
+        const unit = m[2].toLowerCase();
+        if (!(unit in UNIT_MM)) return null;
+        return parseFloat(m[1]) * UNIT_MM[unit];
+      };
+
+      let mmPerUnit = PX_MM;
+      try {
+        const root = new DOMParser().parseFromString(svgText, 'image/svg+xml').documentElement;
+        if (root && root.nodeName.toLowerCase() === 'svg') {
+          const wMM = parseLen(root.getAttribute('width'));
+          const hMM = parseLen(root.getAttribute('height'));
+          const vbAttr = root.getAttribute('viewBox');
+          const vb = vbAttr ? vbAttr.trim().split(/[\s,]+/).map(Number) : null;
+          const hasVB = vb && vb.length === 4 && vb.every(isFinite) && vb[2] > 0 && vb[3] > 0;
+          if (hasVB && (wMM || hMM)) {
+            const sx = wMM ? wMM / vb[2] : null;
+            const sy = hMM ? hMM / vb[3] : null;
+            mmPerUnit = (sx && sy) ? Math.min(sx, sy) : (sx || sy);
+          }
+        }
+      } catch (e) { /* ponechá se výchozí 96 dpi */ }
+
+      return { w: wUnits * mmPerUnit, d: hUnits * mmPerUnit };
     }
 
     let scene, camera, renderer, controls;
@@ -1791,11 +1936,14 @@ function rdpClosed(pts, tol) {
       const targetW = getParamValue(paramWidth);
       const targetD = keepAspect ? targetW : getParamValue(paramDepth);
 
-      const boxH = getParamValue(paramBoxHeight);
-      const lidH = getParamValue(paramLidHeight);
+      // Výšky mohou být libovolně nízké (až 0). Součásti se navzájem ořežou tak, aby
+      // celková výška vždy seděla přesně na zadanou hodnotu. Pod EPS_H se díl nevytváří.
+      const EPS_H = 0.01;
+      const boxH = Math.max(0, getParamValue(paramBoxHeight));
+      const lidH = Math.max(0, getParamValue(paramLidHeight));
       const wallT = getParamValue(paramWallThickness);
-      const floorT = getParamValue(paramFloorThickness);
-      const lipH = getParamValue(paramLipHeight);
+      const floorT = Math.min(getParamValue(paramFloorThickness), boxH);
+      const lipH = Math.min(Math.max(0, getParamValue(paramLipHeight)), Math.max(0, boxH - floorT));
       const tol = getParamValue(paramTolerance);
       const lidStyle = lidStyleSelect ? lidStyleSelect.value : 'inset';
       const explodeOffset = getParamValue(paramExplode);
@@ -1821,6 +1969,7 @@ function rdpClosed(pts, tol) {
           if (p.y > maxY) maxY = p.y;
         });
         exportDims = { w: maxX - minX, d: maxY - minY };
+        updateOutlineInfo();
       }
 
       const innerPts = createOffsetPath(outerPts, -wallT);
@@ -1834,28 +1983,38 @@ function rdpClosed(pts, tol) {
       baseMesh = new THREE.Group();
 
       if (lidStyle === 'inset') {
-        const mainWallHeight = Math.max(1, boxH - lipH - floorT);
+        const mainWallHeight = Math.max(0, boxH - lipH - floorT);
         const lipOuterPts = createOffsetPath(outerPts, -(wallT / 2 + tol / 2));
 
-        const baseFloorGeo = createSolidExtrusion(outerPts, floorT);
-        baseMesh.add(new THREE.Mesh(baseFloorGeo, baseMaterial));
+        if (floorT > EPS_H) {
+          const baseFloorGeo = createSolidExtrusion(outerPts, floorT);
+          baseMesh.add(new THREE.Mesh(baseFloorGeo, baseMaterial));
+        }
 
-        const baseWallGeo = createHollowExtrusion(outerPts, innerPts, mainWallHeight);
-        baseWallGeo.translate(0, 0, floorT);
-        baseMesh.add(new THREE.Mesh(baseWallGeo, baseMaterial));
+        if (mainWallHeight > EPS_H) {
+          const baseWallGeo = createHollowExtrusion(outerPts, innerPts, mainWallHeight);
+          baseWallGeo.translate(0, 0, floorT);
+          baseMesh.add(new THREE.Mesh(baseWallGeo, baseMaterial));
+        }
 
-        const lipGeo = createHollowExtrusion(lipOuterPts, innerPts, lipH);
-        lipGeo.translate(0, 0, floorT + mainWallHeight);
-        baseMesh.add(new THREE.Mesh(lipGeo, baseMaterial));
+        if (lipH > EPS_H) {
+          const lipGeo = createHollowExtrusion(lipOuterPts, innerPts, lipH);
+          lipGeo.translate(0, 0, floorT + mainWallHeight);
+          baseMesh.add(new THREE.Mesh(lipGeo, baseMaterial));
+        }
       } else {
-        const wallHeight = Math.max(1, boxH - floorT);
+        const wallHeight = Math.max(0, boxH - floorT);
 
-        const baseFloorGeo = createSolidExtrusion(outerPts, floorT);
-        baseMesh.add(new THREE.Mesh(baseFloorGeo, baseMaterial));
+        if (floorT > EPS_H) {
+          const baseFloorGeo = createSolidExtrusion(outerPts, floorT);
+          baseMesh.add(new THREE.Mesh(baseFloorGeo, baseMaterial));
+        }
 
-        const baseWallGeo = createHollowExtrusion(outerPts, innerPts, wallHeight);
-        baseWallGeo.translate(0, 0, floorT);
-        baseMesh.add(new THREE.Mesh(baseWallGeo, baseMaterial));
+        if (wallHeight > EPS_H) {
+          const baseWallGeo = createHollowExtrusion(outerPts, innerPts, wallHeight);
+          baseWallGeo.translate(0, 0, floorT);
+          baseMesh.add(new THREE.Mesh(baseWallGeo, baseMaterial));
+        }
       }
 
       baseMesh.rotation.x = -Math.PI / 2;
@@ -1863,46 +2022,57 @@ function rdpClosed(pts, tol) {
       // ---------------- 2. LID (VÍKO) ----------------
       lidMesh = new THREE.Group();
 
+      // Víko může být libovolně nízké (až jen límec + deska). Celková výška víka je přesně lidH.
+      const lidPlateT = Math.min(getParamValue(paramFloorThickness), lidH); // tloušťka horní desky
+      const lidWallHeight = Math.max(0, lidH - lidPlateT);                   // výška límce pod deskou
+      const EPS = EPS_H;
+      let lidBottomY;                                        // výška spodku víka nad dnem krabičky
+
       if (lidStyle === 'inset') {
-        const lidWallHeight = Math.max(2, lidH - floorT);
         const lipOverlapH = Math.min(lipH, lidWallHeight);
         const topWallH = lidWallHeight - lipOverlapH;
         const lidOuterRecessPts = createOffsetPath(outerPts, -(wallT / 2));
 
-        if (lipOverlapH > 0) {
+        if (lipOverlapH > EPS) {
           const lidRecessGeo = createHollowExtrusion(outerPts, lidOuterRecessPts, lipOverlapH);
           lidMesh.add(new THREE.Mesh(lidRecessGeo, lidMaterial));
         }
 
-        if (topWallH > 0) {
+        if (topWallH > EPS) {
           const lidUpperWallGeo = createHollowExtrusion(outerPts, innerPts, topWallH);
           lidUpperWallGeo.translate(0, 0, lipOverlapH);
           lidMesh.add(new THREE.Mesh(lidUpperWallGeo, lidMaterial));
         }
 
-        const lidTopGeo = createSolidExtrusion(outerPts, floorT);
-        lidTopGeo.translate(0, 0, lidWallHeight);
-        lidMesh.add(new THREE.Mesh(lidTopGeo, lidMaterial));
+        if (lidPlateT > EPS) {
+          const lidTopGeo = createSolidExtrusion(outerPts, lidPlateT);
+          lidTopGeo.translate(0, 0, lidWallHeight);
+          lidMesh.add(new THREE.Mesh(lidTopGeo, lidMaterial));
+        }
+
+        // deska víka dosedne na horní okraj zámku základny
+        lidBottomY = boxH - lipOverlapH;
       } else {
         const shoeBoxOuterPts = createOffsetPath(outerPts, wallT + tol);
         const shoeBoxInnerPts = createOffsetPath(outerPts, tol);
-        const lidWallHeight = Math.max(2, lidH - floorT);
 
-        const lidWallGeo = createHollowExtrusion(shoeBoxOuterPts, shoeBoxInnerPts, lidWallHeight);
-        lidMesh.add(new THREE.Mesh(lidWallGeo, lidMaterial));
+        if (lidWallHeight > EPS) {
+          const lidWallGeo = createHollowExtrusion(shoeBoxOuterPts, shoeBoxInnerPts, lidWallHeight);
+          lidMesh.add(new THREE.Mesh(lidWallGeo, lidMaterial));
+        }
 
-        const lidTopGeo = createSolidExtrusion(shoeBoxOuterPts, floorT);
-        lidTopGeo.translate(0, 0, lidWallHeight);
-        lidMesh.add(new THREE.Mesh(lidTopGeo, lidMaterial));
+        if (lidPlateT > EPS) {
+          const lidTopGeo = createSolidExtrusion(shoeBoxOuterPts, lidPlateT);
+          lidTopGeo.translate(0, 0, lidWallHeight);
+          lidMesh.add(new THREE.Mesh(lidTopGeo, lidMaterial));
+        }
+
+        // deska víka dosedne na horní okraj stěn základny
+        lidBottomY = boxH - lidWallHeight;
       }
 
       lidMesh.rotation.x = -Math.PI / 2;
-
-      if (lidStyle === 'inset') {
-        lidMesh.position.y = (boxH - lipH) + explodeOffset;
-      } else {
-        lidMesh.position.y = (boxH - lidH + floorT) + explodeOffset;
-      }
+      lidMesh.position.y = lidBottomY + explodeOffset;
 
       if (currentViewMode === 'both' || currentViewMode === 'box') {
         boxGroup.add(baseMesh);
@@ -2023,7 +2193,12 @@ function rdpClosed(pts, tol) {
 
       const baseGeo = getMergedGeometryForGroup(baseMesh, false);
       const lidGeo = getMergedGeometryForGroup(lidMesh, true);
-      if (!baseGeo || !lidGeo) return;
+      if (!baseGeo || !lidGeo) {
+        // jeden z dílů má nulovou výšku – exportuje se jen ten, který existuje
+        const only = baseGeo || lidGeo;
+        if (only) downloadGeometries([only], filename);
+        return;
+      }
 
       // Víko vedle dna s mezerou 10 mm, aby se nepřekrývaly
       const gap = 10;
@@ -2135,21 +2310,40 @@ function rdpClosed(pts, tol) {
     }
 
     function bindEvents() {
-      const inputs = [paramWidth, paramDepth, paramBoxHeight, paramLidHeight, paramWallThickness, paramFloorThickness, paramLipHeight, paramTolerance, paramExplode];
+      // Posuvníky: step="any" kvůli přesným hodnotám, původní krok si pamatujeme v mm
+      dimSliders().forEach(el => {
+        el.dataset.stepMm = el.getAttribute('step') || '1';
+        el.step = 'any';
+      });
 
-      inputs.forEach(el => {
+      dimSliders().forEach(el => {
         el.addEventListener('input', () => {
+          snapSliderToStep(el);
           updateValueLabels();
           rebuildBox();
         });
+
+        // Číselné políčko: hodnota se použije po potvrzení (Enter nebo opuštění pole)
+        const num = numFor(el);
+        num.addEventListener('change', () => commitNumberInput(el));
+        num.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); num.blur(); } });
+        num.addEventListener('focus', () => num.select());
       });
 
       checkKeepAspect.addEventListener('change', () => {
         if (checkKeepAspect.checked) {
           containerDepth.classList.add('hidden');
+          // při zapnutí poměru stran je šířka největší rozměr obrysu
+          if (exportDims.w > 0) setParamMM(paramWidth, Math.max(exportDims.w, exportDims.d));
         } else {
           containerDepth.classList.remove('hidden');
-          paramDepth.value = paramWidth.value;
+          // při vypnutí zůstanou aktuální skutečné rozměry obrysu (tvar se nezdeformuje)
+          if (exportDims.w > 0) {
+            setParamMM(paramWidth, exportDims.w);
+            setParamMM(paramDepth, exportDims.d);
+          } else {
+            paramDepth.value = paramWidth.value;
+          }
         }
         updateValueLabels();
         rebuildBox();
@@ -2225,8 +2419,8 @@ function rdpClosed(pts, tol) {
         if (e.target.value === 'rectangle') {
           checkKeepAspect.checked = false;
           containerDepth.classList.remove('hidden');
-          paramWidth.value = 80;
-          paramDepth.value = 50;
+          setParamMM(paramWidth, 80);
+          setParamMM(paramDepth, 50);
         } else {
           checkKeepAspect.checked = true;
           containerDepth.classList.add('hidden');
@@ -2242,8 +2436,9 @@ function rdpClosed(pts, tol) {
         const reader = new FileReader();
         reader.onload = (evt) => {
           try {
+            const svgText = evt.target.result;
             const loader = new THREE.SVGLoader();
-            const svgData = loader.parse(evt.target.result);
+            const svgData = loader.parse(svgText);
             const shapes = [];
             svgData.paths.forEach(path => {
               const pathShapes = THREE.SVGLoader.createShapes(path);
@@ -2257,8 +2452,22 @@ function rdpClosed(pts, tol) {
               containerDepth.classList.add('hidden');
               btnRemoveSvg.classList.remove('hidden');
               updateSidesVisibility();
+
+              // zachovat skutečný rozměr souboru (největší rozměr obrysu v mm)
+              const nat = getSvgNativeSizeMM(svgText, shapes);
+              if (nat) setParamMM(paramWidth, Math.min(MAX_DIM_MM, Math.max(nat.w, nat.d)));
+              updateValueLabels();
               rebuildBox();
-              showToast(translations[currentLang].toastSvgSuccess);
+
+              let msg = translations[currentLang].toastSvgSuccess;
+              if (nat && exportDims.w > 0) {
+                const f = unitFactor();
+                msg += ' ' + translations[currentLang].toastSvgSize
+                  .replace('{w}', fmtDisplay(exportDims.w / f))
+                  .replace('{d}', fmtDisplay(exportDims.d / f))
+                  .replace('{u}', currentUnit === 'in' ? 'in' : 'mm');
+              }
+              showToast(msg);
             } else {
               showToast(translations[currentLang].toastSvgErr);
             }
