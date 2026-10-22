@@ -156,6 +156,13 @@
             <i class="fa-solid fa-shapes text-blue-400"></i> <span data-i18n="sectionInput">1. Input Shape (SVG, JPG, PNG)</span>
           </label>
           <div>
+            <label class="text-xs text-slate-300 mb-1 block font-medium" data-i18n="boxTypeLabel">Type:</label>
+            <select id="boxTypeSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+              <option value="box" data-i18n="boxTypeBox">Box</option>
+              <option value="led" data-i18n="boxTypeLed">LED strip box</option>
+            </select>
+          </div>
+          <div>
             <label class="text-xs text-slate-300 mb-1 block" data-i18n="presetShapes">Preset Shapes:</label>
             <select id="presetSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
               <option value="square" data-i18n="shapeSquare">Square</option>
@@ -243,6 +250,16 @@
               <span id="paramSmoothVal" class="font-mono text-blue-400 font-bold">2</span>
             </div>
             <input type="range" id="paramSmooth" min="1" max="4" step="1" value="2" class="w-full">
+          </div>
+
+          <!-- Holes in the outline (hollow centre) – visible only when the loaded outline has holes -->
+          <div id="containerHoles" class="hidden space-y-1">
+            <label class="flex items-center justify-between gap-2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 cursor-pointer">
+              <span class="text-xs text-slate-300" data-i18n="checkHoles">Follow holes in the outline (hollow centre)</span>
+              <input type="checkbox" id="checkHoles" class="w-4 h-4 accent-blue-500 cursor-pointer">
+            </label>
+            <p class="text-[11px] leading-snug text-slate-500" data-i18n="holesHint">hint</p>
+            <p id="holesWarn" class="hidden text-[11px] leading-snug text-amber-400"></p>
           </div>
         </section>
 
@@ -333,6 +350,153 @@
             </select>
           </div>
         </section>
+
+        <!-- LED strip box options (visible only for the LED type) -->
+        <div id="ledWrap" class="hidden space-y-6">
+          <hr class="border-slate-800">
+          <section class="space-y-3">
+            <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+              <i class="fa-solid fa-lightbulb text-blue-400"></i> <span data-i18n="sectionLed">LED strip options</span>
+            </label>
+            <p class="text-[11px] leading-snug text-slate-500" data-i18n="ledHint">hint</p>
+
+            <label class="flex items-center justify-between gap-2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 cursor-pointer">
+              <span class="text-xs text-slate-300" data-i18n="checkCableHole">Cable hole</span>
+              <input type="checkbox" id="checkCableHole" class="w-4 h-4 accent-blue-500 cursor-pointer">
+            </label>
+
+            <div id="cableHoleOpts" class="space-y-3">
+              <div>
+                <label class="text-xs text-slate-300 mb-1 block" data-i18n="cablePosLabel">Hole position:</label>
+                <select id="cablePosSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+                  <option value="side" data-i18n="cablePosSide">Side wall</option>
+                  <option value="bottom" data-i18n="cablePosBottom">Bottom (floor)</option>
+                  <option value="top" data-i18n="cablePosTop">Top (lid)</option>
+                </select>
+              </div>
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-300" data-i18n="paramCableDia">Hole diameter</span>
+                <span class="flex items-center gap-1"><input type="number" id="paramCableDiaNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramCableDiaVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
+              </div>
+              <input type="range" id="paramCableDia" min="2" max="20" step="0.5" value="6" class="w-full">
+            </div>
+
+              <div id="cableSideWrap" class="space-y-3">
+                <div>
+                  <label class="text-xs text-slate-300 mb-1 block" data-i18n="cableWallLabel">Wall:</label>
+                  <select id="cableWallSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+                    <option value="front" data-i18n="wallFront">Front</option>
+                    <option value="back" data-i18n="wallBack">Back</option>
+                    <option value="left" data-i18n="wallLeft">Left</option>
+                    <option value="right" data-i18n="wallRight">Right</option>
+                  </select>
+                </div>
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-300" data-i18n="paramCableAlong">Position along the wall</span>
+                <span class="flex items-center gap-1"><input type="number" id="paramCableAlongNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramCableAlongVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
+              </div>
+              <input type="range" id="paramCableAlong" min="-150" max="150" step="0.5" value="0" class="w-full">
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-300" data-i18n="paramCableZ">Height from bottom (hole centre)</span>
+                <span class="flex items-center gap-1"><input type="number" id="paramCableZNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramCableZVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
+              </div>
+              <input type="range" id="paramCableZ" min="0" max="150" step="0.5" value="12" class="w-full">
+            </div>
+
+              </div>
+              <div id="cableTopBotWrap" class="space-y-3 hidden">
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-300" data-i18n="paramCableX">Position X (left ↔ right)</span>
+                <span class="flex items-center gap-1"><input type="number" id="paramCableXNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramCableXVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
+              </div>
+              <input type="range" id="paramCableX" min="-150" max="150" step="0.5" value="0" class="w-full">
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-300" data-i18n="paramCableY">Position Y (front ↔ back)</span>
+                <span class="flex items-center gap-1"><input type="number" id="paramCableYNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramCableYVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
+              </div>
+              <input type="range" id="paramCableY" min="-150" max="150" step="0.5" value="0" class="w-full">
+            </div>
+
+              </div>
+            </div>
+
+            <label class="flex items-center justify-between gap-2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 cursor-pointer">
+              <span class="text-xs text-slate-300" data-i18n="checkStripHolders">LED strip holders (clips along the wall)</span>
+              <input type="checkbox" id="checkStripHolders" class="w-4 h-4 accent-blue-500 cursor-pointer">
+            </label>
+
+            <div id="stripOpts" class="space-y-3">
+              <div>
+                <label class="text-xs text-slate-300 mb-1 block" data-i18n="stripModeLabel">Strip placement:</label>
+                <select id="stripModeSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+                  <option value="lying" data-i18n="stripLying">Lying on the floor</option>
+                  <option value="standing" data-i18n="stripStanding">Standing on edge at the wall</option>
+                </select>
+              </div>
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-300" data-i18n="paramStripW">Strip width</span>
+                <span class="flex items-center gap-1"><input type="number" id="paramStripWNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramStripWVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
+              </div>
+              <input type="range" id="paramStripW" min="3" max="30" step="0.5" value="10" class="w-full">
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-300" data-i18n="paramStripT">Strip thickness (with LEDs)</span>
+                <span class="flex items-center gap-1"><input type="number" id="paramStripTNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramStripTVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
+              </div>
+              <input type="range" id="paramStripT" min="1" max="10" step="0.5" value="3" class="w-full">
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-300" data-i18n="paramHolderSpacing">Holder spacing</span>
+                <span class="flex items-center gap-1"><input type="number" id="paramHolderSpacingNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramHolderSpacingVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
+              </div>
+              <input type="range" id="paramHolderSpacing" min="10" max="150" step="1" value="40" class="w-full">
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-300" data-i18n="paramHolderLen">Holder length</span>
+                <span class="flex items-center gap-1"><input type="number" id="paramHolderLenNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramHolderLenVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
+              </div>
+              <input type="range" id="paramHolderLen" min="3" max="30" step="0.5" value="8" class="w-full">
+            </div>
+
+            </div>
+
+            <div id="cableHolderToggle">
+            <label class="flex items-center justify-between gap-2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 cursor-pointer">
+              <span class="text-xs text-slate-300" data-i18n="checkCableHolder">Cable holder next to the hole (side hole)</span>
+              <input type="checkbox" id="checkCableHolder" class="w-4 h-4 accent-blue-500 cursor-pointer">
+            </label>
+
+            </div>
+            <div id="cableHolderOpts" class="space-y-3 hidden">
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-300" data-i18n="paramCableHolderDist">Holder distance from the wall</span>
+                <span class="flex items-center gap-1"><input type="number" id="paramCableHolderDistNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramCableHolderDistVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
+              </div>
+              <input type="range" id="paramCableHolderDist" min="0" max="60" step="1" value="8" class="w-full">
+            </div>
+
+            </div>
+
+            <p id="ledWarn" class="hidden text-[11px] leading-snug text-amber-400"></p>
+          </section>
+        </div>
 
         <hr class="border-slate-800">
 
@@ -525,7 +689,47 @@
         aboutTitle: "About BoxGenerator",
         footerChangelog: "Changelog",
         changelogTitle: "Changelog",
-        changelogVersion: "Version"
+        changelogVersion: "Version",
+        boxTypeLabel: "Type:",
+        boxTypeBox: "Box",
+        boxTypeLed: "LED strip box",
+        sectionLed: "LED strip options",
+        ledHint: "Holders are small snap-in hooks on the floor along the inner wall – the strip slides under the hook. The cable holder is an open ring in line with the hole.",
+        checkCableHole: "Cable hole",
+        cablePosLabel: "Hole position:",
+        cablePosSide: "Side wall",
+        cablePosBottom: "Bottom (floor)",
+        cablePosTop: "Top (lid)",
+        cableWallLabel: "Wall:",
+        wallFront: "Front",
+        wallBack: "Back",
+        wallLeft: "Left",
+        wallRight: "Right",
+        paramCableDia: "Hole diameter",
+        paramCableAlong: "Position along the wall",
+        paramCableX: "Position X (left ↔ right)",
+        paramCableY: "Position Y (front ↔ back)",
+        paramCableZ: "Height from bottom (hole centre)",
+        checkStripHolders: "LED strip holders (clips along the wall)",
+        stripModeLabel: "Strip placement:",
+        stripLying: "Lying on the floor",
+        stripStanding: "Standing on edge at the wall",
+        paramStripW: "Strip width",
+        paramStripT: "Strip thickness (with LEDs)",
+        paramHolderSpacing: "Holder spacing",
+        paramHolderLen: "Holder length",
+        checkCableHolder: "Cable holder next to the hole (side hole)",
+        paramCableHolderDist: "Holder distance from the wall",
+        warnHoleOutside: "The cable hole is outside the usable area – move it.",
+        warnHoleLow: "The wall is too low for this hole – the hole was made smaller or skipped.",
+        warnHoldersLow: "The box is too low for the strip holders – increase the box height.",
+        warnNoHolders: "No holder fits along the outline (corners are skipped) – reduce the spacing or length.",
+        checkHoles: "Follow holes in the outline (hollow centre)",
+        holesHint: "Holes in the outline stay empty: they get their own wall, and the floor and lid are cut out there.",
+        warnHolesFit: "A hole is too close to the edge or to another hole for this wall thickness – it was skipped.",
+        warnTooManyHoles: "Too many holes – only the 12 largest are used.",
+        warnHoleShrink: "A hole is too small for the shoe-box lid collar – it stays closed in the lid.",
+        warnNoHoles: "No holes were found in this outline. Holes are read from SVG files only."
       },
       cs: {
         appTitle: "3D Box Generator",
@@ -598,7 +802,47 @@
         aboutTitle: "O BoxGeneratoru",
         footerChangelog: "Seznam změn",
         changelogTitle: "Seznam změn",
-        changelogVersion: "Verze"
+        changelogVersion: "Verze",
+        boxTypeLabel: "Typ:",
+        boxTypeBox: "Krabička",
+        boxTypeLed: "Krabička pro LED pásek",
+        sectionLed: "Možnosti pro LED pásek",
+        ledHint: "Držáky jsou malé zacvakávací háčky na dně podél vnitřní stěny – pásek se zasune pod háček. Držák kabelu je otevřený kroužek ve směru otvoru.",
+        checkCableHole: "Otvor na kabel",
+        cablePosLabel: "Umístění otvoru:",
+        cablePosSide: "Boční stěna",
+        cablePosBottom: "Dno",
+        cablePosTop: "Víko (nahoře)",
+        cableWallLabel: "Stěna:",
+        wallFront: "Vpředu",
+        wallBack: "Vzadu",
+        wallLeft: "Vlevo",
+        wallRight: "Vpravo",
+        paramCableDia: "Průměr otvoru",
+        paramCableAlong: "Poloha podél stěny",
+        paramCableX: "Poloha X (vlevo ↔ vpravo)",
+        paramCableY: "Poloha Y (vpředu ↔ vzadu)",
+        paramCableZ: "Výška od spodku (střed otvoru)",
+        checkStripHolders: "Držáky LED pásku (klipy podél stěny)",
+        stripModeLabel: "Uložení pásku:",
+        stripLying: "Položený na dně",
+        stripStanding: "Postavený na hraně u stěny",
+        paramStripW: "Šířka pásku",
+        paramStripT: "Tloušťka pásku (s LED)",
+        paramHolderSpacing: "Rozestup držáků",
+        paramHolderLen: "Délka držáku",
+        checkCableHolder: "Držák kabelu u otvoru (boční otvor)",
+        paramCableHolderDist: "Vzdálenost držáku od stěny",
+        warnHoleOutside: "Otvor na kabel je mimo použitelnou plochu – posuňte ho.",
+        warnHoleLow: "Stěna je pro tento otvor příliš nízká – otvor byl zmenšen nebo vynechán.",
+        warnHoldersLow: "Krabička je pro držáky pásku příliš nízká – zvyšte její výšku.",
+        warnNoHolders: "Podél obrysu se nevešel žádný držák (rohy se přeskakují) – zmenšete rozestup nebo délku.",
+        checkHoles: "Respektovat otvory v obrysu (prázdný střed)",
+        holesHint: "Otvory v obrysu zůstanou prázdné: dostanou vlastní stěnu a dno i víko se tam vyřízne.",
+        warnHolesFit: "Otvor je pro tuto tloušťku stěny příliš blízko okraje nebo jiného otvoru – byl vynechán.",
+        warnTooManyHoles: "Příliš mnoho otvorů – použije se jen 12 největších.",
+        warnHoleShrink: "Otvor je pro límec víka jako od krabice příliš malý – ve víku zůstane zavřený.",
+        warnNoHoles: "V tomto obrysu se nenašly žádné otvory. Otvory se čtou jen ze souborů SVG."
       },
       de: {
         appTitle: "3D-Box-Generator",
@@ -671,7 +915,47 @@
         aboutTitle: "Über BoxGenerator",
         footerChangelog: "Änderungsprotokoll",
         changelogTitle: "Änderungsprotokoll",
-        changelogVersion: "Version"
+        changelogVersion: "Version",
+        boxTypeLabel: "Typ:",
+        boxTypeBox: "Box",
+        boxTypeLed: "LED-Streifen-Box",
+        sectionLed: "Optionen für LED-Streifen",
+        ledHint: "Die Halter sind kleine Schnapphaken am Boden entlang der Innenwand – der Streifen wird unter den Haken geschoben. Der Kabelhalter ist ein offener Ring in Achse des Lochs.",
+        checkCableHole: "Kabelloch",
+        cablePosLabel: "Position des Lochs:",
+        cablePosSide: "Seitenwand",
+        cablePosBottom: "Boden",
+        cablePosTop: "Deckel (oben)",
+        cableWallLabel: "Wand:",
+        wallFront: "Vorne",
+        wallBack: "Hinten",
+        wallLeft: "Links",
+        wallRight: "Rechts",
+        paramCableDia: "Lochdurchmesser",
+        paramCableAlong: "Position entlang der Wand",
+        paramCableX: "Position X (links ↔ rechts)",
+        paramCableY: "Position Y (vorne ↔ hinten)",
+        paramCableZ: "Höhe vom Boden (Lochmitte)",
+        checkStripHolders: "LED-Streifen-Halter (Clips entlang der Wand)",
+        stripModeLabel: "Lage des Streifens:",
+        stripLying: "Flach auf dem Boden",
+        stripStanding: "Hochkant an der Wand",
+        paramStripW: "Streifenbreite",
+        paramStripT: "Streifendicke (mit LEDs)",
+        paramHolderSpacing: "Halterabstand",
+        paramHolderLen: "Halterlänge",
+        checkCableHolder: "Kabelhalter am Loch (Seitenloch)",
+        paramCableHolderDist: "Abstand des Halters zur Wand",
+        warnHoleOutside: "Das Kabelloch liegt außerhalb der nutzbaren Fläche – bitte verschieben.",
+        warnHoleLow: "Die Wand ist für dieses Loch zu niedrig – das Loch wurde verkleinert oder weggelassen.",
+        warnHoldersLow: "Die Box ist für die Streifenhalter zu niedrig – Höhe erhöhen.",
+        warnNoHolders: "Entlang der Kontur passt kein Halter (Ecken werden übersprungen) – Abstand oder Länge verringern.",
+        checkHoles: "Löcher in der Kontur beibehalten (hohle Mitte)",
+        holesHint: "Löcher in der Kontur bleiben leer: Sie erhalten eine eigene Wand, Boden und Deckel werden dort ausgeschnitten.",
+        warnHolesFit: "Ein Loch liegt für diese Wandstärke zu nah am Rand oder an einem anderen Loch – es wurde übersprungen.",
+        warnTooManyHoles: "Zu viele Löcher – nur die 12 größten werden verwendet.",
+        warnHoleShrink: "Ein Loch ist für den Deckelrand (Schachtelstil) zu klein – es bleibt im Deckel geschlossen.",
+        warnNoHoles: "In dieser Kontur wurden keine Löcher gefunden. Löcher werden nur aus SVG-Dateien gelesen."
       },
       es: {
         appTitle: "Generador de Cajas 3D",
@@ -744,7 +1028,47 @@
         aboutTitle: "Acerca de BoxGenerator",
         footerChangelog: "Historial de cambios",
         changelogTitle: "Historial de cambios",
-        changelogVersion: "Versión"
+        changelogVersion: "Versión",
+        boxTypeLabel: "Tipo:",
+        boxTypeBox: "Caja",
+        boxTypeLed: "Caja para tira LED",
+        sectionLed: "Opciones de tira LED",
+        ledHint: "Los soportes son pequeños ganchos a presión en el suelo a lo largo de la pared interior: la tira se desliza bajo el gancho. El soporte del cable es un anillo abierto alineado con el orificio.",
+        checkCableHole: "Orificio para cable",
+        cablePosLabel: "Posición del orificio:",
+        cablePosSide: "Pared lateral",
+        cablePosBottom: "Base (suelo)",
+        cablePosTop: "Tapa (arriba)",
+        cableWallLabel: "Pared:",
+        wallFront: "Delante",
+        wallBack: "Detrás",
+        wallLeft: "Izquierda",
+        wallRight: "Derecha",
+        paramCableDia: "Diámetro del orificio",
+        paramCableAlong: "Posición a lo largo de la pared",
+        paramCableX: "Posición X (izquierda ↔ derecha)",
+        paramCableY: "Posición Y (delante ↔ detrás)",
+        paramCableZ: "Altura desde la base (centro del orificio)",
+        checkStripHolders: "Soportes de tira LED (clips a lo largo de la pared)",
+        stripModeLabel: "Colocación de la tira:",
+        stripLying: "Tumbada en el suelo",
+        stripStanding: "De canto contra la pared",
+        paramStripW: "Ancho de la tira",
+        paramStripT: "Grosor de la tira (con LED)",
+        paramHolderSpacing: "Separación de soportes",
+        paramHolderLen: "Longitud del soporte",
+        checkCableHolder: "Soporte de cable junto al orificio (orificio lateral)",
+        paramCableHolderDist: "Distancia del soporte a la pared",
+        warnHoleOutside: "El orificio para el cable está fuera del área útil: muévelo.",
+        warnHoleLow: "La pared es demasiado baja para este orificio: se redujo u omitió.",
+        warnHoldersLow: "La caja es demasiado baja para los soportes de la tira: aumenta la altura.",
+        warnNoHolders: "No cabe ningún soporte a lo largo del contorno (se omiten las esquinas): reduce la separación o la longitud.",
+        checkHoles: "Respetar los huecos del contorno (centro vacío)",
+        holesHint: "Los huecos del contorno quedan vacíos: reciben su propia pared y la base y la tapa se recortan ahí.",
+        warnHolesFit: "Un hueco está demasiado cerca del borde o de otro hueco para este grosor de pared: se omitió.",
+        warnTooManyHoles: "Demasiados huecos: solo se usan los 12 más grandes.",
+        warnHoleShrink: "Un hueco es demasiado pequeño para el borde de la tapa tipo caja de zapatos: queda cerrado en la tapa.",
+        warnNoHoles: "No se encontraron huecos en este contorno. Los huecos solo se leen de archivos SVG."
       },
       fr: {
         appTitle: "Générateur de Boîte 3D",
@@ -817,12 +1141,87 @@
         aboutTitle: "À propos de BoxGenerator",
         footerChangelog: "Historique des modifications",
         changelogTitle: "Historique des modifications",
-        changelogVersion: "Version"
+        changelogVersion: "Version",
+        boxTypeLabel: "Type :",
+        boxTypeBox: "Boîte",
+        boxTypeLed: "Boîte pour ruban LED",
+        sectionLed: "Options ruban LED",
+        ledHint: "Les supports sont de petits crochets à clipser sur le fond le long de la paroi intérieure : le ruban se glisse sous le crochet. Le support de câble est un anneau ouvert dans l'axe du trou.",
+        checkCableHole: "Trou pour câble",
+        cablePosLabel: "Position du trou :",
+        cablePosSide: "Paroi latérale",
+        cablePosBottom: "Fond",
+        cablePosTop: "Couvercle (dessus)",
+        cableWallLabel: "Paroi :",
+        wallFront: "Avant",
+        wallBack: "Arrière",
+        wallLeft: "Gauche",
+        wallRight: "Droite",
+        paramCableDia: "Diamètre du trou",
+        paramCableAlong: "Position le long de la paroi",
+        paramCableX: "Position X (gauche ↔ droite)",
+        paramCableY: "Position Y (avant ↔ arrière)",
+        paramCableZ: "Hauteur depuis le fond (centre du trou)",
+        checkStripHolders: "Supports de ruban LED (clips le long de la paroi)",
+        stripModeLabel: "Position du ruban :",
+        stripLying: "À plat sur le fond",
+        stripStanding: "Sur la tranche contre la paroi",
+        paramStripW: "Largeur du ruban",
+        paramStripT: "Épaisseur du ruban (avec LED)",
+        paramHolderSpacing: "Espacement des supports",
+        paramHolderLen: "Longueur du support",
+        checkCableHolder: "Support de câble près du trou (trou latéral)",
+        paramCableHolderDist: "Distance du support à la paroi",
+        warnHoleOutside: "Le trou pour câble est hors de la zone utilisable : déplacez-le.",
+        warnHoleLow: "La paroi est trop basse pour ce trou : il a été réduit ou omis.",
+        warnHoldersLow: "La boîte est trop basse pour les supports de ruban : augmentez la hauteur.",
+        warnNoHolders: "Aucun support ne tient le long du contour (les angles sont ignorés) : réduisez l'espacement ou la longueur.",
+        checkHoles: "Respecter les trous du contour (centre vide)",
+        holesHint: "Les trous du contour restent vides : ils reçoivent leur propre paroi, et le fond et le couvercle y sont découpés.",
+        warnHolesFit: "Un trou est trop proche du bord ou d’un autre trou pour cette épaisseur de paroi : il a été ignoré.",
+        warnTooManyHoles: "Trop de trous : seuls les 12 plus grands sont utilisés.",
+        warnHoleShrink: "Un trou est trop petit pour le rebord du couvercle (style boîte à chaussures) : il reste fermé dans le couvercle.",
+        warnNoHoles: "Aucun trou trouvé dans ce contour. Les trous ne sont lus que dans les fichiers SVG."
       }
     };
 
     // Seznam změn podle verzí (nejnovější nahoře)
     const changelogData = [
+      {
+        version: '6',
+        items: {
+          en: [
+            "New type switch: Box or LED strip box.",
+            "LED strip box: a cable hole in the side wall, bottom or lid – with adjustable diameter, position and height.",
+            "LED strip box: snap-in holders for the LED strip along the inner wall, and an optional cable holder next to the hole.",
+            "Outlines with holes (e.g. a ring or frame): a new option makes the box follow the holes, so the centre stays empty."
+          ],
+          cs: [
+            "Nový přepínač typu: Krabička nebo Krabička pro LED pásek.",
+            "Krabička pro LED pásek: otvor na kabel v boční stěně, ve dně nebo ve víku – s nastavitelným průměrem, polohou a výškou.",
+            "Krabička pro LED pásek: zacvakávací držáky LED pásku podél vnitřní stěny a volitelný držák kabelu u otvoru.",
+            "Obrysy s otvory (např. prstenec nebo rámeček): nová volba vytvoří krabičku podle otvorů, takže střed zůstane prázdný."
+          ],
+          de: [
+            "Neuer Typ-Schalter: Box oder LED-Streifen-Box.",
+            "LED-Streifen-Box: Kabelloch in Seitenwand, Boden oder Deckel – mit einstellbarem Durchmesser, Position und Höhe.",
+            "LED-Streifen-Box: Schnapp-Halter für den LED-Streifen entlang der Innenwand und optional ein Kabelhalter am Loch.",
+            "Konturen mit Löchern (z. B. Ring oder Rahmen): Eine neue Option folgt den Löchern, sodass die Mitte leer bleibt."
+          ],
+          es: [
+            "Nuevo selector de tipo: Caja o Caja para tira LED.",
+            "Caja para tira LED: orificio para cable en la pared lateral, la base o la tapa, con diámetro, posición y altura ajustables.",
+            "Caja para tira LED: soportes a presión para la tira a lo largo de la pared interior y, opcionalmente, un soporte de cable junto al orificio.",
+            "Contornos con huecos (p. ej. un anillo o un marco): una nueva opción hace que la caja siga los huecos y el centro quede vacío."
+          ],
+          fr: [
+            "Nouveau sélecteur de type : Boîte ou Boîte pour ruban LED.",
+            "Boîte pour ruban LED : trou pour câble dans la paroi latérale, le fond ou le couvercle – avec diamètre, position et hauteur réglables.",
+            "Boîte pour ruban LED : supports à clipser pour le ruban le long de la paroi intérieure et, en option, un support de câble près du trou.",
+            "Contours avec trous (p. ex. un anneau ou un cadre) : une nouvelle option fait suivre les trous à la boîte, le centre reste vide."
+          ]
+        }
+      },
       {
         version: '5',
         items: {
@@ -1232,12 +1631,17 @@
     const HARD_MIN_MM = {
       paramWidth: 2, paramDepth: 2, paramBoxHeight: 0, paramLidHeight: 0,
       paramWallThickness: 0.2, paramFloorThickness: 0.2, paramLipHeight: 0,
-      paramTolerance: 0, paramExplode: -MAX_DIM_MM
+      paramTolerance: 0, paramExplode: -MAX_DIM_MM,
+      paramCableDia: 0.5, paramCableAlong: -MAX_DIM_MM, paramCableX: -MAX_DIM_MM, paramCableY: -MAX_DIM_MM,
+      paramCableZ: 0, paramStripW: 1, paramStripT: 0.5, paramHolderSpacing: 3, paramHolderLen: 1,
+      paramCableHolderDist: 0
     };
 
     function dimSliders() {
       return [paramWidth, paramDepth, paramBoxHeight, paramLidHeight, paramWallThickness,
-              paramFloorThickness, paramLipHeight, paramTolerance, paramExplode];
+              paramFloorThickness, paramLipHeight, paramTolerance, paramExplode,
+              paramCableDia, paramCableAlong, paramCableX, paramCableY, paramCableZ,
+              paramStripW, paramStripT, paramHolderSpacing, paramHolderLen, paramCableHolderDist];
     }
     function numFor(slider) { return document.getElementById(slider.id + 'Num'); }
     function unitFactor() { return currentUnit === 'in' ? MM_PER_INCH : 1; }
@@ -1370,6 +1774,318 @@
       } catch (e) { /* ponechá se výchozí 96 dpi */ }
 
       return { w: wUnits * mmPerUnit, d: hUnits * mmPerUnit };
+    }
+
+    // ================= Krabička pro LED pásek: otvor na kabel, držáky pásku a kabelu =================
+    const boxTypeSelect = document.getElementById('boxTypeSelect');
+    const checkHoles = document.getElementById('checkHoles');
+    const containerHoles = document.getElementById('containerHoles');
+    const holesWarnEl = document.getElementById('holesWarn');
+    let lastHolePts = [];   // normalizované díry obrysu (platí jen při zapnutém zatržítku)
+    const ledWrap = document.getElementById('ledWrap');
+    const ledWarnEl = document.getElementById('ledWarn');
+    const checkCableHole = document.getElementById('checkCableHole');
+    const cableHoleOpts = document.getElementById('cableHoleOpts');
+    const cablePosSelect = document.getElementById('cablePosSelect');
+    const cableWallSelect = document.getElementById('cableWallSelect');
+    const cableSideWrap = document.getElementById('cableSideWrap');
+    const cableTopBotWrap = document.getElementById('cableTopBotWrap');
+    const checkStripHolders = document.getElementById('checkStripHolders');
+    const stripOpts = document.getElementById('stripOpts');
+    const stripModeSelect = document.getElementById('stripModeSelect');
+    const checkCableHolder = document.getElementById('checkCableHolder');
+    const cableHolderToggle = document.getElementById('cableHolderToggle');
+    const cableHolderOpts = document.getElementById('cableHolderOpts');
+    const paramCableDia = document.getElementById('paramCableDia');
+    const paramCableAlong = document.getElementById('paramCableAlong');
+    const paramCableX = document.getElementById('paramCableX');
+    const paramCableY = document.getElementById('paramCableY');
+    const paramCableZ = document.getElementById('paramCableZ');
+    const paramStripW = document.getElementById('paramStripW');
+    const paramStripT = document.getElementById('paramStripT');
+    const paramHolderSpacing = document.getElementById('paramHolderSpacing');
+    const paramHolderLen = document.getElementById('paramHolderLen');
+    const paramCableHolderDist = document.getElementById('paramCableHolderDist');
+
+    // Zobrazení / skrytí voleb podle zvoleného typu a zaškrtnutých funkcí
+    function updateLedUI() {
+      const led = boxTypeSelect.value === 'led';
+      ledWrap.classList.toggle('hidden', !led);
+      cableHoleOpts.classList.toggle('hidden', !checkCableHole.checked);
+      const side = cablePosSelect.value === 'side';
+      cableSideWrap.classList.toggle('hidden', !side);
+      cableTopBotWrap.classList.toggle('hidden', side);
+      stripOpts.classList.toggle('hidden', !checkStripHolders.checked);
+      // držák kabelu má smysl jen u bočního otvoru
+      cableHolderToggle.classList.toggle('hidden', !(checkCableHole.checked && side));
+      cableHolderOpts.classList.toggle('hidden', !(checkCableHole.checked && side && checkCableHolder.checked));
+    }
+
+    // ---- pomocné funkce pro 2D geometrii ----
+    function pointInPoly(x, y, poly) {
+      let inside = false;
+      for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+        const a = poly[i], b = poly[j];
+        if (((a.y > y) !== (b.y > y)) && (x < (b.x - a.x) * (y - a.y) / (b.y - a.y) + a.x)) inside = !inside;
+      }
+      return inside;
+    }
+    function distToEdges(x, y, poly) {
+      let best = Infinity;
+      for (let i = 0; i < poly.length; i++) {
+        const a = poly[i], b = poly[(i + 1) % poly.length];
+        const dx = b.x - a.x, dy = b.y - a.y, l2 = dx * dx + dy * dy;
+        let t = l2 > 0 ? ((x - a.x) * dx + (y - a.y) * dy) / l2 : 0;
+        t = Math.max(0, Math.min(1, t));
+        best = Math.min(best, Math.hypot(a.x + t * dx - x, a.y + t * dy - y));
+      }
+      return best;
+    }
+    function holeFitsInside(poly, x, y, r) {
+      return pointInPoly(x, y, poly) && distToEdges(x, y, poly) >= r + 0.2;
+    }
+
+    // Průsečík vodorovné přímky y = const s obrysem na straně stěny (side = +1 max X, -1 min X).
+    // S refX hledá průsečík nejblíž pod/před vnějším průsečíkem (pro vnitřní obrys).
+    function wallCrossing(P, y, side, refX, maxDist) {
+      const n = P.length;
+      let best = null;
+      for (let i = 0; i < n; i++) {
+        const a = P[i], b = P[(i + 1) % n];
+        if (!((a.y <= y && b.y > y) || (b.y <= y && a.y > y))) continue;
+        const t = (y - a.y) / (b.y - a.y);
+        const x = a.x + t * (b.x - a.x);
+        if (refX !== undefined) {
+          if (side > 0 ? x > refX + 1e-6 : x < refX - 1e-6) continue;
+          if (Math.abs(x - refX) > maxDist) continue;
+        }
+        if (!best || (side > 0 ? x > best.x : x < best.x)) best = { i: i, t: t, x: x, y: y };
+      }
+      return best;
+    }
+    // Cesta po obrysu dopředu z bodu a do bodu b (a, b = výsledky wallCrossing)
+    function arcForward(P, a, b) {
+      const n = P.length;
+      const out = [{ x: a.x, y: a.y }];
+      let k = (b.i - a.i + n) % n;
+      if (b.i === a.i && b.t <= a.t) k = n;
+      for (let j = 1; j <= k; j++) out.push(P[(a.i + j) % n]);
+      out.push({ x: b.x, y: b.y });
+      return out;
+    }
+    function pathLength(pts) {
+      let l = 0;
+      for (let i = 1; i < pts.length; i++) l += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
+      return l;
+    }
+    function wallInfo(cable) {
+      return {
+        swap: cable.wall === 'front' || cable.wall === 'back',
+        side: (cable.wall === 'right' || cable.wall === 'back') ? 1 : -1
+      };
+    }
+    function toWallSpace(pts, swap) {
+      return ensureOrientation(pts.map(p => swap ? new THREE.Vector2(p.y, p.x) : new THREE.Vector2(p.x, p.y)), true);
+    }
+
+    // Polygon stěny (obrys minus vnitřek) s mezerou šířky 2*g v místě otvoru. Vrací pole Vector2 nebo null.
+    function cutWallPolygon(outer, inner, cable, g) {
+      const wi = wallInfo(cable);
+      const O = toWallSpace(outer, wi.swap), I = toWallSpace(inner, wi.swap);
+      const ya = cable.along - g, yb = cable.along + g;
+      const o1 = wallCrossing(O, ya, wi.side), o2 = wallCrossing(O, yb, wi.side);
+      if (!o1 || !o2) return null;
+      const maxD = cable.wallT * 3 + 1;
+      const i1 = wallCrossing(I, ya, wi.side, o1.x, maxD), i2 = wallCrossing(I, yb, wi.side, o2.x, maxD);
+      if (!i1 || !i2) return null;
+      let oStart = o1, oEnd = o2, iStart = i1, iEnd = i2;
+      // mezera = kratší oblouk mezi oběma průsečíky
+      if (pathLength(arcForward(O, o1, o2)) > pathLength(arcForward(O, o2, o1))) {
+        oStart = o2; oEnd = o1; iStart = i2; iEnd = i1;
+      }
+      const keepO = arcForward(O, oEnd, oStart);
+      const keepI = arcForward(I, iEnd, iStart).reverse();
+      return keepO.concat(keepI).map(p => wi.swap ? new THREE.Vector2(p.y, p.x) : new THREE.Vector2(p.x, p.y));
+    }
+
+    // Bod, kde osa otvoru protíná vnitřní líc stěny (skutečné souřadnice)
+    function sideHolePoint(inner, cable) {
+      const wi = wallInfo(cable);
+      const c = wallCrossing(toWallSpace(inner, wi.swap), cable.along, wi.side);
+      if (!c) return null;
+      return wi.swap ? new THREE.Vector2(cable.along, c.x) : new THREE.Vector2(c.x, cable.along);
+    }
+
+    function extrudePolygon(pts, depth) {
+      const geo = new THREE.ExtrudeGeometry(new THREE.Shape(pts), { depth: depth, bevelEnabled: false });
+      if (checkSmooth.checked) smoothWallNormals(geo, 40);
+      return geo;
+    }
+
+    // Stěna od z0 do z1 s kruhovým otvorem (osa vodorovně). Otvor se skládá z vrstev,
+    // v každé vrstvě je ve stěně mezera podle šířky kruhu v dané výšce.
+    function buildWallWithSideHole(outer, inner, z0, z1, cable) {
+      const geos = [];
+      const addRing = (a, b) => {
+        if (b - a > 0.01) {
+          const g = createHollowExtrusion(outer, inner, b - a);
+          g.translate(0, 0, a);
+          geos.push(g);
+        }
+      };
+      const zLo = Math.max(z0, cable.zc - cable.r), zHi = Math.min(z1, cable.zc + cable.r);
+      addRing(z0, zLo);
+      addRing(zHi, z1);
+      if (zHi - zLo <= 0.01) return geos;
+      const n = Math.max(8, Math.min(40, Math.ceil((zHi - zLo) / 0.3)));
+      const dz = (zHi - zLo) / n;
+      for (let k = 0; k < n; k++) {
+        const za = zLo + k * dz;
+        const zm = za + dz / 2;
+        const g = Math.sqrt(Math.max(0, cable.r * cable.r - (zm - cable.zc) * (zm - cable.zc)));
+        const poly = g > 0.05 ? cutWallPolygon(outer, inner, cable, g) : null;
+        let geo;
+        if (poly && poly.length >= 3) {
+          geo = extrudePolygon(poly, dz);
+        } else {
+          geo = createHollowExtrusion(outer, inner, dz);
+        }
+        geo.translate(0, 0, za);
+        geos.push(geo);
+      }
+      return geos;
+    }
+
+    // Spočítá otvor na kabel podle voleb. Vrací objekt nebo null (a přidá varování).
+    function computeCableHole(outer, inner, floorT, wallTop, wallT, warn, holePlus) {
+      const T = translations[currentLang];
+      let r = getParamValue(paramCableDia) / 2;
+      if (!(r > 0.05)) return null;
+      const pos = cablePosSelect.value;
+      if (pos === 'bottom' || pos === 'top') {
+        const x = getParamValue(paramCableX), y = getParamValue(paramCableY);
+        const clearOfHoles = (holePlus || []).every(pl => !pointInPoly(x, y, pl) && distToEdges(x, y, pl) >= r + 0.2);
+        if (!holeFitsInside(inner, x, y, r) || !clearOfHoles) { warn.push(T.warnHoleOutside); return null; }
+        return { kind: pos, x: x, y: y, r: r, pt: new THREE.Vector2(x, y) };
+      }
+      const wallH = wallTop - floorT;
+      if (wallH < 1) { warn.push(T.warnHoleLow); return null; }
+      if (r * 2 > wallH) { r = wallH / 2; warn.push(T.warnHoleLow); }
+      const zc = Math.min(Math.max(getParamValue(paramCableZ), floorT + r), wallTop - r);
+      const cable = { kind: 'side', wall: cableWallSelect.value, along: getParamValue(paramCableAlong), zc: zc, r: r, wallT: wallT };
+      const pt = sideHolePoint(inner, cable);
+      if (!pt || !cutWallPolygon(outer, inner, cable, r * 0.999)) { warn.push(T.warnHoleOutside); return null; }
+      cable.pt = pt;
+      return cable;
+    }
+
+    // Umístí geometrii vytvořenou v rovině tvaru (u, v) a vytlačenou ve směru w do skutečných souřadnic
+    function placeGeometry(geo, axisU, axisV, axisW, origin) {
+      const m = new THREE.Matrix4().makeBasis(axisU, axisV, axisW);
+      m.setPosition(origin);
+      geo.applyMatrix4(m);
+      return geo;
+    }
+
+    // Držák kabelu: otevřený kroužek (zacvakne se shora) na patce, souosý s otvorem
+    function createCableRing(inner, cable, floorT) {
+      const wi = wallInfo(cable);
+      const c = wallCrossing(toWallSpace(inner, wi.swap), cable.along, wi.side);
+      if (!c) return [];
+      const dist = Math.max(0, getParamValue(paramCableHolderDist));
+      const len = 5, wallRing = 1.6;
+      const near = c.x - wi.side * dist;
+      const far = near - wi.side * len;
+      const xs = Math.min(near, far);
+      const R2 = cable.r + wallRing;
+      const arc = (rad, a0, a1, reverse) => {
+        const out = [];
+        for (let k = 0; k <= 36; k++) {
+          const ang = THREE.MathUtils.degToRad(a0 + (a1 - a0) * k / 36);
+          out.push(new THREE.Vector2(rad * Math.cos(ang), rad * Math.sin(ang)));
+        }
+        return reverse ? out.reverse() : out;
+      };
+      // otvor kroužku nahoře (±38° kolem osy +v)
+      const a0 = 90 + 38, a1 = 90 - 38 + 360;
+      const ringPts = arc(R2, a0, a1, false).concat(arc(cable.r, a0, a1, true));
+      const geos = [];
+      const origin = wi.swap ? new THREE.Vector3(cable.along, xs, cable.zc) : new THREE.Vector3(xs, cable.along, cable.zc);
+      const axU = wi.swap ? new THREE.Vector3(-1, 0, 0) : new THREE.Vector3(0, 1, 0);
+      const axV = new THREE.Vector3(0, 0, 1);
+      const axW = wi.swap ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0);
+      geos.push(placeGeometry(extrudePolygon(ringPts, len), axU, axV, axW, origin));
+      // patka od podlahy ke kroužku
+      const footTop = -(cable.r + wallRing / 2);
+      const footBottom = -(cable.zc - floorT);
+      if (footTop - footBottom > 0.2) {
+        const fw = R2 * 0.6;
+        const footPts = [new THREE.Vector2(-fw, footBottom), new THREE.Vector2(fw, footBottom),
+                         new THREE.Vector2(fw, footTop), new THREE.Vector2(-fw, footTop)];
+        geos.push(placeGeometry(extrudePolygon(footPts, len), axU, axV, axW, origin));
+      }
+      return geos;
+    }
+
+    // Držáky LED pásku: pružné zacvakávací háčky na podlaze podél vnitřní stěny.
+    // loops = [{ pts, ccw }]: smyčka, podél které se držáky rozmístí (ccw = dutina je vlevo od směru chůze).
+    function createStripHolders(loops, floorT, boxH, cable, warn) {
+      const T = translations[currentLang];
+      const stripW = getParamValue(paramStripW), stripT = getParamValue(paramStripT);
+      const standing = stripModeSelect.value === 'standing';
+      const a = standing ? stripT : stripW;   // rozměr pásku směrem od stěny
+      const b = standing ? stripW : stripT;   // rozměr pásku do výšky
+      const clr = 0.3, rail = 1.2, hookT = 1.2;
+      const zTip = b + clr;
+      const o = Math.max(0.4, Math.min(1.5, zTip - 0.4));
+      const H = zTip + hookT;
+      if (floorT + H > boxH) { warn.push(T.warnHoldersLow); return []; }
+      const n0 = a + clr;
+      const prof = [[n0, 0], [n0 + rail, 0], [n0 + rail, H], [n0 - o, H], [n0 - o, zTip], [n0, zTip - o]];
+      const shape = new THREE.Shape(prof.map(p => new THREE.Vector2(p[0], p[1])));
+      const len = Math.max(1, getParamValue(paramHolderLen));
+      const spacing = Math.max(len, getParamValue(paramHolderSpacing));
+      const half = len / 2;
+      const norm = (x, y) => { const l = Math.hypot(x, y) || 1; return { x: x / l, y: y / l }; };
+      const geos = [];
+
+      loops.forEach(loop => {
+        const poly = ensureOrientation(loop.pts, loop.ccw);
+        const m = poly.length;
+        if (m < 3) return;
+        const cum = [0];
+        for (let i = 0; i < m; i++) {
+          const p = poly[i], q = poly[(i + 1) % m];
+          cum.push(cum[i] + Math.hypot(q.x - p.x, q.y - p.y));
+        }
+        const L = cum[m];
+        if (!(L > 0)) return;
+        const pointAt = (s) => {
+          s = ((s % L) + L) % L;
+          let lo = 0, hi = m;
+          while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (cum[mid] <= s) lo = mid; else hi = mid; }
+          const p = poly[lo], q = poly[(lo + 1) % m];
+          const t = (s - cum[lo]) / Math.max(1e-9, cum[lo + 1] - cum[lo]);
+          return { x: p.x + t * (q.x - p.x), y: p.y + t * (q.y - p.y) };
+        };
+        const count = Math.max(1, Math.round(L / spacing));
+        const step = L / count;
+        for (let k = 0; k < count; k++) {
+          const s = (k + 0.5) * step;
+          const pA = pointAt(s - half), pM = pointAt(s), pB = pointAt(s + half);
+          const d1 = norm(pM.x - pA.x, pM.y - pA.y), d2 = norm(pB.x - pM.x, pB.y - pM.y);
+          if (d1.x * d2.x + d1.y * d2.y < 0.94) continue;           // roh – držák se nevytvoří
+          if (cable && cable.pt && Math.hypot(pM.x - cable.pt.x, pM.y - cable.pt.y) < cable.r + half + 3) continue; // místo otvoru
+          const t = norm(pB.x - pA.x, pB.y - pA.y);
+          const nrm = { x: -t.y, y: t.x };                          // dovnitř dutiny (vlevo od směru chůze)
+          const geo = new THREE.ExtrudeGeometry(shape, { depth: len, bevelEnabled: false });
+          placeGeometry(geo, new THREE.Vector3(nrm.x, nrm.y, 0), new THREE.Vector3(0, 0, 1), new THREE.Vector3(t.x, t.y, 0),
+            new THREE.Vector3(pM.x - t.x * half, pM.y - t.y * half, floorT));
+          geos.push(geo);
+        }
+      });
+      if (geos.length === 0) warn.push(T.warnNoHolders);
+      return geos;
     }
 
     let scene, camera, renderer, controls;
@@ -1776,7 +2492,7 @@ function rdpClosed(pts, tol) {
       if (offsetCache.has(key)) return offsetCache.get(key).map(p => p.clone());
       let res;
       try { res = rasterOffset(points, offset); } catch (e) { console.warn(e); res = createOffsetPathLegacy(points, offset); }
-      if (offsetCache.size > 24) offsetCache.delete(offsetCache.keys().next().value);
+      if (offsetCache.size > 96) offsetCache.delete(offsetCache.keys().next().value);
       offsetCache.set(key, res.map(p => p.clone()));
       return res;
     }
@@ -1873,15 +2589,45 @@ function rdpClosed(pts, tol) {
       renderer.setSize(container.clientWidth, container.clientHeight);
     }
 
-    function getNormalizedPoints(shapes, targetWidth, targetDepth, keepAspect) {
-      if (!shapes || shapes.length === 0) return [];
-      let pts = null, bestA = -1;   // použij největší tvar, ne jen první
+    // Rozdělí tvary na obrys a díry podle vnoření uzavřených obrysů (sudé/liché pravidlo):
+    // hloubka 0 = obrys (bere se největší), hloubka 1 = díra, hloubka 2 = ostrůvek v díře (ignoruje se).
+    // Berou se obrysy tvarů i jejich díry, takže to funguje bez ohledu na to, jak SVG díru zapsalo.
+    function getOutlineParts(shapes) {
+      const polys = [];
       shapes.forEach(sh => {
-        const pp = sh.extractPoints(64).shape;
-        if (pp && pp.length >= 3) { const ar = Math.abs(getSignedArea(pp)); if (ar > bestA) { bestA = ar; pts = pp; } }
+        const ex = sh.extractPoints(64);
+        if (ex.shape && ex.shape.length >= 3) polys.push(ex.shape);
+        (ex.holes || []).forEach(h => { if (h && h.length >= 3) polys.push(h); });
       });
+      if (!polys.length) return { outer: null, holes: [] };
+      const info = polys.map(pts => ({ pts: pts, area: Math.abs(getSignedArea(pts)) }));
+      const sample = (pts) => {
+        const n = Math.min(12, pts.length), out = [];
+        for (let k = 0; k < n; k++) out.push(pts[Math.floor(k * pts.length / n)]);
+        return out;
+      };
+      info.forEach(it => { it.sample = sample(it.pts); });
+      const inside = (a, b) => a.area < b.area && a.sample.every(q => pointInPoly(q.x, q.y, b.pts));  // a leží celé v b
+      info.forEach(a => { a.depth = info.filter(b => b !== a && inside(a, b)).length; });
+      let outer = null;
+      info.forEach(it => { if (it.depth === 0 && (!outer || it.area > outer.area)) outer = it; });
+      if (!outer) return { outer: null, holes: [] };
+      const holes = info.filter(it => it.depth === 1 && inside(it, outer)).map(it => it.pts);
+      return { outer: outer.pts, holes: holes };
+    }
+
+    function getNormalizedPoints(shapes, targetWidth, targetDepth, keepAspect) {
+      lastHolePts = [];
+      if (!shapes || shapes.length === 0) return [];
+      const parts = getOutlineParts(shapes);       // největší tvar = obrys
+      let pts = parts.outer;
+      // zatržítko se nabízí jen tehdy, když obrys díry obsahuje
+      containerHoles.classList.toggle('hidden', parts.holes.length === 0 && btnRemoveSvg.classList.contains('hidden'));
+      let rawHoles = (checkHoles.checked && parts.holes.length) ? parts.holes.slice() : [];
+      const smoothN = parseInt(paramSmooth.value, 10) || 2;
       if (checkSmooth.checked && pts && pts.length >= 3) {
-        pts = smoothClosedPolyline(pts, parseInt(paramSmooth.value, 10) || 2);
+        pts = smoothClosedPolyline(pts, smoothN);
+        rawHoles = rawHoles.map(h => smoothClosedPolyline(h, smoothN));
       }
 
       if (!pts || pts.length < 3) return [];
@@ -1914,12 +2660,25 @@ function rdpClosed(pts, tol) {
       // Zrcadlení / převrácení předlohy – krabička se pak vygeneruje z převráceného obrysu
       const flipX = checkFlipX.checked ? -1 : 1;
       const flipY = checkFlipY.checked ? -1 : 1;
-      const normalized = pts.map(p => new THREE.Vector2((p.x - centerX) * scaleX * flipX, (p.y - centerY) * scaleY * flipY));
+      const tf = (p) => new THREE.Vector2((p.x - centerX) * scaleX * flipX, (p.y - centerY) * scaleY * flipY);
+      const normalized = pts.map(tf);
+      lastHolePts = rawHoles.map(h => ensureOrientation(h.map(tf), false));
       return ensureOrientation(normalized, false);
     }
 
-    function createSolidExtrusion(outerPts, height) {
+    function createSolidExtrusion(outerPts, height, hole, holePolys) {
       const shape = new THREE.Shape(outerPts);
+      const holeList = [];
+      if (hole) {
+        const hp = [];
+        for (let k = 0; k < 48; k++) {
+          const a = (k / 48) * Math.PI * 2;
+          hp.push(new THREE.Vector2(hole.x + hole.r * Math.cos(a), hole.y + hole.r * Math.sin(a)));
+        }
+        holeList.push(new THREE.Path(hp));
+      }
+      if (holePolys) holePolys.forEach(h => { if (h && h.length >= 3) holeList.push(new THREE.Path(ensureOrientation(h, true))); });
+      if (holeList.length) shape.holes = holeList;
       const geo = new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false });
       if (checkSmooth.checked) smoothWallNormals(geo, 40);
       return geo;
@@ -1935,6 +2694,12 @@ function rdpClosed(pts, tol) {
     }
 
     function rebuildBox() {
+      const ledWarn = [];
+      const holeWarn = [];
+      ledWarnEl.textContent = '';
+      ledWarnEl.classList.add('hidden');
+      holesWarnEl.textContent = '';
+      holesWarnEl.classList.add('hidden');
       while (boxGroup.children.length > 0) {
         const obj = boxGroup.children[0];
         if (obj.geometry) obj.geometry.dispose();
@@ -1988,6 +2753,47 @@ function rdpClosed(pts, tol) {
         return;
       }
 
+      // ---------------- Díry v obrysu (prázdný střed) ----------------
+      // Každá díra dostane vlastní stěnu: plus = díra rozšířená o tloušťku stěny, h = okraj díry.
+      const holeLoops = [];
+      if (checkHoles.checked && lastHolePts.length) {
+        const Th = translations[currentLang];
+        let src = lastHolePts.slice().sort((x, y) => Math.abs(getSignedArea(y)) - Math.abs(getSignedArea(x)));
+        if (src.length > 12) { holeWarn.push(Th.warnTooManyHoles); src = src.slice(0, 12); }
+        let tooClose = false;
+        src.forEach(h => {
+          const plus = createOffsetPath(h, wallT);
+          const fits = plus.length >= 3 &&
+            plus.every(q => pointInPoly(q.x, q.y, innerPts) && distToEdges(q.x, q.y, innerPts) >= 0.5);
+          if (fits) holeLoops.push({ h: h, plus: plus }); else tooClose = true;
+        });
+        if (tooClose) holeWarn.push(Th.warnHolesFit);
+      }
+      if (checkHoles.checked && lastHolePts.length === 0) holeWarn.push(translations[currentLang].warnNoHoles);
+      const holePolys = holeLoops.map(hl => hl.h);
+
+      // ---------------- LED režim: otvor na kabel ----------------
+      const led = boxTypeSelect.value === 'led';
+      const wallTopZ = boxH - (lidStyle === 'inset' ? lipH : 0);
+      let cable = null;
+      if (led && checkCableHole.checked) {
+        cable = computeCableHole(outerPts, innerPts, floorT, wallTopZ, wallT, ledWarn, holeLoops.map(hl => hl.plus));
+      }
+      const sideCable = (cable && cable.kind === 'side') ? cable : null;
+      const bottomHole = (cable && cable.kind === 'bottom') ? cable : null;
+      const topHole = (cable && cable.kind === 'top') ? cable : null;
+      const addWall = (group, material, o, i, z0, z1, cb) => {
+        if (z1 - z0 <= EPS_H) return;
+        const geos = cb ? buildWallWithSideHole(o, i, z0, z1, cb) : null;
+        if (geos) {
+          geos.forEach(g => group.add(new THREE.Mesh(g, material)));
+        } else {
+          const g = createHollowExtrusion(o, i, z1 - z0);
+          g.translate(0, 0, z0);
+          group.add(new THREE.Mesh(g, material));
+        }
+      };
+
       // ---------------- 1. BASE BOX ----------------
       baseMesh = new THREE.Group();
 
@@ -1996,34 +2802,47 @@ function rdpClosed(pts, tol) {
         const lipOuterPts = createOffsetPath(outerPts, -(wallT / 2 + tol / 2));
 
         if (floorT > EPS_H) {
-          const baseFloorGeo = createSolidExtrusion(outerPts, floorT);
+          const baseFloorGeo = createSolidExtrusion(outerPts, floorT, bottomHole, holePolys);
           baseMesh.add(new THREE.Mesh(baseFloorGeo, baseMaterial));
         }
 
-        if (mainWallHeight > EPS_H) {
-          const baseWallGeo = createHollowExtrusion(outerPts, innerPts, mainWallHeight);
-          baseWallGeo.translate(0, 0, floorT);
-          baseMesh.add(new THREE.Mesh(baseWallGeo, baseMaterial));
-        }
+        addWall(baseMesh, baseMaterial, outerPts, innerPts, floorT, floorT + mainWallHeight, sideCable);
+        holeLoops.forEach(hl => addWall(baseMesh, baseMaterial, hl.plus, hl.h, floorT, floorT + mainWallHeight, null));
 
         if (lipH > EPS_H) {
           const lipGeo = createHollowExtrusion(lipOuterPts, innerPts, lipH);
           lipGeo.translate(0, 0, floorT + mainWallHeight);
           baseMesh.add(new THREE.Mesh(lipGeo, baseMaterial));
+          // zámek kolem díry leží na straně dutiny (zrcadlově k vnějšímu zámku)
+          holeLoops.forEach(hl => {
+            const lipIn = createOffsetPath(hl.h, wallT / 2 + tol / 2);
+            if (lipIn.length < 3) return;
+            const g = createHollowExtrusion(hl.plus, lipIn, lipH);
+            g.translate(0, 0, floorT + mainWallHeight);
+            baseMesh.add(new THREE.Mesh(g, baseMaterial));
+          });
         }
       } else {
         const wallHeight = Math.max(0, boxH - floorT);
 
         if (floorT > EPS_H) {
-          const baseFloorGeo = createSolidExtrusion(outerPts, floorT);
+          const baseFloorGeo = createSolidExtrusion(outerPts, floorT, bottomHole, holePolys);
           baseMesh.add(new THREE.Mesh(baseFloorGeo, baseMaterial));
         }
 
-        if (wallHeight > EPS_H) {
-          const baseWallGeo = createHollowExtrusion(outerPts, innerPts, wallHeight);
-          baseWallGeo.translate(0, 0, floorT);
-          baseMesh.add(new THREE.Mesh(baseWallGeo, baseMaterial));
-        }
+        addWall(baseMesh, baseMaterial, outerPts, innerPts, floorT, floorT + wallHeight, sideCable);
+        holeLoops.forEach(hl => addWall(baseMesh, baseMaterial, hl.plus, hl.h, floorT, floorT + wallHeight, null));
+      }
+
+      // ---------------- LED režim: držáky pásku a kabelu ----------------
+      if (led && checkStripHolders.checked) {
+        const stripLoops = [{ pts: innerPts, ccw: true }].concat(holeLoops.map(hl => ({ pts: hl.plus, ccw: false })));
+        createStripHolders(stripLoops, floorT, boxH, cable, ledWarn)
+          .forEach(g => baseMesh.add(new THREE.Mesh(g, baseMaterial)));
+      }
+      if (led && sideCable && checkCableHolder.checked) {
+        createCableRing(innerPts, sideCable, floorT)
+          .forEach(g => baseMesh.add(new THREE.Mesh(g, baseMaterial)));
       }
 
       baseMesh.rotation.x = -Math.PI / 2;
@@ -2053,8 +2872,23 @@ function rdpClosed(pts, tol) {
           lidMesh.add(new THREE.Mesh(lidUpperWallGeo, lidMaterial));
         }
 
+        // kolem děr: vnější polovina stěny (strana díry) a horní část stěny
+        holeLoops.forEach(hl => {
+          if (lipOverlapH > EPS) {
+            const halfPlus = createOffsetPath(hl.h, wallT / 2);
+            if (halfPlus.length >= 3) {
+              lidMesh.add(new THREE.Mesh(createHollowExtrusion(halfPlus, hl.h, lipOverlapH), lidMaterial));
+            }
+          }
+          if (topWallH > EPS) {
+            const g = createHollowExtrusion(hl.plus, hl.h, topWallH);
+            g.translate(0, 0, lipOverlapH);
+            lidMesh.add(new THREE.Mesh(g, lidMaterial));
+          }
+        });
+
         if (lidPlateT > EPS) {
-          const lidTopGeo = createSolidExtrusion(outerPts, lidPlateT);
+          const lidTopGeo = createSolidExtrusion(outerPts, lidPlateT, topHole, holePolys);
           lidTopGeo.translate(0, 0, lidWallHeight);
           lidMesh.add(new THREE.Mesh(lidTopGeo, lidMaterial));
         }
@@ -2070,8 +2904,22 @@ function rdpClosed(pts, tol) {
           lidMesh.add(new THREE.Mesh(lidWallGeo, lidMaterial));
         }
 
+        // kolem děr: límec víka zajede do díry (obrys díry zmenšený o vůli a tloušťku stěny)
+        const lidHolePolys = [];
+        let shrinkFailed = false;
+        holeLoops.forEach(hl => {
+          const skirtOuter = createOffsetPath(hl.h, -tol);
+          const skirtInner = createOffsetPath(hl.h, -(tol + wallT));
+          if (skirtOuter.length < 3 || skirtInner.length < 3) { shrinkFailed = true; return; }
+          if (lidWallHeight > EPS) {
+            lidMesh.add(new THREE.Mesh(createHollowExtrusion(skirtOuter, skirtInner, lidWallHeight), lidMaterial));
+          }
+          lidHolePolys.push(skirtInner);
+        });
+        if (shrinkFailed) holeWarn.push(translations[currentLang].warnHoleShrink);
+
         if (lidPlateT > EPS) {
-          const lidTopGeo = createSolidExtrusion(shoeBoxOuterPts, lidPlateT);
+          const lidTopGeo = createSolidExtrusion(shoeBoxOuterPts, lidPlateT, topHole, lidHolePolys);
           lidTopGeo.translate(0, 0, lidWallHeight);
           lidMesh.add(new THREE.Mesh(lidTopGeo, lidMaterial));
         }
@@ -2088,6 +2936,15 @@ function rdpClosed(pts, tol) {
       }
       if (currentViewMode === 'both' || currentViewMode === 'lid') {
         boxGroup.add(lidMesh);
+      }
+
+      if (ledWarn.length) {
+        ledWarnEl.textContent = ledWarn.join(' ');
+        ledWarnEl.classList.remove('hidden');
+      }
+      if (holeWarn.length) {
+        holesWarnEl.textContent = holeWarn.join(' ');
+        holesWarnEl.classList.remove('hidden');
       }
 
       if (isCutaway) {
@@ -2187,7 +3044,7 @@ function rdpClosed(pts, tol) {
         name = 'polygon-' + paramSides.value;
       }
       const dims = [exportDims.w, exportDims.d, getParamValue(paramBoxHeight)].map(fmt).join('x');
-      return name + ' box ' + dims; // rozměry vždy v mm (STL je v mm)
+      return name + (boxTypeSelect.value === 'led' ? ' led box ' : ' box ') + dims; // rozměry vždy v mm (STL je v mm)
     }
 
     function exportSingleGroupToSTL(group, filename, isLid) {
@@ -2339,6 +3196,12 @@ function rdpClosed(pts, tol) {
         num.addEventListener('focus', () => num.select());
       });
 
+      checkHoles.addEventListener('change', rebuildBox);
+      [boxTypeSelect, checkCableHole, cablePosSelect, cableWallSelect, checkStripHolders,
+       stripModeSelect, checkCableHolder].forEach(el => {
+        el.addEventListener('change', () => { updateLedUI(); rebuildBox(); });
+      });
+
       checkKeepAspect.addEventListener('change', () => {
         if (checkKeepAspect.checked) {
           containerDepth.classList.add('hidden');
@@ -2449,9 +3312,18 @@ function rdpClosed(pts, tol) {
             const loader = new THREE.SVGLoader();
             const svgData = loader.parse(svgText);
             const shapes = [];
+            // Surové uzavřené obrysy všech podcest – o tom, co je obrys a co díra, rozhodne getOutlineParts
+            // podle vnoření (SVGLoader díry podle fill-rule nerozpozná vždy správně).
             svgData.paths.forEach(path => {
-              const pathShapes = THREE.SVGLoader.createShapes(path);
-              shapes.push(...pathShapes);
+              let added = 0;
+              (path.subPaths || []).forEach(sp => {
+                const pts = sp.getPoints(64);
+                if (pts && pts.length >= 3 && Math.abs(getSignedArea(pts)) > 1e-9) {
+                  shapes.push(new THREE.Shape(pts));
+                  added++;
+                }
+              });
+              if (!added) shapes.push(...THREE.SVGLoader.createShapes(path));
             });
 
             if (shapes.length > 0) {
@@ -2586,6 +3458,7 @@ function rdpClosed(pts, tol) {
       initThree();
       bindEvents();
       setLanguage('en');
+      updateLedUI();
       updateValueLabels();
       currentShapes = createPresetShapes('square');
       rebuildBox();
