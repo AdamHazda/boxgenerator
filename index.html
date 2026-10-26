@@ -200,7 +200,7 @@
             <option value="es">ES</option>
             <option value="fr">FR</option>
           </select>
-          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v8.2.0</span>
+          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v8.3.0</span>
         </div>
       </div>
 
@@ -379,6 +379,18 @@
               <span class="flex items-center gap-1"><input type="number" id="paramFloorThicknessNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500"><span id="paramFloorThicknessVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
             </div>
             <input type="range" id="paramFloorThickness" min="1.0" max="6.0" step="0.2" value="2.0" class="w-full">
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-300" data-i18n="paramCeilingThickness">Top (lid) Thickness</span>
+              <span class="flex items-center gap-1"><input type="number" id="paramCeilingThicknessNum" step="any" inputmode="decimal" class="dim-num w-20 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500 disabled:opacity-50"><span id="paramCeilingThicknessVal" class="font-mono text-blue-400 text-xs w-5">mm</span></span>
+            </div>
+            <input type="range" id="paramCeilingThickness" min="1.0" max="6.0" step="0.2" value="2.0" class="w-full disabled:opacity-50">
+            <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer pt-1">
+              <input type="checkbox" id="checkCeilingSame" checked class="w-4 h-4 accent-blue-500 cursor-pointer">
+              <span data-i18n="ceilingSame">Same as bottom</span>
+            </label>
           </div>
 
           <div class="space-y-1">
@@ -792,7 +804,9 @@
         paramBoxHeight: "Total Box Height",
         paramLidHeight: "Lid Height",
         paramWallThickness: "Wall Thickness",
-        paramFloorThickness: "Bottom/Top Thickness",
+        paramFloorThickness: "Bottom Thickness",
+        paramCeilingThickness: "Top (lid) Thickness",
+        ceilingSame: "Same as bottom",
         paramLipHeight: "Lip / Lock Height",
         paramTolerance: "Lock Clearance / Tolerance",
         lidStyleLabel: "Lid Style:",
@@ -947,7 +961,9 @@
         paramBoxHeight: "Výška Krabičky (Celková)",
         paramLidHeight: "Výška Víka",
         paramWallThickness: "Tloušťka Stěny",
-        paramFloorThickness: "Tloušťka Dna / Stropu",
+        paramFloorThickness: "Tloušťka dna",
+        paramCeilingThickness: "Tloušťka stropu",
+        ceilingSame: "Stejné jako dno",
         paramLipHeight: "Výška Zámku / Osazení",
         paramTolerance: "Vůle / Tolerance Zámku",
         lidStyleLabel: "Typ / Styl Víka:",
@@ -1102,7 +1118,9 @@
         paramBoxHeight: "Gesamthöhe der Box",
         paramLidHeight: "Deckelhöhe",
         paramWallThickness: "Wandstärke",
-        paramFloorThickness: "Boden-/Deckelstärke",
+        paramFloorThickness: "Bodenstärke",
+        paramCeilingThickness: "Deckelstärke (oben)",
+        ceilingSame: "Wie Boden",
         paramLipHeight: "Lippen-/Verschluss-Höhe",
         paramTolerance: "Toleranz / Spielraum",
         lidStyleLabel: "Deckelstil:",
@@ -1257,7 +1275,9 @@
         paramBoxHeight: "Altura Total de la Caja",
         paramLidHeight: "Altura de la Tapa",
         paramWallThickness: "Grosor de la Pared",
-        paramFloorThickness: "Grosor de Base/Tapa",
+        paramFloorThickness: "Grosor de la base",
+        paramCeilingThickness: "Grosor del techo (tapa)",
+        ceilingSame: "Igual que la base",
         paramLipHeight: "Altura del Cierre/Pestaña",
         paramTolerance: "Tolerancia / Holgura",
         lidStyleLabel: "Estilo de Tapa:",
@@ -1412,7 +1432,9 @@
         paramBoxHeight: "Hauteur Totale",
         paramLidHeight: "Hauteur du Couvercle",
         paramWallThickness: "Épaisseur du Mur",
-        paramFloorThickness: "Épaisseur Fond/Haut",
+        paramFloorThickness: "Épaisseur du fond",
+        paramCeilingThickness: "Épaisseur du plafond (couvercle)",
+        ceilingSame: "Identique au fond",
         paramLipHeight: "Hauteur de la Rebord",
         paramTolerance: "Tolérance / Jeu",
         lidStyleLabel: "Style du Couvercle:",
@@ -1536,6 +1558,16 @@
 
     // Seznam změn podle verzí (nejnovější nahoře)
     const changelogData = [
+      {
+        version: '8.3.0',
+        items: {
+          en: ["Bottom and top thickness are now separate. \"Bottom Thickness\" sets the floor; below it \"Top (lid) Thickness\" sets the lid plate. The tick \"Same as bottom\" (on by default, so nothing changes for existing projects) keeps them equal; untick it to set the top thickness independently."],
+          cs: ["Tloušťka dna a stropu jsou nově oddělené. „Tloušťka dna“ nastavuje dno, pod ní „Tloušťka stropu“ horní desku víka. Zaškrtávátko „Stejné jako dno“ (ve výchozím stavu zapnuté, takže se nic nemění) drží obě hodnoty stejné; po odškrtnutí lze strop nastavit zvlášť."],
+          de: ["Boden- und Deckelstärke sind jetzt getrennt. „Bodenstärke“ legt den Boden fest, darunter „Deckelstärke (oben)“ die Deckelplatte. Das Häkchen „Wie Boden“ (standardmäßig an, bestehende Projekte bleiben also gleich) hält beide gleich; ohne Häkchen lässt sich die Deckelstärke getrennt einstellen."],
+          es: ["El grosor de la base y el del techo ahora son independientes. «Grosor de la base» fija el fondo y debajo «Grosor del techo (tapa)» fija la placa superior. La casilla «Igual que la base» (activada por defecto, así que nada cambia) mantiene ambos iguales; desmárcala para ajustar el techo por separado."],
+          fr: ["L'épaisseur du fond et celle du plafond sont désormais séparées. « Épaisseur du fond » règle le fond, et en dessous « Épaisseur du plafond (couvercle) » règle la plaque supérieure. La case « Identique au fond » (cochée par défaut, rien ne change) garde les deux égales ; décochez-la pour régler le plafond séparément."]
+        }
+      },
       {
         version: '8.2.0',
         items: {
@@ -2116,7 +2148,7 @@
     // Nejmenší povolená hodnota (v mm) při ručním zadání
     const HARD_MIN_MM = {
       paramWidth: 2, paramDepth: 2, paramBoxHeight: 0, paramLidHeight: 0,
-      paramWallThickness: 0.2, paramFloorThickness: 0.2, paramLipHeight: 0,
+      paramWallThickness: 0.2, paramFloorThickness: 0.2, paramCeilingThickness: 0.2, paramLipHeight: 0,
       paramTolerance: 0, paramExplode: -MAX_DIM_MM,
       paramCableDia: 0.5, paramCableAlong: -MAX_DIM_MM, paramCableX: -MAX_DIM_MM, paramCableY: -MAX_DIM_MM,
       paramCableZ: 0, paramStripW: 1, paramStripT: 0.5, paramHolderSpacing: 3, paramHolderLen: 1,
@@ -2125,7 +2157,7 @@
 
     function dimSliders() {
       return [paramWidth, paramDepth, paramBoxHeight, paramLidHeight, paramWallThickness,
-              paramFloorThickness, paramLipHeight, paramTolerance, paramExplode,
+              paramFloorThickness, paramCeilingThickness, paramLipHeight, paramTolerance, paramExplode,
               paramCableDia, paramCableAlong, paramCableX, paramCableY, paramCableZ,
               paramStripW, paramStripT, paramHolderSpacing, paramHolderLen, paramCableHolderDist];
     }
@@ -2179,8 +2211,18 @@
         fmtDisplay(exportDims.w / f) + ' × ' + fmtDisplay(exportDims.d / f) + ' ' + (currentUnit === 'in' ? 'in' : 'mm');
     }
 
+    // Tloušťka stropu: při zaškrtnutém „Stejné jako dno“ kopíruje dno a ruční úprava je zamčená
+    function syncCeilingThickness() {
+      const same = checkCeilingSame.checked;
+      if (same) setParam(paramCeilingThickness, parseFloat(paramFloorThickness.value));
+      paramCeilingThickness.disabled = same;
+      const num = numFor(paramCeilingThickness);
+      if (num) num.disabled = same;
+    }
+
     function updateValueLabels() {
       const u = currentUnit === 'in' ? 'in' : 'mm';
+      syncCeilingThickness();
       dimSliders().forEach(slider => {
         const unitEl = document.getElementById(slider.id + 'Val');
         if (unitEl) unitEl.textContent = u;
@@ -3195,6 +3237,8 @@
     const paramLidHeight = document.getElementById('paramLidHeight');
     const paramWallThickness = document.getElementById('paramWallThickness');
     const paramFloorThickness = document.getElementById('paramFloorThickness');
+    const paramCeilingThickness = document.getElementById('paramCeilingThickness');
+    const checkCeilingSame = document.getElementById('checkCeilingSame');
     const paramLipHeight = document.getElementById('paramLipHeight');
     const paramTolerance = document.getElementById('paramTolerance');
     const lidStyleSelect = document.getElementById('lidStyleSelect');
@@ -4068,7 +4112,8 @@ function rdpClosed(pts, tol) {
       lidMesh = new THREE.Group();
 
       // Víko může být libovolně nízké (až jen límec + deska). Celková výška víka je přesně lidH.
-      const lidPlateT = Math.min(getParamValue(paramFloorThickness), lidH); // tloušťka horní desky
+      const ceilingT = checkCeilingSame.checked ? getParamValue(paramFloorThickness) : getParamValue(paramCeilingThickness);
+      const lidPlateT = Math.min(ceilingT, lidH);                            // tloušťka horní desky (stropu)
       const lidWallHeight = Math.max(0, lidH - lidPlateT);                   // výška límce pod deskou
       const EPS = EPS_H;
       let lidBottomY;                                        // výška spodku víka nad dnem krabičky
@@ -4427,6 +4472,11 @@ function rdpClosed(pts, tol) {
       dimSliders().forEach(el => {
         el.dataset.stepMm = el.getAttribute('step') || '1';
         el.step = 'any';
+      });
+
+      checkCeilingSame.addEventListener('change', () => {
+        updateValueLabels();   // při zaškrtnutí se strop srovná s dnem, při odškrtnutí zůstane hodnota a jde měnit
+        rebuildBox();
       });
 
       dimSliders().forEach(el => {
