@@ -200,7 +200,7 @@
             <option value="es">ES</option>
             <option value="fr">FR</option>
           </select>
-          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v8.0.0</span>
+          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v8.2.0</span>
         </div>
       </div>
 
@@ -875,7 +875,7 @@
         warnHoleShrink: "A hole is too small for the shoe-box lid collar – it stays closed in the lid.",
         warnNoHoles: "No holes were found in this outline. Holes are read from SVG files only.",
         sectionMount: "Mounting holes (screws)",
-        mountHint: "A washer-like boss is added on the floor with a hole for a screw. Choose a conical (countersunk) or a flat screw head – the washer adapts to it.",
+        mountHint: "A washer-like boss is added on the floor with a hole for a screw. Choose a conical (countersunk) or a flat screw head – the washer adapts to it. Or choose a nut: a hexagonal pocket for a metric nut (the M size is taken from the hole diameter) is cut into the top of the washer and the screw comes from below. Mounting holes and marks can also be dragged with the mouse in the 3D preview.",
         btnAddMount: "Add mounting hole",
         btnRemove: "Remove",
         mountTitle: "Mounting hole {n}",
@@ -890,6 +890,9 @@
         warnMountOutside: "A mounting hole (washer) is outside the floor or collides with another hole – it was skipped.",
         warnMountTall: "A washer is taller than the box wall – reduce its thickness.",
         warnMountSmall: "A washer was too small for the screw – its diameter was enlarged.",
+        mountHeadNut: "Metric nut (hexagonal pocket in the washer)",
+        mountNutInfo: "Nut {m}: {s} mm across flats, {h} mm thick (pocket {ps} mm with clearance)",
+        warnMountNutThick: "A washer was too thin for the nut pocket – its thickness was increased.",
         sectionHolders: "LED strip holder marks",
         holdersHint: "A thin one-layer ring lying on the floor outlines where to drill for the holders. The holders are spread evenly along the route of the strip; each one can be moved in X and Y.",
         checkHolders: "Show drill marks for LED strip holders",
@@ -903,6 +906,9 @@
         btnResetHolders: "Reset positions",
         holderTitle: "Holder {n}",
         warnMarkOutside: "A holder mark is outside the floor or collides with another hole – it was skipped.",
+        warnItemOutside: "⚠ Careful: {name} is outside the object – it is missing from the model.",
+        warnItemOverhang: "⚠ Careful: {name} extends beyond the edge of the object – it is missing from the model.",
+        warnItemCollision: "⚠ Careful: {name} overlaps another hole or opening – it is missing from the model.",
         warnMarkThin: "The floor is too thin for the drill marks.",
         warnNoRoute: "The strip route does not fit inside the box – no drill marks were created."
       },
@@ -1024,7 +1030,7 @@
         warnHoleShrink: "Otvor je pro límec víka jako od krabice příliš malý – ve víku zůstane zavřený.",
         warnNoHoles: "V tomto obrysu se nenašly žádné otvory. Otvory se čtou jen ze souborů SVG.",
         sectionMount: "Montážní otvory (šrouby)",
-        mountHint: "Na dno se přidá podložka s otvorem pro šroub. Vyberte šroub s kuželovou (zapuštěnou) nebo rovnou hlavou – podložka se mu přizpůsobí.",
+        mountHint: "Na dno se přidá podložka s otvorem pro šroub. Vyberte šroub s kuželovou (zapuštěnou) nebo rovnou hlavou – podložka se mu přizpůsobí. Nebo vyberte matici: do horní strany podložky se vyřízne šestihranná kapsa pro metrickou matici (velikost M se určí z průměru díry) a šroub jde zespodu. Otvory i značky lze v 3D náhledu chytit myší a přesunout.",
         btnAddMount: "Přidat montážní otvor",
         btnRemove: "Odebrat",
         mountTitle: "Montážní otvor {n}",
@@ -1039,6 +1045,9 @@
         warnMountOutside: "Montážní otvor (podložka) je mimo dno nebo se kryje s jiným otvorem – byl vynechán.",
         warnMountTall: "Podložka je vyšší než stěna krabičky – zmenšete její tloušťku.",
         warnMountSmall: "Podložka byla pro šroub příliš malá – její průměr byl zvětšen.",
+        mountHeadNut: "Metrická matice (šestihranná kapsa v podložce)",
+        mountNutInfo: "Matice {m}: klíč {s} mm, výška {h} mm (kapsa {ps} mm i s vůlí)",
+        warnMountNutThick: "Podložka byla pro kapsu matice příliš tenká – její tloušťka byla zvětšena.",
         sectionHolders: "Značky pro držáky LED pásku",
         holdersHint: "Tenký jednovrstvý kroužek na dně obkrouží místo, kde vrtat pro držáky. Držáky se rozmístí rovnoměrně po trase pásku a každý lze posunout po ose X a Y.",
         checkHolders: "Zobrazit značky pro držáky LED pásku",
@@ -1052,6 +1061,9 @@
         btnResetHolders: "Obnovit polohy",
         holderTitle: "Držák {n}",
         warnMarkOutside: "Značka držáku je mimo dno nebo se kryje s jiným otvorem – byla vynechána.",
+        warnItemOutside: "⚠ Pozor: {name} je mimo objekt – v modelu chybí.",
+        warnItemOverhang: "⚠ Pozor: {name} přesahuje okraj objektu – v modelu chybí.",
+        warnItemCollision: "⚠ Pozor: {name} se kryje s jiným otvorem – v modelu chybí.",
         warnMarkThin: "Dno je na značky příliš tenké.",
         warnNoRoute: "Trasa pásku se do krabičky nevejde – značky nebyly vytvořeny."
       },
@@ -1173,7 +1185,7 @@
         warnHoleShrink: "Ein Loch ist für den Deckelrand (Schachtelstil) zu klein – es bleibt im Deckel geschlossen.",
         warnNoHoles: "In dieser Kontur wurden keine Löcher gefunden. Löcher werden nur aus SVG-Dateien gelesen.",
         sectionMount: "Montagelöcher (Schrauben)",
-        mountHint: "Auf dem Boden wird eine Unterlegscheibe mit Schraubenloch ergänzt. Wählen Sie eine Senkkopf- (konisch) oder Flachkopfschraube – die Scheibe passt sich an.",
+        mountHint: "Auf dem Boden wird eine Unterlegscheibe mit Schraubenloch ergänzt. Wählen Sie eine Senkkopf- (konisch) oder Flachkopfschraube – die Scheibe passt sich an. Oder wählen Sie eine Mutter: In die Oberseite der Scheibe wird eine Sechskanttasche für eine metrische Mutter geschnitten (die M-Größe ergibt sich aus dem Lochdurchmesser), die Schraube kommt von unten. Löcher und Markierungen lassen sich auch mit der Maus in der 3D-Vorschau verschieben.",
         btnAddMount: "Montageloch hinzufügen",
         btnRemove: "Entfernen",
         mountTitle: "Montageloch {n}",
@@ -1188,6 +1200,9 @@
         warnMountOutside: "Ein Montageloch (Scheibe) liegt außerhalb des Bodens oder überschneidet ein anderes Loch – es wurde übersprungen.",
         warnMountTall: "Eine Scheibe ist höher als die Boxwand – Stärke verringern.",
         warnMountSmall: "Eine Scheibe war für die Schraube zu klein – ihr Durchmesser wurde vergrößert.",
+        mountHeadNut: "Metrische Mutter (Sechskanttasche in der Scheibe)",
+        mountNutInfo: "Mutter {m}: {s} mm Schlüsselweite, {h} mm hoch (Tasche {ps} mm mit Spiel)",
+        warnMountNutThick: "Eine Scheibe war für die Muttertasche zu dünn – ihre Stärke wurde erhöht.",
         sectionHolders: "Markierungen für LED-Streifen-Halter",
         holdersHint: "Ein dünner einlagiger Ring auf dem Boden umrandet die Stelle, an der für die Halter gebohrt wird. Die Halter werden gleichmäßig entlang des Streifenverlaufs verteilt; jeder lässt sich in X und Y verschieben.",
         checkHolders: "Bohrmarkierungen für LED-Streifen-Halter anzeigen",
@@ -1201,6 +1216,9 @@
         btnResetHolders: "Positionen zurücksetzen",
         holderTitle: "Halter {n}",
         warnMarkOutside: "Eine Halter-Markierung liegt außerhalb des Bodens oder überschneidet ein anderes Loch – sie wurde übersprungen.",
+        warnItemOutside: "⚠ Achtung: {name} liegt außerhalb des Objekts – fehlt im Modell.",
+        warnItemOverhang: "⚠ Achtung: {name} ragt über den Rand des Objekts hinaus – fehlt im Modell.",
+        warnItemCollision: "⚠ Achtung: {name} überschneidet ein anderes Loch – fehlt im Modell.",
         warnMarkThin: "Der Boden ist für die Bohrmarkierungen zu dünn.",
         warnNoRoute: "Der Streifenverlauf passt nicht in die Box – es wurden keine Markierungen erzeugt."
       },
@@ -1322,7 +1340,7 @@
         warnHoleShrink: "Un hueco es demasiado pequeño para el borde de la tapa tipo caja de zapatos: queda cerrado en la tapa.",
         warnNoHoles: "No se encontraron huecos en este contorno. Los huecos solo se leen de archivos SVG.",
         sectionMount: "Orificios de montaje (tornillos)",
-        mountHint: "Se añade una arandela sobre la base con un orificio para el tornillo. Elige un tornillo de cabeza cónica (avellanada) o plana: la arandela se adapta.",
+        mountHint: "Se añade una arandela sobre la base con un orificio para el tornillo. Elige un tornillo de cabeza cónica (avellanada) o plana: la arandela se adapta. O elige una tuerca: en la parte superior de la arandela se talla un hueco hexagonal para una tuerca métrica (la medida M se toma del diámetro del orificio) y el tornillo entra desde abajo. Los orificios y las marcas también se pueden arrastrar con el ratón en la vista 3D.",
         btnAddMount: "Añadir orificio de montaje",
         btnRemove: "Quitar",
         mountTitle: "Orificio de montaje {n}",
@@ -1337,6 +1355,9 @@
         warnMountOutside: "Un orificio de montaje (arandela) queda fuera de la base o choca con otro orificio: se omitió.",
         warnMountTall: "Una arandela es más alta que la pared de la caja: reduce su grosor.",
         warnMountSmall: "Una arandela era demasiado pequeña para el tornillo: se aumentó su diámetro.",
+        mountHeadNut: "Tuerca métrica (hueco hexagonal en la arandela)",
+        mountNutInfo: "Tuerca {m}: {s} mm entre caras, {h} mm de grosor (hueco {ps} mm con holgura)",
+        warnMountNutThick: "Una arandela era demasiado fina para el hueco de la tuerca: se aumentó su grosor.",
         sectionHolders: "Marcas para soportes de tira LED",
         holdersHint: "Un anillo fino de una capa sobre la base rodea el punto donde taladrar para los soportes. Los soportes se reparten uniformemente a lo largo del recorrido de la tira y cada uno se puede mover en X e Y.",
         checkHolders: "Mostrar marcas de taladrado para soportes de tira LED",
@@ -1350,6 +1371,9 @@
         btnResetHolders: "Restablecer posiciones",
         holderTitle: "Soporte {n}",
         warnMarkOutside: "Una marca de soporte queda fuera de la base o choca con otro orificio: se omitió.",
+        warnItemOutside: "⚠ Atención: {name} está fuera del objeto – falta en el modelo.",
+        warnItemOverhang: "⚠ Atención: {name} sobresale del borde del objeto – falta en el modelo.",
+        warnItemCollision: "⚠ Atención: {name} se solapa con otro orificio – falta en el modelo.",
         warnMarkThin: "La base es demasiado fina para las marcas de taladrado.",
         warnNoRoute: "El recorrido de la tira no cabe en la caja: no se crearon marcas."
       },
@@ -1471,7 +1495,7 @@
         warnHoleShrink: "Un trou est trop petit pour le rebord du couvercle (style boîte à chaussures) : il reste fermé dans le couvercle.",
         warnNoHoles: "Aucun trou trouvé dans ce contour. Les trous ne sont lus que dans les fichiers SVG.",
         sectionMount: "Trous de montage (vis)",
-        mountHint: "Une rondelle avec un trou pour la vis est ajoutée sur le fond. Choisissez une vis à tête conique (fraisée) ou plate : la rondelle s'adapte.",
+        mountHint: "Une rondelle avec un trou pour la vis est ajoutée sur le fond. Choisissez une vis à tête conique (fraisée) ou plate : la rondelle s'adapte. Ou choisissez un écrou : une poche hexagonale pour écrou métrique (la taille M est déduite du diamètre du trou) est creusée sur le dessus de la rondelle et la vis vient du dessous. Les trous et repères peuvent aussi être déplacés à la souris dans l'aperçu 3D.",
         btnAddMount: "Ajouter un trou de montage",
         btnRemove: "Supprimer",
         mountTitle: "Trou de montage {n}",
@@ -1486,6 +1510,9 @@
         warnMountOutside: "Un trou de montage (rondelle) est hors du fond ou chevauche un autre trou : il a été ignoré.",
         warnMountTall: "Une rondelle est plus haute que la paroi de la boîte : réduisez son épaisseur.",
         warnMountSmall: "Une rondelle était trop petite pour la vis : son diamètre a été augmenté.",
+        mountHeadNut: "Écrou métrique (poche hexagonale dans la rondelle)",
+        mountNutInfo: "Écrou {m} : {s} mm sur plats, {h} mm d'épaisseur (poche {ps} mm avec jeu)",
+        warnMountNutThick: "Une rondelle était trop fine pour la poche de l'écrou : son épaisseur a été augmentée.",
         sectionHolders: "Repères pour supports de ruban LED",
         holdersHint: "Un fin anneau d'une couche posé sur le fond entoure l'endroit où percer pour les supports. Les supports sont répartis régulièrement le long du trajet du ruban ; chacun peut être déplacé en X et Y.",
         checkHolders: "Afficher les repères de perçage des supports de ruban LED",
@@ -1499,6 +1526,9 @@
         btnResetHolders: "Réinitialiser les positions",
         holderTitle: "Support {n}",
         warnMarkOutside: "Un repère de support est hors du fond ou chevauche un autre trou : il a été ignoré.",
+        warnItemOutside: "⚠ Attention : {name} est hors de l'objet – absent du modèle.",
+        warnItemOverhang: "⚠ Attention : {name} dépasse du bord de l'objet – absent du modèle.",
+        warnItemCollision: "⚠ Attention : {name} chevauche un autre trou – absent du modèle.",
         warnMarkThin: "Le fond est trop fin pour les repères de perçage.",
         warnNoRoute: "Le trajet du ruban ne tient pas dans la boîte : aucun repère créé."
       }
@@ -1506,6 +1536,81 @@
 
     // Seznam změn podle verzí (nejnovější nahoře)
     const changelogData = [
+      {
+        version: '8.2.0',
+        items: {
+          en: [
+            "Smooth curves: inner walls, hole walls and lid rims are no longer simplified into long straight segments. Their points now lie exactly at the wall-thickness distance from the original outline, so arcs stay arcs in the preview and in the STL (the longest straight piece on a 90 mm circle dropped from about 5 mm to under 1 mm).",
+            "SVG import samples arcs and curves according to their length, and the image tracing keeps much finer detail, so curved shapes no longer turn into polygons."
+          ],
+          cs: [
+            "Hladké oblouky: vnitřní stěny, stěny kolem děr i okraje víka se už nezjednodušují na dlouhé rovné úsečky. Jejich body nově leží přesně ve vzdálenosti tloušťky stěny od původního obrysu, takže oblouky zůstanou oblouky v náhledu i v STL (nejdelší rovný kus na kruhu o průměru 90 mm se zmenšil z asi 5 mm na méně než 1 mm).",
+            "Import SVG vzorkuje oblouky a křivky podle jejich délky a trasování obrázku zachovává mnohem jemnější detail, takže se zakřivené tvary už nemění na mnohoúhelníky."
+          ],
+          de: [
+            "Glatte Kurven: Innenwände, Lochwände und Deckelränder werden nicht mehr zu langen geraden Stücken vereinfacht. Ihre Punkte liegen jetzt exakt im Abstand der Wandstärke zur ursprünglichen Kontur, sodass Bögen in der Vorschau und im STL Bögen bleiben (das längste gerade Stück an einem Kreis mit 90 mm Durchmesser sank von etwa 5 mm auf unter 1 mm).",
+            "Der SVG-Import tastet Bögen und Kurven nach ihrer Länge ab und die Bildnachzeichnung behält deutlich feinere Details, sodass gekrümmte Formen nicht mehr zu Vielecken werden."
+          ],
+          es: [
+            "Curvas suaves: las paredes interiores, las paredes de los huecos y los bordes de la tapa ya no se simplifican en tramos rectos largos. Sus puntos están ahora exactamente a la distancia del grosor de pared del contorno original, así los arcos siguen siendo arcos en la vista previa y en el STL (el tramo recto más largo en un círculo de 90 mm bajó de unos 5 mm a menos de 1 mm).",
+            "La importación SVG muestrea arcos y curvas según su longitud y el trazado de imágenes conserva mucho más detalle, de modo que las formas curvas ya no se convierten en polígonos."
+          ],
+          fr: [
+            "Courbes lisses : les parois intérieures, les parois autour des trous et les bords du couvercle ne sont plus simplifiés en longs segments droits. Leurs points sont désormais exactement à la distance de l'épaisseur de paroi du contour d'origine, les arcs restent donc des arcs dans l'aperçu et dans le STL (le plus long segment droit d'un cercle de 90 mm est passé d'environ 5 mm à moins de 1 mm).",
+            "L'import SVG échantillonne arcs et courbes selon leur longueur et le tracé d'image conserve beaucoup plus de détails, les formes courbes ne deviennent donc plus des polygones."
+          ]
+        }
+      },
+      {
+        version: '8.1.0',
+        items: {
+          en: [
+            "Mounting holes: a new screw type \"Metric nut\". A hexagonal pocket for a nut is cut into the top of the washer; the M size (M2–M12) is taken from the hole diameter, e.g. a 4 mm hole gets an M4 pocket. The washer is automatically made wide and thick enough for the pocket.",
+            "Mounting holes and LED strip holder marks can be grabbed with the mouse in the 3D preview and dragged across the floor. The position sliders follow along. Dragging an item outside the object shows the red warning as before."
+          ],
+          cs: [
+            "Montážní otvory: nový typ \"Metrická matice\". Do horní strany podložky se vyřízne šestihranná kapsa pro matici; velikost M (M2–M12) se určí z průměru díry, takže díra 4 mm dostane kapsu pro M4. Podložka se automaticky zvětší, aby kapsa měla dost místa i tloušťky.",
+            "Montážní otvory a značky držáků LED pásku lze v 3D náhledu chytit myší a přetáhnout po dně. Posuvníky pozice se přitom upravují. Přesunutí položky mimo objekt zobrazí červené upozornění jako dosud."
+          ],
+          de: [
+            "Montagelöcher: neuer Schraubentyp \"Metrische Mutter\". In die Oberseite der Scheibe wird eine Sechskanttasche für die Mutter geschnitten; die M-Größe (M2–M12) ergibt sich aus dem Lochdurchmesser, ein 4-mm-Loch erhält also eine M4-Tasche. Die Scheibe wird automatisch breit und dick genug gemacht.",
+            "Montagelöcher und Markierungen für LED-Streifen-Halter lassen sich in der 3D-Vorschau mit der Maus greifen und über den Boden ziehen. Die Positionsregler folgen dabei. Wird ein Element aus dem Objekt gezogen, erscheint wie bisher die rote Warnung."
+          ],
+          es: [
+            "Orificios de montaje: nuevo tipo \"Tuerca métrica\". En la parte superior de la arandela se talla un hueco hexagonal para la tuerca; la medida M (M2–M12) se toma del diámetro del orificio, así un orificio de 4 mm recibe un hueco para M4. La arandela se amplía automáticamente para que quepa.",
+            "Los orificios de montaje y las marcas de soportes de tira LED se pueden agarrar con el ratón en la vista 3D y arrastrar por la base. Los controles de posición se actualizan. Si se arrastra fuera del objeto, aparece la advertencia roja como antes."
+          ],
+          fr: [
+            "Trous de montage : nouveau type « Écrou métrique ». Une poche hexagonale pour l'écrou est creusée sur le dessus de la rondelle ; la taille M (M2–M12) est déduite du diamètre du trou, un trou de 4 mm reçoit donc une poche M4. La rondelle est agrandie automatiquement si nécessaire.",
+            "Les trous de montage et les repères de supports de ruban LED peuvent être saisis à la souris dans l'aperçu 3D et déplacés sur le fond. Les curseurs de position suivent. Hors de l'objet, l'avertissement rouge s'affiche comme avant."
+          ]
+        }
+      },
+      {
+        version: '8.0.1',
+        items: {
+          en: [
+            "A mounting hole or holder mark moved outside the object (or over its edge, or onto another hole) is no longer just dropped: it is shown as a red outline with a glowing beam rising into the sky, an axis and an arrow, so you can always see where it is.",
+            "A warning appears at the item itself (red frame and a ⚠ in its title) and in the section, saying whether it is outside the object, overhangs its edge or overlaps another hole. The outline is a preview only and is never exported to the STL."
+          ],
+          cs: [
+            "Montážní otvor nebo značka držáku přesunutá mimo objekt (nebo přes jeho okraj, či na jiný otvor) se už jen nevynechá: zobrazí se jako červený obrys se zářícím sloupem stoupajícím do oblohy, osou a šipkou, takže vždy vidíte, kde se nachází.",
+            "U dané položky (červený rámeček a ⚠ v názvu) i v sekci se objeví upozornění, zda je mimo objekt, přesahuje okraj nebo se kryje s jiným otvorem. Obrys slouží jen k náhledu a do STL se nikdy neexportuje."
+          ],
+          de: [
+            "Ein Montageloch oder eine Halter-Markierung außerhalb des Objekts (über dem Rand oder auf einem anderen Loch) wird nicht mehr einfach weggelassen: Es erscheint als roter Umriss mit leuchtendem Strahl in den Himmel, Achse und Pfeil – so sieht man immer, wo es liegt.",
+            "Am Element selbst (roter Rahmen und ⚠ im Titel) und im Abschnitt erscheint eine Warnung, ob es außerhalb liegt, über den Rand ragt oder ein anderes Loch überschneidet. Der Umriss dient nur der Vorschau und wird nie in die STL exportiert."
+          ],
+          es: [
+            "Un orificio de montaje o una marca de soporte fuera del objeto (sobre el borde o sobre otro orificio) ya no se omite sin más: se muestra como contorno rojo con un haz luminoso hacia el cielo, un eje y una flecha, para ver siempre dónde está.",
+            "Aparece una advertencia en el propio elemento (marco rojo y ⚠ en el título) y en la sección, indicando si está fuera, sobresale del borde o se solapa con otro orificio. El contorno es solo vista previa y nunca se exporta al STL."
+          ],
+          fr: [
+            "Un trou de montage ou un repère de support placé hors de l'objet (sur le bord ou sur un autre trou) n'est plus simplement ignoré : il s'affiche en contour rouge avec un faisceau lumineux montant vers le ciel, un axe et une flèche, pour toujours voir où il se trouve.",
+            "Un avertissement apparaît sur l'élément (cadre rouge et ⚠ dans le titre) et dans la section : hors de l'objet, dépassant du bord ou chevauchant un autre trou. Le contour sert uniquement à l'aperçu et n'est jamais exporté dans le STL."
+          ]
+        }
+      },
       {
         version: '8',
         items: {
@@ -2549,6 +2654,35 @@
       return geo;
     }
 
+    // Metrické matice (ISO 4032): velikost klíče s a výška h v mm. Velikost se vybírá podle průměru díry:
+    // největší M, jejíž jmenovitý průměr nepřesahuje průměr díry (+0,25 mm), takže díra 3,4 mm → M3, 4 mm → M4.
+    const NUTS = [
+      { n: 2, s: 4, h: 1.6 }, { n: 2.5, s: 5, h: 2.0 }, { n: 3, s: 5.5, h: 2.4 }, { n: 4, s: 7, h: 3.2 },
+      { n: 5, s: 8, h: 4.7 }, { n: 6, s: 10, h: 5.2 }, { n: 8, s: 13, h: 6.8 }, { n: 10, s: 16, h: 8.4 }, { n: 12, s: 18, h: 10.8 }
+    ];
+    const NUT_CLEAR = 0.4;   // vůle kapsy pro 3D tisk (mm)
+    function nutForHole(d) {
+      let best = NUTS[0];
+      NUTS.forEach(e => { if (e.n <= d + 0.25) best = e; });
+      return best;
+    }
+
+    // Podložka s kapsou na matici: spodní prstenec s kruhovým otvorem + horní prstenec se šestihranným otvorem.
+    function createNutPlug(m, H) {
+      const outer = circlePts({ x: m.x, y: m.y, r: m.R }, CIRCLE_SEG);
+      const hole = circlePts({ x: m.x, y: m.y, r: m.holeR }, CIRCLE_SEG);
+      const hex = [];
+      for (let k = 0; k < 6; k++) {
+        const a = k * Math.PI / 3;
+        hex.push(new THREE.Vector2(m.x + m.pocketR * Math.cos(a), m.y + m.pocketR * Math.sin(a)));
+      }
+      const lowH = H - m.depth;
+      const low = createHollowExtrusion(outer, hole, lowH);
+      const up = createHollowExtrusion(outer, hex, m.depth);
+      up.translate(0, 0, lowH);
+      return [low, up];
+    }
+
     // Výchozí polohy držáků LED pásku: rovnoměrně po úsečce vedené středem krabičky
     // (po delší straně, nebo podle volby) uvnitř vnitřního obrysu. Jeden držák je na středu úseku.
     function computeHolderAuto(inner, count, layout, markR) {
@@ -2582,9 +2716,34 @@
     }
 
     // Rozmístí podložky a značky; vrací geometrie podložek a kruhy, které se vyříznou ze dna.
+    // Proč se položka (otvor / značka) nevejde: střed mimo obrys / přesah přes okraj / kolize s jiným otvorem
+    function classifyPlacement(poly, c) {
+      if (!pointInPoly(c.x, c.y, poly)) return 'outside';
+      if (distToEdges(c.x, c.y, poly) < c.r + 0.2) return 'overhang';
+      return 'collision';
+    }
+    function placementMsg(reason, name) {
+      const key = reason === 'outside' ? 'warnItemOutside' : (reason === 'overhang' ? 'warnItemOverhang' : 'warnItemCollision');
+      return tx(key).replace('{name}', name);
+    }
+    let mountItemMsgs = [], holderItemMsgs = [];     // varování k jednotlivým položkám z posledního přepočtu
+    let mountItemEls = [], holderItemEls = [];       // prvky v panelu, kam se varování vypisují
+    function applyItemWarn(it, msg) {
+      if (!it) return;
+      it.warnEl.textContent = msg || '';
+      it.warnEl.classList.toggle('hidden', !msg);
+      it.det.classList.toggle('border-rose-500', !!msg);
+      it.det.classList.toggle('border-slate-700', !msg);
+      it.title.textContent = (msg ? '\u26A0 ' : '') + it.baseTitle;
+    }
+    function updateItemWarnings() {
+      mountItemEls.forEach((it, i) => applyItemWarn(it, mountItemMsgs[i]));
+      holderItemEls.forEach((it, i) => applyItemWarn(it, holderItemMsgs[i]));
+    }
+
     function planMountAndMarks(outer, inner, holeLoops, bottomHole, floorT, wallTopZ, mw, hw) {
       const T = translations[currentLang];
-      const plan = { plugs: [], mountCircles: [], markCircles: [], markDepth: 0 };
+      const plan = { plugs: [], mountCircles: [], markCircles: [], markDepth: 0, ghosts: [], mountMsgs: [], markMsgs: [] };
       lastAutoMarks = [];
       const placed = [];
       if (bottomHole) placed.push({ x: bottomHole.x, y: bottomHole.y, r: bottomHole.r });
@@ -2592,30 +2751,47 @@
       const clearOfOutlineHoles = (c) => holePlus.every(pl => !pointInPoly(c.x, c.y, pl) && distToEdges(c.x, c.y, pl) >= c.r + 0.2);
       const clearOfPlaced = (c) => placed.every(p => Math.hypot(p.x - c.x, p.y - c.y) >= p.r + c.r + 0.2);
 
-      let outsideMount = false, tallMount = false, smallMount = false;
-      mountHoles.forEach(m => {
+      plan.dragItems = [];   // všechny položky, které lze v náhledu chytit myší (i ty mimo objekt)
+      let outsideMount = false, tallMount = false, smallMount = false, nutThick = false;
+      mountHoles.forEach((m, mIdx) => {
         const holeR = Math.max(0.25, m.d / 2);
         const cone = m.head === 'cone';
+        const nut = m.head === 'nut' ? nutForHole(m.d) : null;
         let topR = holeR * 2;                       // hlava kuželového šroubu ≈ 2× průměr otvoru
-        const minR = cone ? topR + 0.8 : holeR + 1.0;
+        const pocketR = nut ? (nut.s + NUT_CLEAR) / Math.sqrt(3) : 0;   // poloměr opsané kružnice šestihranu
+        const pocketDepth = nut ? nut.h + NUT_CLEAR : 0;
+        const minR = nut ? pocketR + 1.2 : (cone ? topR + 0.8 : holeR + 1.0);
         let R = m.washerD / 2;
         if (R < minR) { R = minR; smallMount = true; }
-        const H = floorT + Math.max(0, m.washerT);
+        let H = floorT + Math.max(0, m.washerT);
+        if (nut && H < pocketDepth + 1.0) { H = pocketDepth + 1.0; nutThick = true; }   // pod kapsou zůstane aspoň 1 mm
         if (H < 0.05) return;
+        plan.dragItems.push({ kind: 'mount', idx: mIdx, x: m.x, y: m.y, r: R, z: H });
         let coneDepth = 0;
         if (cone) {
           coneDepth = Math.min(topR - holeR, Math.max(0, H - 0.4));   // 90° zapuštění: hloubka = rozdíl poloměrů
           topR = holeR + coneDepth;
         }
         const c = { x: m.x, y: m.y, r: R };
-        if (!holeFitsInside(outer, c.x, c.y, c.r) || !clearOfOutlineHoles(c) || !clearOfPlaced(c)) { outsideMount = true; return; }
+        if (!holeFitsInside(outer, c.x, c.y, c.r) || !clearOfOutlineHoles(c) || !clearOfPlaced(c)) {
+          outsideMount = true;
+          // místo zmizení se zobrazí obrys se zářící osou a v panelu varování
+          plan.ghosts.push({ x: c.x, y: c.y, r: c.r });
+          plan.mountMsgs[mIdx] = placementMsg(classifyPlacement(outer, c), tx('mountTitle').replace('{n}', mIdx + 1));
+          return;
+        }
         placed.push(c);
         plan.mountCircles.push(c);
         if (H > wallTopZ + 0.01) tallMount = true;
-        plan.plugs.push(createMountPlug({ x: m.x, y: m.y, holeR: holeR, R: R, topR: topR, cone: cone, coneDepth: coneDepth }, H));
+        if (nut) {
+          createNutPlug({ x: m.x, y: m.y, holeR: holeR, R: R, pocketR: pocketR, depth: pocketDepth }, H).forEach(g => plan.plugs.push(g));
+        } else {
+          plan.plugs.push(createMountPlug({ x: m.x, y: m.y, holeR: holeR, R: R, topR: topR, cone: cone, coneDepth: coneDepth }, H));
+        }
       });
-      if (outsideMount) mw.push(T.warnMountOutside);
+      plan.mountMsgs.forEach(msg => { if (msg) mw.push(msg); });
       if (smallMount) mw.push(T.warnMountSmall);
+      if (nutThick) mw.push(T.warnMountNutThick);
       if (tallMount) mw.push(T.warnMountTall);
 
       if (holderState.enabled) {
@@ -2632,12 +2808,18 @@
             for (let i = 0; i < count; i++) {
               const a = auto[i], off = holderState.offsets[i] || { dx: 0, dy: 0 };
               const c = { x: a.x + off.dx, y: a.y + off.dy, r: markR };
-              if (!holeFitsInside(inner, c.x, c.y, c.r) || !clearOfOutlineHoles(c) || !clearOfPlaced(c)) { skipped = true; continue; }
+              plan.dragItems.push({ kind: 'mark', idx: i, x: c.x, y: c.y, r: c.r, z: floorT + depth });
+              if (!holeFitsInside(inner, c.x, c.y, c.r) || !clearOfOutlineHoles(c) || !clearOfPlaced(c)) {
+                skipped = true;
+                plan.ghosts.push({ x: c.x, y: c.y, r: c.r });
+                plan.markMsgs[i] = placementMsg(classifyPlacement(inner, c), tx('holderTitle').replace('{n}', i + 1));
+                continue;
+              }
               placed.push(c);
               plan.markCircles.push(c);
             }
             plan.markDepth = depth;
-            if (skipped) hw.push(T.warnMarkOutside);
+            plan.markMsgs.forEach(msg => { if (msg) hw.push(msg); });
           }
         }
       }
@@ -2716,7 +2898,7 @@
       const body = document.createElement('div');
       body.className = 'px-3 pb-3 space-y-3';
       det.appendChild(sum); det.appendChild(body);
-      return { det: det, body: body };
+      return { det: det, body: body, title: t };
     }
 
     const POS = { minMM: -150, maxMM: 150, stepMM: 0.5, hardMin: -2000, hardMax: 2000 };
@@ -2736,6 +2918,7 @@
 
     function renderMountUI() {
       mountRefreshers = [];
+      mountItemEls = [];
       mountListEl.innerHTML = '';
       mountHoles.forEach((m, idx) => {
         const box = makeDetails(tx('mountTitle').replace('{n}', idx + 1), m.open, (o) => { m.open = o; }, () => {
@@ -2743,10 +2926,14 @@
           renderMountUI();
           rebuildBox();
         });
+        const mWarnEl = document.createElement('p');
+        mWarnEl.className = 'hidden text-[11px] leading-snug text-rose-400 font-semibold';
+        box.body.appendChild(mWarnEl);
+        mountItemEls[idx] = { det: box.det, title: box.title, warnEl: mWarnEl, baseTitle: tx('mountTitle').replace('{n}', idx + 1) };
         const add = (f) => { box.body.appendChild(f.el); mountRefreshers.push(f.refresh); f.refresh(); };
         add(makeNumSlider(tx('paramMountX'), () => m.x, v => { m.x = v; }, POS));
         add(makeNumSlider(tx('paramMountY'), () => m.y, v => { m.y = v; }, POS));
-        add(makeNumSlider(tx('paramMountD'), () => m.d, v => { m.d = v; }, { minMM: 1, maxMM: 12, stepMM: 0.1, hardMin: 0.5, hardMax: 100 }));
+        add(makeNumSlider(tx('paramMountD'), () => m.d, v => { m.d = v; if (m._updateNutInfo) m._updateNutInfo(); },{ minMM: 1, maxMM: 12, stepMM: 0.1, hardMin: 0.5, hardMax: 100 }));
 
         const selWrap = document.createElement('div');
         const lab = document.createElement('label');
@@ -2754,24 +2941,39 @@
         lab.textContent = tx('mountHeadLabel');
         const sel = document.createElement('select');
         sel.className = 'w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500';
-        [['cone', 'mountHeadCone'], ['flat', 'mountHeadFlat']].forEach(pair => {
+        [['cone', 'mountHeadCone'], ['flat', 'mountHeadFlat'], ['nut', 'mountHeadNut']].forEach(pair => {
           const op = document.createElement('option');
           op.value = pair[0]; op.textContent = tx(pair[1]);
           sel.appendChild(op);
         });
         sel.value = m.head;
-        sel.addEventListener('change', () => { m.head = sel.value; rebuildBox(); });
-        selWrap.appendChild(lab); selWrap.appendChild(sel);
+        // informace o vybrané matici (velikost M se mění s průměrem díry)
+        const nutInfo = document.createElement('p');
+        nutInfo.className = 'text-[11px] leading-snug text-slate-400 mt-1';
+        const updateNutInfo = () => {
+          const isNut = m.head === 'nut';
+          nutInfo.classList.toggle('hidden', !isNut);
+          if (!isNut) return;
+          const nt = nutForHole(m.d);
+          nutInfo.textContent = tx('mountNutInfo').replace('{m}', 'M' + nt.n).replace('{s}', nt.s).replace('{h}', nt.h)
+            .replace('{ps}', (nt.s + NUT_CLEAR).toFixed(1));
+        };
+        updateNutInfo();
+        sel.addEventListener('change', () => { m.head = sel.value; updateNutInfo(); rebuildBox(); });
+        selWrap.appendChild(lab); selWrap.appendChild(sel); selWrap.appendChild(nutInfo);
         box.body.appendChild(selWrap);
+        m._updateNutInfo = updateNutInfo;
 
         add(makeNumSlider(tx('paramWasherD'), () => m.washerD, v => { m.washerD = v; }, { minMM: 4, maxMM: 40, stepMM: 0.5, hardMin: 1, hardMax: 500 }));
         add(makeNumSlider(tx('paramWasherT'), () => m.washerT, v => { m.washerT = v; }, { minMM: 0, maxMM: 10, stepMM: 0.1, hardMin: 0, hardMax: 100 }));
         mountListEl.appendChild(box.det);
       });
+      updateItemWarnings();
     }
 
     function renderHolderUI() {
       holderRefreshers = [];
+      holderItemEls = [];
       holderParamsEl.innerHTML = '';
       holderListEl.innerHTML = '';
       const add = (parent, f) => { parent.appendChild(f.el); holderRefreshers.push(f.refresh); f.refresh(); };
@@ -2779,6 +2981,10 @@
       add(holderParamsEl, makeNumSlider(tx('paramMarkDepth'), () => holderState.depth, v => { holderState.depth = v; }, { minMM: 0.05, maxMM: 1, stepMM: 0.05, hardMin: 0.05, hardMax: 5 }));
       for (let i = 0; i < holderState.count; i++) {
         const box = makeDetails(tx('holderTitle').replace('{n}', i + 1), false, null, null);
+        const hWarnEl = document.createElement('p');
+        hWarnEl.className = 'hidden text-[11px] leading-snug text-rose-400 font-semibold';
+        box.body.appendChild(hWarnEl);
+        holderItemEls[i] = { det: box.det, title: box.title, warnEl: hWarnEl, baseTitle: tx('holderTitle').replace('{n}', i + 1) };
         const off = () => { if (!holderState.offsets[i]) holderState.offsets[i] = { dx: 0, dy: 0 }; return holderState.offsets[i]; };
         const autoAt = () => lastAutoMarks[i] || { x: 0, y: 0 };
         const addIn = (f) => { box.body.appendChild(f.el); holderRefreshers.push(f.refresh); f.refresh(); };
@@ -2786,6 +2992,7 @@
         addIn(makeNumSlider(tx('paramMountY'), () => autoAt().y + off().dy, v => { off().dy = v - autoAt().y; }, POS));
         holderListEl.appendChild(box.det);
       }
+      updateItemWarnings();
     }
 
     // Po přepočtu krabičky se zobrazené (absolutní) polohy držáků srovnají s novými výchozími polohami
@@ -2832,6 +3039,101 @@
 
     let scene, camera, renderer, controls;
     let boxGroup, baseMesh, lidMesh;
+
+    // ================= Přesouvání montážních otvorů a značek držáků myší =================
+    let lastDragItems = [];   // [{ kind: 'mount' | 'mark', idx, x, y, r, z }] z posledního přepočtu (mm, souřadnice dna)
+
+    function initItemDragging(canvas) {
+      const ray = new THREE.Raycaster();
+      let drag = null, raf = 0, pending = null;
+      canvas.style.touchAction = 'none';
+
+      // Průsečík paprsku z kurzoru s vodorovnou rovinou z = zTop v souřadnicích dna (zahrnuje otočení náhledu)
+      function hitPlane(e, zTop) {
+        if (!baseMesh || !baseMesh.parent) return null;
+        const rect = canvas.getBoundingClientRect();
+        const ndc = new THREE.Vector2(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
+        camera.updateMatrixWorld();
+        ray.setFromCamera(ndc, camera);
+        baseMesh.updateWorldMatrix(true, false);
+        const inv = baseMesh.matrixWorld.clone().invert();
+        const o = ray.ray.origin.clone().applyMatrix4(inv);
+        const d = ray.ray.direction.clone().transformDirection(inv);
+        if (Math.abs(d.z) < 1e-6) return null;
+        const t = (zTop - o.z) / d.z;
+        if (t < 0) return null;
+        return { x: o.x + d.x * t, y: o.y + d.y * t, t: t };
+      }
+
+      // Nejbližší položka pod kurzorem (menší položky mají přednost; zásah má malou rezervu, aby šly chytit i drobné značky)
+      function pick(e) {
+        let best = null;
+        lastDragItems.forEach(it => {
+          const p = hitPlane(e, it.z);
+          if (!p) return;
+          if (Math.hypot(p.x - it.x, p.y - it.y) > Math.max(it.r, 2) + 0.5) return;
+          if (!best || p.t < best.p.t - 0.01 || (Math.abs(p.t - best.p.t) <= 0.01 && it.r < best.it.r)) best = { it: it, p: p };
+        });
+        return best;
+      }
+
+      function applyPos(d, x, y) {
+        x = Math.round(x * 10) / 10; y = Math.round(y * 10) / 10;
+        if (d.kind === 'mount') {
+          const m = mountHoles[d.idx];
+          if (!m) return;
+          m.x = x; m.y = y;
+        } else {
+          const a = lastAutoMarks[d.idx];
+          if (!a) return;
+          holderState.offsets[d.idx] = { dx: x - a.x, dy: y - a.y };
+        }
+      }
+
+      function flush() {
+        raf = 0;
+        if (!pending || !drag) return;
+        applyPos(drag, pending.x, pending.y);
+        pending = null;
+        rebuildBox();
+        refreshAllLists();
+      }
+
+      canvas.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0 || e.pointerType === 'mouse' && (e.ctrlKey || e.metaKey || e.shiftKey)) return;
+        const hit = pick(e);
+        if (!hit) return;
+        drag = { kind: hit.it.kind, idx: hit.it.idx, z: hit.it.z, gx: hit.it.x - hit.p.x, gy: hit.it.y - hit.p.y, id: e.pointerId };
+        if (controls) controls.enabled = false;
+        try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* nevadí */ }
+        canvas.style.cursor = 'grabbing';
+        e.stopImmediatePropagation();
+        e.preventDefault();
+      }, true);
+
+      canvas.addEventListener('pointermove', (e) => {
+        if (drag) {
+          const p = hitPlane(e, drag.z);
+          if (!p) return;
+          pending = { x: p.x + drag.gx, y: p.y + drag.gy };
+          if (!raf) raf = requestAnimationFrame(flush);
+          e.stopImmediatePropagation();
+          return;
+        }
+        if (e.buttons === 0 && e.pointerType === 'mouse') canvas.style.cursor = pick(e) ? 'grab' : '';
+      }, true);
+
+      const end = (e) => {
+        if (!drag) return;
+        if (raf) { cancelAnimationFrame(raf); flush(); }
+        try { canvas.releasePointerCapture(drag.id); } catch (err) { /* nevadí */ }
+        drag = null;
+        if (controls) controls.enabled = true;
+        canvas.style.cursor = '';
+      };
+      canvas.addEventListener('pointerup', end, true);
+      canvas.addEventListener('pointercancel', end, true);
+    }
 
     // Materiály zůstávají mezi přepočty zachované, aby šla barva měnit živě bez přestavby modelu
     const colorBaseEl = document.getElementById('colorBase');
@@ -3262,9 +3564,62 @@ function rdpClosed(pts, tol) {
       const loops = contourLoops(f, W, H, -offset / cell);
       if (!loops.length) return [];
       const big = loops.reduce((a, b) => Math.abs(loopArea(a)) >= Math.abs(loopArea(b)) ? a : b);
-      const simp = rdpClosed(big, 0.6);
+      // Body z rastru jen přibližně leží na odsazené křivce (chyba až ~1 pixel, vzniká zubatost a fazety).
+      // Každý bod proto přesně dopočteme: leží ve vzdálenosti |offset| od nejbližšího místa původního obrysu.
+      // Díky tomu je výsledek hladký a oblouky zůstanou oblouky; zjednodušení pak může být velmi jemné.
+      const world = big.map(q => [minX + (q[0] + 0.5 - pad) * cell, minY + (q[1] + 0.5 - pad) * cell]);
+      const refined = Math.abs(offset) > 1e-6 ? snapToOffsetCurve(world, pts, Math.abs(offset), cell) : world;
+      const ref = Math.max(maxX - minX, maxY - minY);
+      const simp = rdpClosed(refined, ref * 2e-5);
       if (simp.length < 3) return [];
-      return ensureOrientation(simp.map(q => new THREE.Vector2(minX + (q[0] + 0.5 - pad) * cell, minY + (q[1] + 0.5 - pad) * cell)), false);
+      return ensureOrientation(simp.map(q => new THREE.Vector2(q[0], q[1])), false);
+    }
+
+    // Posune každý bod [x, y] podél spojnice s nejbližším bodem původního polygonu tak, aby byl přesně
+    // ve vzdálenosti dist. Nejbližší úsečky se hledají v rovnoměrné mřížce (rychlé i pro tisíce bodů).
+    function snapToOffsetCurve(loop, poly, dist, cell) {
+      const n = poly.length;
+      const cs = dist + 6 * cell;                 // bod leží ~dist od obrysu, takže nejbližší úsečka je v 3×3 buňkách
+      const grid = new Map();
+      const key = (ix, iy) => ix * 73856093 ^ iy * 19349663;
+      for (let i = 0; i < n; i++) {
+        const a = poly[i], b = poly[(i + 1) % n];
+        const x0 = Math.floor(Math.min(a.x, b.x) / cs), x1 = Math.floor(Math.max(a.x, b.x) / cs);
+        const y0 = Math.floor(Math.min(a.y, b.y) / cs), y1 = Math.floor(Math.max(a.y, b.y) / cs);
+        for (let ix = x0; ix <= x1; ix++) for (let iy = y0; iy <= y1; iy++) {
+          const k = key(ix, iy);
+          const arr = grid.get(k);
+          if (arr) arr.push(i); else grid.set(k, [i]);
+        }
+      }
+      const out = [];
+      for (let t = 0; t < loop.length; t++) {
+        const qx = loop[t][0], qy = loop[t][1];
+        const cx = Math.floor(qx / cs), cy = Math.floor(qy / cs);
+        let bestD2 = Infinity, bx = 0, by = 0;
+        const seen = new Set();
+        for (let ix = cx - 1; ix <= cx + 1; ix++) for (let iy = cy - 1; iy <= cy + 1; iy++) {
+          const arr = grid.get(key(ix, iy));
+          if (!arr) continue;
+          for (let m = 0; m < arr.length; m++) {
+            const si = arr[m];
+            if (seen.has(si)) continue;
+            seen.add(si);
+            const a = poly[si], b = poly[(si + 1) % n];
+            const dx = b.x - a.x, dy = b.y - a.y, l2 = dx * dx + dy * dy;
+            let u = l2 > 0 ? ((qx - a.x) * dx + (qy - a.y) * dy) / l2 : 0;
+            u = u < 0 ? 0 : u > 1 ? 1 : u;
+            const px = a.x + dx * u, py = a.y + dy * u;
+            const d2 = (qx - px) * (qx - px) + (qy - py) * (qy - py);
+            if (d2 < bestD2) { bestD2 = d2; bx = px; by = py; }
+          }
+        }
+        const d = Math.sqrt(bestD2);
+        if (!isFinite(d) || d < 1e-9) { out.push([qx, qy]); continue; }
+        const k = dist / d;
+        out.push([bx + (qx - bx) * k, by + (qy - by) * k]);
+      }
+      return out;
     }
 
     const offsetCache = new Map();
@@ -3336,6 +3691,9 @@ function rdpClosed(pts, tol) {
       renderer.setPixelRatio(window.devicePixelRatio);
       renderer.shadowMap.enabled = true;
       container.appendChild(renderer.domElement);
+
+      // Přesouvání otvorů a značek myší – musí se zaregistrovat dřív než OrbitControls
+      initItemDragging(renderer.domElement);
 
       controls = new THREE.OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
@@ -3478,6 +3836,55 @@ function rdpClosed(pts, tol) {
       return geo;
     }
 
+
+    // ---- Duch položky mimo objekt: obrys, zářící sloup do "oblohy", osa a šipka (jen náhled, neexportuje se) ----
+    let ghostLineMat = null, ghostFillMat = null, ghostBeamMat = null, ghostArrowMat = null, ghostGradTex = null;
+    function getGhostMaterials() {
+      if (!ghostLineMat) {
+        const cv = document.createElement('canvas');
+        cv.width = 4; cv.height = 256;
+        const cx = cv.getContext('2d');
+        const gr = cx.createLinearGradient(0, 0, 0, 256);   // nahoře průhledné, dole plné
+        gr.addColorStop(0, '#000000'); gr.addColorStop(0.55, '#2a2a2a'); gr.addColorStop(1, '#ffffff');
+        cx.fillStyle = gr; cx.fillRect(0, 0, 4, 256);
+        ghostGradTex = new THREE.CanvasTexture(cv);
+        ghostLineMat = new THREE.LineBasicMaterial({ color: 0xff3b3b, depthTest: false, transparent: true });
+        ghostFillMat = new THREE.MeshBasicMaterial({ color: 0xff3b3b, transparent: true, opacity: 0.28, side: THREE.DoubleSide, depthTest: false, depthWrite: false });
+        ghostBeamMat = new THREE.MeshBasicMaterial({ color: 0xff3b3b, transparent: true, opacity: 0.5, alphaMap: ghostGradTex, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false });
+        ghostArrowMat = new THREE.MeshBasicMaterial({ color: 0xffd23b, depthTest: false, transparent: true });
+      }
+      return { line: ghostLineMat, fill: ghostFillMat, beam: ghostBeamMat, arrow: ghostArrowMat };
+    }
+    function buildGhostGroup(ghosts, floorT, boxH) {
+      const M = getGhostMaterials();
+      const grp = new THREE.Group();
+      const beamH = Math.max(250, boxH * 4);
+      const y0 = floorT + 0.15;
+      ghosts.forEach(gh => {
+        const r = Math.max(gh.r, 1.5);
+        const px = gh.x, pz = -gh.y;                     // plán (x, y) -> svět (x, -z) po otočení základny
+        const pts = [];
+        for (let k = 0; k < 64; k++) { const a = k / 64 * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(a) * r, 0, Math.sin(a) * r)); }
+        const ring = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), M.line);
+        ring.position.set(px, y0, pz); ring.renderOrder = 999; grp.add(ring);
+
+        const disc = new THREE.Mesh(new THREE.CircleGeometry(r, 48), M.fill);
+        disc.rotation.x = -Math.PI / 2; disc.position.set(px, y0, pz); disc.renderOrder = 998; grp.add(disc);
+
+        const beam = new THREE.Mesh(new THREE.CylinderGeometry(r, r, beamH, 32, 1, true), M.beam);
+        beam.position.set(px, y0 + beamH / 2, pz); beam.renderOrder = 997; grp.add(beam);
+
+        const axis = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(px, y0, pz), new THREE.Vector3(px, y0 + beamH, pz)]), M.line);
+        axis.renderOrder = 999; grp.add(axis);
+
+        const cs = Math.max(4, r * 0.9);                 // šipka ukazující dolů na položku
+        const cone = new THREE.Mesh(new THREE.ConeGeometry(cs * 0.6, cs * 1.6, 16), M.arrow);
+        cone.rotation.x = Math.PI;
+        cone.position.set(px, y0 + cs * 0.8 + 12, pz); cone.renderOrder = 1000; grp.add(cone);
+      });
+      return grp;
+    }
+
     function rebuildBox() {
       const ledWarn = [];
       const holeWarn = [];
@@ -3578,6 +3985,10 @@ function rdpClosed(pts, tol) {
       mountWarnEl.classList.toggle('hidden', mountWarn.length === 0);
       holderWarnEl.textContent = holderWarn.join(' ');
       holderWarnEl.classList.toggle('hidden', holderWarn.length === 0);
+      lastDragItems = plan.dragItems || [];
+      mountItemMsgs = plan.mountMsgs || [];
+      holderItemMsgs = plan.markMsgs || [];
+      updateItemWarnings();
       const addWall = (group, material, o, i, z0, z1, cb) => {
         if (z1 - z0 <= EPS_H) return;
         const geos = cb ? buildWallWithSideHole(o, i, z0, z1, cb) : null;
@@ -3739,6 +4150,10 @@ function rdpClosed(pts, tol) {
 
       addEdgeLines(baseMesh);
       addEdgeLines(lidMesh);
+
+      if (led && plan.ghosts.length && currentViewMode !== 'lid') {
+        boxGroup.add(buildGhostGroup(plan.ghosts, floorT, boxH));
+      }
 
       if (currentViewMode === 'both' || currentViewMode === 'box') {
         boxGroup.add(baseMesh);
@@ -3953,6 +4368,27 @@ function rdpClosed(pts, tol) {
       setTimeout(() => toast.classList.add('hidden'), 4000);
     }
 
+    // Adaptivní vzorkování podcesty z SVG: úsečky zůstanou úsečkami, oblouky a Bézierovy křivky se dělí podle délky
+    // (délka křivky vůči rozměru předlohy), takže plynulé tvary zůstanou plynulé i při velkých rozměrech.
+    function sampleSubPath(sp, ref) {
+      const out = [];
+      (sp.curves || []).forEach(cv => {
+        let div;
+        if (cv.isLineCurve) div = 1;
+        else {
+          const len = cv.getLength();
+          div = Math.min(500, Math.max(16, Math.ceil(len / ref * 800)));
+        }
+        const cp = cv.getPoints(div);
+        cp.forEach(p => {
+          // stejně jako CurvePath.getPoints: následující shodné body (např. nulové úsečky "l0 0" z CorelDRAW) se přeskočí
+          if (out.length && p.distanceTo(out[out.length - 1]) < 1e-9) return;
+          out.push(p);
+        });
+      });
+      return out.length >= 3 ? out : sp.getPoints(64);
+    }
+
     // Obrázek (JPG/PNG/WebP) -> tvar krabičky: vyhlazené pole jasu/průhlednosti, kontura (marching squares), největší obrys
     function traceImageToShape(img, thr, smooth, inv) {
       const w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
@@ -3979,8 +4415,9 @@ function rdpClosed(pts, tol) {
       const loops = contourLoops(f, fw, fh, 1 - thr / 255);
       if (!loops.length) return null;
       const big = loops.reduce((a, b) => Math.abs(loopArea(a)) >= Math.abs(loopArea(b)) ? a : b);
-      let tl = 0.3 * s, pts = rdpClosed(big, tl), g = 0;
-      while (pts.length > 700 && g++ < 40) { tl *= 1.25; pts = rdpClosed(big, tl); }
+      // Jemné zjednodušení (0,1 px zdrojového obrázku), aby oblouky nebyly po úsečkách; strop bodů jen pro extrémní případy
+      let tl = 0.1 * s, pts = rdpClosed(big, tl), g = 0;
+      while (pts.length > 3000 && g++ < 40) { tl *= 1.25; pts = rdpClosed(big, tl); }
       if (pts.length < 3) return null;
       return new THREE.Shape(pts.map(q => new THREE.Vector2((q[0] - PAD) / s, (q[1] - PAD) / s)));
     }
@@ -4137,10 +4574,19 @@ function rdpClosed(pts, tol) {
             const shapes = [];
             // Surové uzavřené obrysy všech podcest – o tom, co je obrys a co díra, rozhodne getOutlineParts
             // podle vnoření (SVGLoader díry podle fill-rule nerozpozná vždy správně).
+            // Rozměr předlohy – podle něj se volí hustota vzorkování křivek (oblouky se nesmí změnit v hrubé úsečky)
+            let rx0 = Infinity, rx1 = -Infinity, ry0 = Infinity, ry1 = -Infinity;
+            svgData.paths.forEach(path => (path.subPaths || []).forEach(sp => {
+              sp.getPoints(8).forEach(p => {
+                if (p.x < rx0) rx0 = p.x; if (p.x > rx1) rx1 = p.x;
+                if (p.y < ry0) ry0 = p.y; if (p.y > ry1) ry1 = p.y;
+              });
+            }));
+            const svgRef = Math.max(rx1 - rx0, ry1 - ry0) || 1;
             svgData.paths.forEach(path => {
               let added = 0;
               (path.subPaths || []).forEach(sp => {
-                const pts = sp.getPoints(64);
+                const pts = sampleSubPath(sp, svgRef);
                 if (pts && pts.length >= 3 && Math.abs(getSignedArea(pts)) > 1e-9) {
                   shapes.push(new THREE.Shape(pts));
                   added++;
@@ -4273,6 +4719,7 @@ function rdpClosed(pts, tol) {
 
     function animate() {
       requestAnimationFrame(animate);
+      if (ghostBeamMat) ghostBeamMat.opacity = 0.5 + 0.2 * Math.sin(performance.now() / 250);
       controls.update();
       renderer.render(scene, camera);
     }
