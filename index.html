@@ -1,14 +1,30 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full bg-slate-900 text-slate-100">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-FC66NQ2B5P"></script>
+<!-- Google Analytics (GA4) + Consent Mode v2.
+     Skript gtag.js se NENAČTE, dokud návštěvník nedá souhlas (viz loadGA() a cookie lišta dole). -->
 <script>
+  var GA_ID = 'G-FC66NQ2B5P';
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-FC66NQ2B5P');
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied'
+  });
+  var gaLoaded = false;
+  function loadGA() {
+    if (gaLoaded) return;
+    gaLoaded = true;
+    window['ga-disable-' + GA_ID] = false;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    gtag('config', GA_ID, { 'anonymize_ip': true, 'allow_google_signals': false, 'allow_ad_personalization_signals': false });
+  }
 </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,6 +98,45 @@
       transform: translateY(-1px);
       opacity: 0.95;
     }
+
+    /* Cookie lišta a nastavení */
+    .cc-hidden[hidden] { display: none !important; }
+    .cc-banner {
+      position: fixed; z-index: 120; left: 12px; right: 12px; bottom: 12px;
+      max-width: 720px; margin-inline: auto;
+      background: rgba(15, 23, 42, .98); color: #e2e8f0;
+      border: 1px solid #475569; border-radius: 14px; padding: 16px 18px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.65); font-size: 13px; line-height: 1.5;
+    }
+    .cc-banner h2, .cc-dialog h2 { font-weight: 700; font-size: 15px; margin: 0 0 6px; color: #f1f5f9; }
+    .cc-banner p { margin: 0 0 12px; color: #94a3b8; }
+    .cc-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .cc-btn {
+      font: inherit; font-weight: 600; font-size: 13px; cursor: pointer; text-align: center;
+      padding: 9px 10px; border-radius: 9px; color: #f1f5f9; background: #1e293b; border: 1px solid #64748b;
+    }
+    .cc-btn:hover { background: #334155; border-color: #94a3b8; }
+    .cc-btn:focus-visible, .cc-link:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
+    .cc-link { background: none; border: 0; padding: 0; font: inherit; color: #93c5fd; text-decoration: underline; cursor: pointer; }
+    .cc-link:hover { color: #fff; }
+    .cc-modal { position: fixed; inset: 0; z-index: 130; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0,0,0,.65); }
+    .cc-dialog { width: 100%; max-width: 540px; max-height: 88vh; overflow-y: auto; background: #0f172a; border: 1px solid #475569; border-radius: 14px; padding: 20px; color: #cbd5e1; font-size: 13px; line-height: 1.55; }
+    .cc-dialog p { margin: 0 0 10px; }
+    .cc-cat { border: 1px solid #334155; border-radius: 10px; padding: 11px 13px; margin-bottom: 10px; }
+    .cc-cat-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-weight: 600; color: #f1f5f9; }
+    .cc-cat p { margin: 5px 0 0; color: #94a3b8; font-size: 12px; }
+    .cc-state { font-size: 11px; font-weight: 500; color: #94a3b8; }
+    .cc-switch { position: relative; width: 42px; height: 24px; flex: none; }
+    .cc-switch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; z-index: 1; }
+    .cc-switch i { position: absolute; inset: 0; border-radius: 999px; background: #334155; transition: background .2s; }
+    .cc-switch i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: transform .2s; }
+    .cc-switch input:checked + i { background: #3b82f6; }
+    .cc-switch input:checked + i::after { transform: translateX(18px); }
+    .cc-switch input:focus-visible + i { outline: 2px solid #60a5fa; outline-offset: 2px; }
+    .cc-privacy { border-top: 1px solid #334155; margin-top: 14px; padding-top: 12px; }
+    .cc-privacy h3 { font-weight: 700; color: #f1f5f9; margin: 0 0 6px; font-size: 13px; }
+    .cc-dialog .cc-actions { margin-top: 14px; }
+    @media (max-width: 560px) { .cc-actions { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body class="h-full flex flex-col overflow-hidden font-sans antialiased">
@@ -577,6 +632,7 @@
           <div style="font-size: 0.75rem;" class="flex flex-wrap items-center gap-x-3 gap-y-1">
             <button id="btnAbout" type="button" class="underline hover:text-slate-200 text-left" data-i18n="footerAbout">About BoxGenerator</button>
             <button id="btnChangelog" type="button" class="underline hover:text-slate-200 text-left" data-i18n="footerChangelog">Changelog</button>
+            <button id="btnCookies" type="button" class="underline hover:text-slate-200 text-left" data-cc-open>Cookies</button>
           </div>
         </div>
 
@@ -3466,5 +3522,194 @@ function rdpClosed(pts, tol) {
     };
   </script>
 
+
+  <!-- COOKIE LIŠTA -->
+  <div class="cc-banner cc-hidden" id="ccBanner" role="dialog" aria-modal="false" aria-labelledby="ccTitle" hidden>
+    <h2 id="ccTitle"></h2>
+    <p><span id="ccText"></span> <button type="button" class="cc-link" data-cc="settings" id="ccMore"></button></p>
+    <div class="cc-actions">
+      <button type="button" class="cc-btn" data-cc="reject" id="ccReject"></button>
+      <button type="button" class="cc-btn" data-cc="settings" id="ccSettings"></button>
+      <button type="button" class="cc-btn" data-cc="accept" id="ccAccept"></button>
+    </div>
+  </div>
+
+  <div class="cc-modal cc-hidden" id="ccModal" hidden>
+    <div class="cc-dialog" role="dialog" aria-modal="true" aria-labelledby="ccModalTitle">
+      <h2 id="ccModalTitle"></h2>
+      <p id="ccModalIntro"></p>
+      <div class="cc-cat">
+        <div class="cc-cat-head"><span id="ccNecTitle"></span><span class="cc-state" id="ccAlways"></span></div>
+        <p id="ccNecDesc"></p>
+      </div>
+      <div class="cc-cat">
+        <div class="cc-cat-head">
+          <label for="ccAnalytics" id="ccAnTitle"></label>
+          <span class="cc-switch"><input type="checkbox" id="ccAnalytics"><i></i></span>
+        </div>
+        <p id="ccAnDesc"></p>
+      </div>
+      <div class="cc-actions">
+        <button type="button" class="cc-btn" data-cc="reject" id="ccReject2"></button>
+        <button type="button" class="cc-btn" data-cc="save" id="ccSave"></button>
+        <button type="button" class="cc-btn" data-cc="accept" id="ccAccept2"></button>
+      </div>
+      <div class="cc-privacy">
+        <h3 id="ccPrivTitle"></h3>
+        <p id="ccPriv1"></p>
+        <p id="ccPriv2"></p>
+        <p id="ccPriv3"></p>
+        <p id="ccPriv4"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* Správa souhlasu s cookies + texty pro 5 jazyků webu */
+    (function () {
+      var KEY = 'cookie_consent_v1';
+      var T = {
+        en: {
+          title: 'Cookies & privacy',
+          text: 'I would like to use Google Analytics cookies to measure traffic anonymously. They are used only if you agree, and nothing is sent to Google before that.',
+          more: 'Learn more', reject: 'Reject all', settings: 'Settings', accept: 'Accept all', save: 'Save selection',
+          modalTitle: 'Cookie settings', intro: 'Choose which cookies you allow. You can change this at any time via “Cookies” in the footer.',
+          necTitle: 'Necessary', always: 'Always on', necDesc: 'Remembers your cookie choice in your browser. No tracking.',
+          anTitle: 'Analytics (Google Analytics)', anDesc: 'Anonymized statistics about visits (pages, country, device type) to help me improve the tool. Not used for advertising.',
+          privTitle: 'Privacy',
+          p1: 'Controller: Adam Hazda, ID (IČO) 30083991, adam(at)hazda.cz.',
+          p2: 'Your SVG and image files and the generated models are processed only in your browser and are never uploaded to any server.',
+          p3: 'Google Analytics collects anonymized traffic data (pages visited, approximate location at country level, device and browser type) only with your consent. IP addresses are anonymized, and the data is not used for marketing or ad personalization. You can withdraw consent at any time.',
+          p4: 'The page loads libraries and icons from public CDNs (Tailwind, cdnjs, jsDelivr) and the Buy Me a Coffee button. Their providers may technically process your IP address.',
+          footer: 'Cookies'
+        },
+        cs: {
+          title: 'Cookies a soukromí',
+          text: 'Rád bych používal analytické cookies Google Analytics k anonymnímu měření návštěvnosti. Použijí se jen s vaším souhlasem a do té doby se Googlu nic neodesílá.',
+          more: 'Více informací', reject: 'Odmítnout vše', settings: 'Nastavení', accept: 'Přijmout vše', save: 'Uložit výběr',
+          modalTitle: 'Nastavení cookies', intro: 'Vyberte, která cookies povolíte. Volbu můžete kdykoliv změnit přes odkaz „Cookies“ v patičce.',
+          necTitle: 'Nezbytné', always: 'Vždy zapnuto', necDesc: 'Pamatuje si ve vašem prohlížeči vaši volbu cookies. Žádné sledování.',
+          anTitle: 'Analytické (Google Analytics)', anDesc: 'Anonymizované statistiky návštěvnosti (stránky, stát, typ zařízení), které mi pomáhají nástroj zlepšovat. Nepoužívá se pro reklamu.',
+          privTitle: 'Ochrana soukromí',
+          p1: 'Správce: Adam Hazda, IČO 30083991, adam(at)hazda.cz.',
+          p2: 'Vaše soubory SVG a obrázky i vygenerované modely se zpracovávají pouze ve vašem prohlížeči a nikam se nenahrávají.',
+          p3: 'Google Analytics sbírá anonymizovaná data o návštěvnosti (navštívené stránky, přibližná lokace na úrovni státu, typ zařízení a prohlížeče) pouze s vaším souhlasem. IP adresy jsou anonymizovány a data se nepoužívají k marketingu ani k personalizaci reklamy. Souhlas můžete kdykoliv odvolat.',
+          p4: 'Stránka načítá knihovny a ikony z veřejných CDN (Tailwind, cdnjs, jsDelivr) a tlačítko Buy Me a Coffee. Jejich provozovatelé mohou technicky zpracovat vaši IP adresu.',
+          footer: 'Cookies'
+        },
+        de: {
+          title: 'Cookies & Datenschutz',
+          text: 'Ich möchte Google-Analytics-Cookies verwenden, um die Nutzung anonym zu messen. Sie werden nur mit Ihrer Zustimmung genutzt, vorher wird nichts an Google gesendet.',
+          more: 'Mehr erfahren', reject: 'Alle ablehnen', settings: 'Einstellungen', accept: 'Alle akzeptieren', save: 'Auswahl speichern',
+          modalTitle: 'Cookie-Einstellungen', intro: 'Wählen Sie, welche Cookies Sie erlauben. Sie können das jederzeit über „Cookies“ in der Fußzeile ändern.',
+          necTitle: 'Notwendig', always: 'Immer aktiv', necDesc: 'Speichert Ihre Cookie-Auswahl in Ihrem Browser. Kein Tracking.',
+          anTitle: 'Analyse (Google Analytics)', anDesc: 'Anonymisierte Besuchsstatistiken (Seiten, Land, Gerätetyp), mit denen ich das Tool verbessere. Nicht für Werbung.',
+          privTitle: 'Datenschutz',
+          p1: 'Verantwortlicher: Adam Hazda, IČO 30083991, adam(at)hazda.cz.',
+          p2: 'Ihre SVG- und Bilddateien sowie die erzeugten Modelle werden nur in Ihrem Browser verarbeitet und nie auf einen Server hochgeladen.',
+          p3: 'Google Analytics erfasst nur mit Ihrer Zustimmung anonymisierte Nutzungsdaten (besuchte Seiten, ungefährer Standort auf Länderebene, Geräte- und Browsertyp). IP-Adressen werden anonymisiert; die Daten dienen weder dem Marketing noch der Personalisierung von Werbung. Sie können die Einwilligung jederzeit widerrufen.',
+          p4: 'Die Seite lädt Bibliotheken und Icons von öffentlichen CDNs (Tailwind, cdnjs, jsDelivr) sowie den Buy-Me-a-Coffee-Button. Deren Betreiber können Ihre IP-Adresse technisch verarbeiten.',
+          footer: 'Cookies'
+        },
+        es: {
+          title: 'Cookies y privacidad',
+          text: 'Me gustaría usar cookies de Google Analytics para medir el tráfico de forma anónima. Solo se usan si aceptas, y antes no se envía nada a Google.',
+          more: 'Más información', reject: 'Rechazar todo', settings: 'Configuración', accept: 'Aceptar todo', save: 'Guardar selección',
+          modalTitle: 'Configuración de cookies', intro: 'Elige qué cookies permites. Puedes cambiarlo en cualquier momento con «Cookies» en el pie de página.',
+          necTitle: 'Necesarias', always: 'Siempre activas', necDesc: 'Recuerda tu elección de cookies en tu navegador. Sin seguimiento.',
+          anTitle: 'Analíticas (Google Analytics)', anDesc: 'Estadísticas anonimizadas de visitas (páginas, país, tipo de dispositivo) para mejorar la herramienta. No se usan para publicidad.',
+          privTitle: 'Privacidad',
+          p1: 'Responsable: Adam Hazda, IČO 30083991, adam(at)hazda.cz.',
+          p2: 'Tus archivos SVG e imágenes y los modelos generados se procesan solo en tu navegador y nunca se suben a ningún servidor.',
+          p3: 'Google Analytics recopila datos de tráfico anonimizados (páginas visitadas, ubicación aproximada a nivel de país, tipo de dispositivo y navegador) solo con tu consentimiento. Las direcciones IP se anonimizan y los datos no se usan para marketing ni personalización de anuncios. Puedes retirar el consentimiento en cualquier momento.',
+          p4: 'La página carga bibliotecas e iconos desde CDN públicas (Tailwind, cdnjs, jsDelivr) y el botón Buy Me a Coffee. Sus proveedores pueden procesar técnicamente tu dirección IP.',
+          footer: 'Cookies'
+        },
+        fr: {
+          title: 'Cookies et confidentialité',
+          text: 'Je souhaite utiliser les cookies Google Analytics pour mesurer la fréquentation de façon anonyme. Ils ne sont utilisés qu’avec votre accord, et rien n’est envoyé à Google avant.',
+          more: 'En savoir plus', reject: 'Tout refuser', settings: 'Paramètres', accept: 'Tout accepter', save: 'Enregistrer la sélection',
+          modalTitle: 'Paramètres des cookies', intro: 'Choisissez les cookies que vous autorisez. Vous pouvez modifier ce choix à tout moment via « Cookies » en bas de page.',
+          necTitle: 'Nécessaires', always: 'Toujours actifs', necDesc: 'Mémorise votre choix de cookies dans votre navigateur. Aucun suivi.',
+          anTitle: 'Analytiques (Google Analytics)', anDesc: 'Statistiques de visite anonymisées (pages, pays, type d’appareil) pour m’aider à améliorer l’outil. Non utilisées pour la publicité.',
+          privTitle: 'Confidentialité',
+          p1: 'Responsable : Adam Hazda, IČO 30083991, adam(at)hazda.cz.',
+          p2: 'Vos fichiers SVG et images ainsi que les modèles générés sont traités uniquement dans votre navigateur et ne sont jamais envoyés à un serveur.',
+          p3: 'Google Analytics collecte des données de fréquentation anonymisées (pages visitées, localisation approximative au niveau du pays, type d’appareil et de navigateur) uniquement avec votre consentement. Les adresses IP sont anonymisées et les données ne servent ni au marketing ni à la personnalisation des publicités. Vous pouvez retirer votre consentement à tout moment.',
+          p4: 'La page charge des bibliothèques et icônes depuis des CDN publics (Tailwind, cdnjs, jsDelivr) ainsi que le bouton Buy Me a Coffee. Leurs exploitants peuvent traiter techniquement votre adresse IP.',
+          footer: 'Cookies'
+        }
+      };
+
+      var $ = function (id) { return document.getElementById(id); };
+      var banner = $('ccBanner'), modal = $('ccModal'), box = $('ccAnalytics'), langSel = $('langSelect');
+      var lastFocus = null;
+
+      function tr() { return T[langSel && T[langSel.value] ? langSel.value : 'en']; }
+      function render() {
+        var t = tr();
+        var map = { ccTitle: 'title', ccText: 'text', ccMore: 'more', ccReject: 'reject', ccSettings: 'settings', ccAccept: 'accept',
+          ccReject2: 'reject', ccAccept2: 'accept', ccSave: 'save', ccModalTitle: 'modalTitle', ccModalIntro: 'intro',
+          ccNecTitle: 'necTitle', ccAlways: 'always', ccNecDesc: 'necDesc', ccAnTitle: 'anTitle', ccAnDesc: 'anDesc',
+          ccPrivTitle: 'privTitle', ccPriv1: 'p1', ccPriv2: 'p2', ccPriv3: 'p3', ccPriv4: 'p4', btnCookies: 'footer' };
+        for (var id in map) { var el = $(id); if (el) el.textContent = t[map[id]]; }
+        document.documentElement.lang = langSel ? langSel.value : 'en';
+      }
+
+      function read() {
+        try { var v = JSON.parse(localStorage.getItem(KEY)); return v && typeof v.analytics === 'boolean' ? v : null; }
+        catch (e) { return null; }
+      }
+      function write(a) { try { localStorage.setItem(KEY, JSON.stringify({ analytics: a, ts: new Date().toISOString() })); } catch (e) {} }
+      function deleteGaCookies() {
+        var parts = location.hostname.split('.'), domains = ['', location.hostname];
+        for (var i = 0; i < parts.length - 1; i++) domains.push('.' + parts.slice(i).join('.'));
+        document.cookie.split(';').forEach(function (c) {
+          var n = c.split('=')[0].trim();
+          if (n === '_ga' || n.indexOf('_ga_') === 0 || n === '_gid' || n.indexOf('_gat') === 0) {
+            domains.forEach(function (d) {
+              document.cookie = n + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/' + (d ? '; domain=' + d : '');
+            });
+          }
+        });
+      }
+      function apply(a) {
+        if (a) { gtag('consent', 'update', { 'analytics_storage': 'granted' }); loadGA(); }
+        else { window['ga-disable-' + GA_ID] = true; gtag('consent', 'update', { 'analytics_storage': 'denied' }); deleteGaCookies(); }
+      }
+      function closeModal() {
+        if (modal.hidden) return;
+        modal.hidden = true;
+        if (!read()) banner.hidden = false;
+        else if (lastFocus && lastFocus.focus) lastFocus.focus();
+      }
+      function choose(a) { write(a); apply(a); banner.hidden = true; closeModal(); }
+      function openModal() {
+        var c = read();
+        box.checked = !!(c && c.analytics);
+        lastFocus = document.activeElement;
+        banner.hidden = true; modal.hidden = false;
+        var f = modal.querySelector('.cc-btn'); if (f) f.focus();
+      }
+
+      document.addEventListener('click', function (e) {
+        var t = e.target.closest('[data-cc], [data-cc-open]');
+        if (!t) return;
+        if (t.hasAttribute('data-cc-open')) { openModal(); return; }
+        var a = t.getAttribute('data-cc');
+        if (a === 'accept') choose(true);
+        else if (a === 'reject') choose(false);
+        else if (a === 'save') choose(box.checked);
+        else if (a === 'settings') openModal();
+      });
+      modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+      if (langSel) langSel.addEventListener('change', render);
+
+      render();
+      var saved = read();
+      if (saved) apply(saved.analytics); else banner.hidden = false;
+    })();
+  </script>
 </body>
 </html>
