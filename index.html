@@ -200,7 +200,7 @@
             <option value="es">ES</option>
             <option value="fr">FR</option>
           </select>
-          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v8.4.0</span>
+          <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/25">v8.5.0</span>
         </div>
       </div>
 
@@ -230,6 +230,7 @@
               <option value="shield" data-i18n="shapeShield">Shield</option>
               <option value="fish" data-i18n="shapeFish">Fish</option>
               <option value="polygon" data-i18n="shapePolygon">Polygon</option>
+              <option value="text" data-i18n="shapeText">Custom text</option>
             </select>
           </div>
 
@@ -240,6 +241,25 @@
               <span id="paramSidesVal" class="font-mono text-blue-400 font-bold">6</span>
             </div>
             <input type="range" id="paramSides" min="3" max="24" step="1" value="6" class="w-full">
+          </div>
+          <!-- Vlastní text (visible only for the Custom text preset) -->
+          <div id="containerText" class="space-y-2 hidden">
+            <label class="text-xs text-slate-300 block" data-i18n="textLabel">Text:</label>
+            <input type="text" id="textInput" value="a" maxlength="20" autocomplete="off" spellcheck="false" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+            <div class="grid grid-cols-2 gap-2">
+              <select id="fontSelect" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                <option value="Arial, Helvetica, sans-serif" data-i18n="fontSans">Sans-serif</option>
+                <option value="Georgia, 'Times New Roman', serif" data-i18n="fontSerif">Serif</option>
+                <option value="'Courier New', monospace" data-i18n="fontMono">Monospace</option>
+                <option value="Impact, 'Arial Black', sans-serif" data-i18n="fontImpact">Impact</option>
+                <option value="'Brush Script MT', cursive" data-i18n="fontScript">Script</option>
+              </select>
+              <label class="flex items-center justify-between gap-2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 cursor-pointer">
+                <span class="text-xs text-slate-300" data-i18n="textBold">Bold</span>
+                <input type="checkbox" id="textBold" checked class="w-4 h-4 accent-blue-500 cursor-pointer">
+              </label>
+            </div>
+            <p class="text-[11px] leading-snug text-slate-500" data-i18n="textHint">hint</p>
           </div>
           <div>
             <label class="text-xs text-slate-300 mb-1 block" data-i18n="uploadSvg">Or upload custom SVG:</label>
@@ -1620,7 +1640,12 @@
         exportFrame: "Download Frame (STL)",
         warnFrameHole: "A hole is too small for the frame – it was skipped.",
         warnFrameCollar: "The collar is wider than the opening – it was left out.",
-        frameSize: "Frame size"
+        frameSize: "Frame size",
+        shapeText: "Custom text",
+        textLabel: "Text:",
+        textBold: "Bold",
+        textHint: "The text is turned into an outline (holes inside letters such as a, e, 8 are kept). Only the largest connected part becomes the box, so use a single character or letters that touch.",
+        fontSans: "Sans-serif", fontSerif: "Serif", fontMono: "Monospace", fontImpact: "Impact", fontScript: "Script"
       },
       cs: {
         sectionFrame: "Rámeček",
@@ -1637,7 +1662,12 @@
         exportFrame: "Stáhnout rámeček (STL)",
         warnFrameHole: "Otvor je pro rámeček příliš malý – byl vynechán.",
         warnFrameCollar: "Límec je širší než otvor – byl vynechán.",
-        frameSize: "Rozměr rámečku"
+        frameSize: "Rozměr rámečku",
+        shapeText: "Vlastní text",
+        textLabel: "Text:",
+        textBold: "Tučně",
+        textHint: "Text se převede na obrys (otvory uvnitř písmen jako a, e, 8 zůstanou). Krabičkou se stane jen největší souvislá část, takže použijte jeden znak nebo písmena, která se dotýkají.",
+        fontSans: "Bezpatkové", fontSerif: "Patkové", fontMono: "Neproporcionální", fontImpact: "Impact", fontScript: "Psací"
       },
       de: {
         sectionFrame: "Rahmen",
@@ -1654,7 +1684,12 @@
         exportFrame: "Rahmen herunterladen (STL)",
         warnFrameHole: "Ein Loch ist für den Rahmen zu klein – es wurde übersprungen.",
         warnFrameCollar: "Der Kragen ist breiter als die Öffnung – er wurde weggelassen.",
-        frameSize: "Rahmengröße"
+        frameSize: "Rahmengröße",
+        shapeText: "Eigener Text",
+        textLabel: "Text:",
+        textBold: "Fett",
+        textHint: "Der Text wird in eine Kontur umgewandelt (Löcher in Buchstaben wie a, e, 8 bleiben erhalten). Nur der größte zusammenhängende Teil wird zur Box – am besten ein einzelnes Zeichen oder sich berührende Buchstaben.",
+        fontSans: "Serifenlos", fontSerif: "Serif", fontMono: "Monospace", fontImpact: "Impact", fontScript: "Schreibschrift"
       },
       es: {
         sectionFrame: "Marco",
@@ -1671,7 +1706,12 @@
         exportFrame: "Descargar marco (STL)",
         warnFrameHole: "Un hueco es demasiado pequeño para el marco: se omitió.",
         warnFrameCollar: "El reborde es más ancho que la abertura: se omitió.",
-        frameSize: "Tamaño del marco"
+        frameSize: "Tamaño del marco",
+        shapeText: "Texto personalizado",
+        textLabel: "Texto:",
+        textBold: "Negrita",
+        textHint: "El texto se convierte en un contorno (los huecos de letras como a, e, 8 se conservan). Solo la parte conectada más grande se convierte en la caja; usa un solo carácter o letras que se toquen.",
+        fontSans: "Sin serifa", fontSerif: "Con serifa", fontMono: "Monoespaciada", fontImpact: "Impact", fontScript: "Manuscrita"
       },
       fr: {
         sectionFrame: "Cadre",
@@ -1688,13 +1728,28 @@
         exportFrame: "Télécharger le cadre (STL)",
         warnFrameHole: "Un trou est trop petit pour le cadre : il a été ignoré.",
         warnFrameCollar: "Le collet est plus large que l'ouverture : il a été omis.",
-        frameSize: "Taille du cadre"
+        frameSize: "Taille du cadre",
+        shapeText: "Texte personnalisé",
+        textLabel: "Texte :",
+        textBold: "Gras",
+        textHint: "Le texte est converti en contour (les trous des lettres comme a, e, 8 sont conservés). Seule la plus grande partie connexe devient la boîte ; utilisez un seul caractère ou des lettres qui se touchent.",
+        fontSans: "Sans empattement", fontSerif: "Avec empattement", fontMono: "Monospace", fontImpact: "Impact", fontScript: "Manuscrite"
       }
     };
     Object.keys(frameTranslations).forEach(l => Object.assign(translations[l], frameTranslations[l]));
 
     // Seznam změn podle verzí (nejnovější nahoře)
     const changelogData = [
+      {
+        version: '8.5.0',
+        items: {
+          en: ["Offsets now keep sharp corners like \"Offset Path\" in Illustrator (miter joins, limit 4): a square with a wide frame stays a square instead of getting rounded corners. Very sharp tips are bevelled.", "New preset \"Custom text\": type a letter or digit (a, p, s, r, 8 …), pick a font and bold, and the box, lid or frame is built from it - handy for testing parameters."],
+          cs: ["Odsazení obrysu nově zachovává ostré rohy jako „Offset Path“ v Illustratoru (ostré spoje, limit 4): čtverec s širokým rámečkem zůstane čtvercem, nezaoblí se. Velmi ostré špičky se seříznou.", "Nová předvolba „Vlastní text“: napište písmeno nebo číslici (a, p, s, r, 8 …), vyberte písmo a tučnost a krabička, víko nebo rámeček se z něj vytvoří – hodí se pro testování parametrů."],
+          de: ["Versätze behalten jetzt scharfe Ecken wie „Pfad versetzen“ in Illustrator (Gehrungsverbindung, Limit 4): Ein Quadrat mit breitem Rahmen bleibt ein Quadrat statt abgerundeter Ecken. Sehr spitze Ecken werden abgeschrägt.", "Neue Vorlage „Eigener Text“: Buchstabe oder Ziffer (a, p, s, r, 8 …) eingeben, Schrift und Fett wählen – Box, Deckel oder Rahmen wird daraus erzeugt, praktisch zum Testen der Parameter."],
+          es: ["Los desfases ahora conservan las esquinas vivas como «Desfase de trazado» en Illustrator (uniones en inglete, límite 4): un cuadrado con un marco ancho sigue siendo un cuadrado, sin esquinas redondeadas. Las puntas muy agudas se biselan.", "Nueva plantilla «Texto personalizado»: escribe una letra o dígito (a, p, s, r, 8 …), elige fuente y negrita y se genera la caja, la tapa o el marco; útil para probar parámetros."],
+          fr: ["Les décalages conservent désormais les angles vifs comme « Décalage de tracé » dans Illustrator (jonctions en onglet, limite 4) : un carré avec un large cadre reste un carré, sans coins arrondis. Les pointes très aiguës sont biseautées.", "Nouveau modèle « Texte personnalisé » : saisissez une lettre ou un chiffre (a, p, s, r, 8 …), choisissez police et gras ; la boîte, le couvercle ou le cadre en est généré, pratique pour tester les paramètres."]
+        }
+      },
       {
         version: '8.4.0',
         items: {
@@ -3464,6 +3519,10 @@
     const checkFlipY = document.getElementById('checkFlipY');
     const paramRotate = document.getElementById('paramRotate');
     const paramRotateVal = document.getElementById('paramRotateVal');
+    const containerText = document.getElementById('containerText');
+    const textInput = document.getElementById('textInput');
+    const fontSelect = document.getElementById('fontSelect');
+    const textBold = document.getElementById('textBold');
     const containerSides = document.getElementById('containerSides');
     const paramSides = document.getElementById('paramSides');
     const paramSidesVal = document.getElementById('paramSidesVal');
@@ -3482,7 +3541,43 @@
     const paramToleranceVal = document.getElementById('paramToleranceVal');
     const paramExplodeVal = document.getElementById('paramExplodeVal');
 
+    // Text -> obrysy: text se vykreslí na plátno, z krytí se marching squares získají všechny uzavřené smyčky
+    // (obrysy písmen i jejich otvory). O tom, co je obrys a co díra, rozhodne getOutlineParts podle vnoření.
+    function createTextShapes(text, family, bold) {
+      const str = String(text || '');
+      if (!str.trim()) return [];
+      const fontStr = (sz) => (bold ? 'bold ' : '') + sz + 'px ' + family;
+      let size = 500;
+      const mctx = document.createElement('canvas').getContext('2d');
+      mctx.font = fontStr(size);
+      let w = mctx.measureText(str).width;
+      if (w > 3000) { size = Math.max(40, Math.floor(size * 3000 / w)); mctx.font = fontStr(size); w = mctx.measureText(str).width; }
+      const pad = 16;
+      const W = Math.max(8, Math.ceil(w) + 2 * pad), H = Math.ceil(size * 1.6) + 2 * pad;
+      const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      const ctx = cv.getContext('2d', { willReadFrequently: true });
+      ctx.font = fontStr(size);
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillStyle = '#000';
+      ctx.fillText(str, pad, pad + size * 1.2);
+      const d = ctx.getImageData(0, 0, W, H).data;
+      let f = new Float32Array(W * H);
+      for (let i = 0; i < f.length; i++) f[i] = d[i * 4 + 3] / 255;
+      f = blurField(f, W, H, 0.8);
+      const loops = contourLoops(f, W, H, 0.5);
+      const shapes = [];
+      loops.forEach(lp => {
+        if (Math.abs(loopArea(lp)) < 12) return;            // drobný šum
+        const sp = rdpClosed(lp, 0.2);
+        if (sp.length < 3) return;
+        // obrázek má osu y dolů, tvar nahoru – text se proto převrátí, aby se četl správně
+        shapes.push(new THREE.Shape(sp.map(q => new THREE.Vector2(q[0], -q[1]))));
+      });
+      return shapes;
+    }
+
     function createPresetShapes(type) {
+      if (type === 'text') return createTextShapes(textInput.value, fontSelect.value, textBold.checked);
       const shape = new THREE.Shape();
       if (type === 'square') {
         const size = 40;
@@ -3828,7 +3923,12 @@ function rdpClosed(pts, tol) {
       // Každý bod proto přesně dopočteme: leží ve vzdálenosti |offset| od nejbližšího místa původního obrysu.
       // Díky tomu je výsledek hladký a oblouky zůstanou oblouky; zjednodušení pak může být velmi jemné.
       const world = big.map(q => [minX + (q[0] + 0.5 - pad) * cell, minY + (q[1] + 0.5 - pad) * cell]);
-      const refined = Math.abs(offset) > 1e-6 ? snapToOffsetCurve(world, pts, Math.abs(offset), cell) : world;
+      let refined = world;
+      if (Math.abs(offset) > 1e-6) {
+        const vinfo = [];
+        refined = snapToOffsetCurve(world, pts, Math.abs(offset), cell, vinfo);
+        refined = sharpenOffsetCorners(refined, vinfo, pts, Math.abs(offset));   // ostré rohy jako „Offset Path“ v Illustratoru
+      }
       const ref = Math.max(maxX - minX, maxY - minY);
       const simp = rdpClosed(refined, ref * 2e-5);
       if (simp.length < 3) return [];
@@ -3837,7 +3937,7 @@ function rdpClosed(pts, tol) {
 
     // Posune každý bod [x, y] podél spojnice s nejbližším bodem původního polygonu tak, aby byl přesně
     // ve vzdálenosti dist. Nejbližší úsečky se hledají v rovnoměrné mřížce (rychlé i pro tisíce bodů).
-    function snapToOffsetCurve(loop, poly, dist, cell) {
+    function snapToOffsetCurve(loop, poly, dist, cell, vinfo) {
       const n = poly.length;
       const cs = dist + 6 * cell;                 // bod leží ~dist od obrysu, takže nejbližší úsečka je v 3×3 buňkách
       const grid = new Map();
@@ -3856,7 +3956,7 @@ function rdpClosed(pts, tol) {
       for (let t = 0; t < loop.length; t++) {
         const qx = loop[t][0], qy = loop[t][1];
         const cx = Math.floor(qx / cs), cy = Math.floor(qy / cs);
-        let bestD2 = Infinity, bx = 0, by = 0;
+        let bestD2 = Infinity, bx = 0, by = 0, bv = -1;
         const seen = new Set();
         for (let ix = cx - 1; ix <= cx + 1; ix++) for (let iy = cy - 1; iy <= cy + 1; iy++) {
           const arr = grid.get(key(ix, iy));
@@ -3871,13 +3971,61 @@ function rdpClosed(pts, tol) {
             u = u < 0 ? 0 : u > 1 ? 1 : u;
             const px = a.x + dx * u, py = a.y + dy * u;
             const d2 = (qx - px) * (qx - px) + (qy - py) * (qy - py);
-            if (d2 < bestD2) { bestD2 = d2; bx = px; by = py; }
+            if (d2 < bestD2) { bestD2 = d2; bx = px; by = py; bv = (u === 0) ? si : (u === 1 ? (si + 1) % n : -1); }
           }
         }
         const d = Math.sqrt(bestD2);
-        if (!isFinite(d) || d < 1e-9) { out.push([qx, qy]); continue; }
+        if (!isFinite(d) || d < 1e-9) { out.push([qx, qy]); if (vinfo) vinfo.push(-1); continue; }
         const k = dist / d;
         out.push([bx + (qx - bx) * k, by + (qy - by) * k]);
+        if (vinfo) vinfo.push(bv);
+      }
+      return out;
+    }
+
+    // Rastrové odsazení zaobluje rohy tam, kde obrys „obíhá“ vrchol původního tvaru. Illustrator (Offset Path) používá
+    // ostrý spoj (miter): oblouk kolem vrcholu se nahradí průsečíkem obou odsazených hran. Při velmi ostrých rohách
+    // (poměr nad MITER_LIMIT, v Illustratoru výchozí 4) se roh seřízne (bevel).
+    const MITER_LIMIT = 4;
+    function miterForRun(run, vi, poly, d) {
+      const m = poly.length;
+      const V = poly[vi], A = poly[(vi + m - 1) % m], B = poly[(vi + 1) % m];
+      let t1x = V.x - A.x, t1y = V.y - A.y, t2x = B.x - V.x, t2y = B.y - V.y;
+      const l1 = Math.hypot(t1x, t1y), l2 = Math.hypot(t2x, t2y);
+      if (l1 < 1e-9 || l2 < 1e-9) return null;
+      t1x /= l1; t1y /= l1; t2x /= l2; t2y /= l2;
+      let mx = 0, my = 0;
+      run.forEach(q => { mx += q[0] - V.x; my += q[1] - V.y; });
+      let n1x = -t1y, n1y = t1x, n2x = -t2y, n2y = t2x;
+      const side = (mx * (n1x + n2x) + my * (n1y + n2y)) >= 0 ? 1 : -1;   // strana, na které se odsazuje
+      n1x *= side; n1y *= side; n2x *= side; n2y *= side;
+      const dot = n1x * n2x + n1y * n2y;
+      if (dot < -0.98) return null;                                         // téměř otočka o 180° – necháme beze změny
+      const k = d / (1 + dot);
+      const M = [V.x + (n1x + n2x) * k, V.y + (n1y + n2y) * k];
+      if (Math.sqrt(2 / (1 + dot)) <= MITER_LIMIT) return [M];
+      const E1 = [V.x + n1x * d, V.y + n1y * d], E2 = [V.x + n2x * d, V.y + n2y * d];
+      const f = run[0];
+      return Math.hypot(f[0] - E1[0], f[1] - E1[1]) <= Math.hypot(f[0] - E2[0], f[1] - E2[1]) ? [E1, E2] : [E2, E1];
+    }
+    function sharpenOffsetCorners(loop, vinfo, poly, d) {
+      const n = loop.length;
+      if (n < 3 || vinfo.length !== n) return loop;
+      let start = -1;
+      for (let i = 0; i < n; i++) { if (vinfo[i] !== vinfo[(i + n - 1) % n]) { start = i; break; } }
+      if (start < 0) return loop;
+      const out = [];
+      let i = 0;
+      while (i < n) {
+        const kk = (start + i) % n, vi = vinfo[kk];
+        if (vi < 0) { out.push(loop[kk]); i++; continue; }
+        let j = i;
+        while (j < n && vinfo[(start + j) % n] === vi) j++;
+        const run = [];
+        for (let q = i; q < j; q++) run.push(loop[(start + q) % n]);
+        const rep = miterForRun(run, vi, poly, d);
+        (rep || run).forEach(q => out.push(q));
+        i = j;
       }
       return out;
     }
@@ -4620,6 +4768,9 @@ function rdpClosed(pts, tol) {
       if (!isCustom && presetSelect.value === 'polygon') {
         name = 'polygon-' + paramSides.value;
       }
+      if (!isCustom && presetSelect.value === 'text') {
+        name = 'text-' + (textInput.value.replace(/[^\p{L}\p{N}]+/gu, '').slice(0, 12) || 'x');
+      }
       const frameOn = checkFrame.checked;
       const dims = frameOn
         ? [frameDims.w, frameDims.d, getParamValue(paramFrameHeight)].map(fmt).join('x')
@@ -4897,7 +5048,19 @@ function rdpClosed(pts, tol) {
       function updateSidesVisibility() {
         const show = presetSelect.value === 'polygon' && btnRemoveSvg.classList.contains('hidden');
         containerSides.classList.toggle('hidden', !show);
+        containerText.classList.toggle('hidden', !(presetSelect.value === 'text' && btnRemoveSvg.classList.contains('hidden')));
       }
+
+      // Změna textu / písma: tvar se vygeneruje znovu (s krátkou prodlevou při psaní)
+      let textTimer = null;
+      function regenText() {
+        if (presetSelect.value !== 'text' || !btnRemoveSvg.classList.contains('hidden')) return;
+        currentShapes = createPresetShapes('text');
+        rebuildBox();
+      }
+      textInput.addEventListener('input', () => { clearTimeout(textTimer); textTimer = setTimeout(regenText, 200); });
+      fontSelect.addEventListener('change', regenText);
+      textBold.addEventListener('change', regenText);
 
       paramSides.addEventListener('input', () => {
         paramSidesVal.textContent = paramSides.value;
