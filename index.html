@@ -244,7 +244,7 @@
           <div>
             <label class="text-xs text-slate-300 mb-1 block" data-i18n="uploadSvg">Or upload custom SVG:</label>
             <div class="flex items-center gap-2">
-              <input type="file" id="svgFileInput" accept=".svg" class="block w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-blue-400 hover:file:bg-slate-700 cursor-pointer border border-slate-800 rounded-lg bg-slate-900/50">
+              <input type="file" id="svgFileInput" class="block w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-blue-400 hover:file:bg-slate-700 cursor-pointer border border-slate-800 rounded-lg bg-slate-900/50">
               <button id="btnRemoveSvg" title="Remove SVG / Back to Presets" class="hidden p-2 bg-rose-600/80 hover:bg-rose-600 text-white rounded-lg transition text-xs flex items-center justify-center shrink-0">
                 <i class="fa-solid fa-xmark text-sm"></i>
               </button>
@@ -4929,6 +4929,12 @@ function rdpClosed(pts, tol) {
       svgFileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
+        // Bez atributu accept (na mobilu by se jinak otevřely jen Fotky) se přípona kontroluje zde
+        if (!/\.svg$/i.test(file.name) && file.type !== 'image/svg+xml') {
+          svgFileInput.value = '';
+          showToast(translations[currentLang].toastFileErr);
+          return;
+        }
 
         const reader = new FileReader();
         reader.onload = (evt) => {
